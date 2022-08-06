@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/fragment1"
-        android:name="com.example.homeworklogapp.Fragment1"
+        android:name="com.example.homeworklogapp.FragmentTodo"
         android:label="fragment_1"
-        tools:layout="@layout/fragment_1" />
+        tools:layout="@layout/fragment_todo" />
     <fragment
         android:id="@+id/fragment2"
-        android:name="com.example.homeworklogapp.Fragment2"
+        android:name="com.example.homeworklogapp.FragmentDone"
         android:label="fragment_2"
-        tools:layout="@layout/fragment_2" />
+        tools:layout="@layout/fragment_done" />
 </navigation>

@@ -19,9 +19,7 @@ class MainLogActivity : AppCompatActivity() {
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
-        tabLayout.addTab(tabLayout.newTab().setText("Fragment1"))
-        tabLayout.addTab(tabLayout.newTab().setText("Fragment2"))
-        val tabTitles = listOf<String>("Fragment1", "Fragment2")
+        val tabTitles = listOf("to do", "done")
         val adapter = MyAdapter(supportFragmentManager, lifecycle)
         viewPager.adapter = adapter
 
