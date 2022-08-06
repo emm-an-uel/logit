@@ -5,11 +5,12 @@ import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainLogActivity : AppCompatActivity() {
 
     lateinit var tabLayout: TabLayout
-    lateinit var viewPager: ViewPager
+    lateinit var viewPager: ViewPager2
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,18 +21,12 @@ class MainLogActivity : AppCompatActivity() {
         viewPager = findViewById(R.id.viewPager)
         tabLayout.addTab(tabLayout.newTab().setText("Fragment1"))
         tabLayout.addTab(tabLayout.newTab().setText("Fragment2"))
-        val adapter = MyAdapter(this, supportFragmentManager, tabLayout.tabCount)
+        val tabTitles = listOf<String>("Fragment1", "Fragment2")
+        val adapter = MyAdapter(supportFragmentManager, lifecycle)
         viewPager.adapter = adapter
 
-        viewPager.addOnPageChangeListener(TabLayout.TabLayoutOnPageChangeListener(tabLayout))
-        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
-
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                viewPager.currentItem = tab!!.position
-            }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = tabTitles[position]
+        }.attach()
     }
 }
