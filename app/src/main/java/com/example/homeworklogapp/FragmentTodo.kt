@@ -14,21 +14,41 @@ import java.io.StringReader
 
 class FragmentTodo : Fragment() {
 
+    private fun createRV() {
+        RVTodo = binding.rvTodo
+        taskList = ArrayList()
+        RVAdapter = RVAdapter(taskList)
+
+        // set adapter to recycler view
+        RVTodo.adapter = RVAdapter
+
+        // adding data to list
+        readJson()
+
+        RVAdapter.notifyDataSetChanged()
+    }
+
     private fun readJson() {
 
-        // check if file exists
-        val file = File(requireContext().filesDir, "json_file")
+        val files = requireContext().fileList()
+        val numFiles = files.size
 
-        // * deserialize and read .json *
-        // read json file
-        val fileJson = file.readText() // todo: app crashes here
+        if (numFiles > 1) { // if "json_file" exists, since files[0] is a default-added file
 
-        // convert fileJson into listPerson: List
-        JsonReader(StringReader(fileJson)).use { reader ->
-            reader.beginArray {
-                while (reader.hasNext()) {
-                    val t = Klaxon().parse<Task>(reader)
-                    taskList.add(t!!)
+            // check if file exists
+            val file = File(requireContext().filesDir, "json_file")
+
+            // * deserialize and read .json *
+            // read json file
+            val fileJson = file.readText() // todo: app crashes here
+
+            // convert fileJson into listPerson: List
+            JsonReader(StringReader(fileJson)).use { reader ->
+                reader.beginArray {
+                    while (reader.hasNext()) {
+                        val t = Klaxon().parse<Task>(reader)
+                        taskList.add(t!!)
+                    }
                 }
             }
         }
@@ -56,15 +76,8 @@ class FragmentTodo : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        RVTodo = binding.rvTodo
-        taskList = ArrayList()
-        RVAdapter = RVAdapter(taskList)
-
-        // set adapter to recycler view
-        RVTodo.adapter = RVAdapter
-
-        // adding data to list
-        readJson()
+        // create recycler view
+        createRV()
     }
 
     override fun onDestroyView() {
