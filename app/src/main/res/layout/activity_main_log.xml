@@ -10,6 +10,8 @@
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:tabSelectedTextColor="?attr/colorPrimaryVariant"
+        app:tabIndicatorColor="?attr/colorPrimaryVariant"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
