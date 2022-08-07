@@ -15,4 +15,9 @@
         android:name="com.example.homeworklogapp.FragmentDone"
         android:label="fragment_2"
         tools:layout="@layout/fragment_done" />
+    <fragment
+        android:id="@+id/fragmentAddTask"
+        android:name="com.example.homeworklogapp.FragmentAddTask"
+        android:label="fragment_add_task"
+        tools:layout="@layout/fragment_add_task" />
 </navigation>

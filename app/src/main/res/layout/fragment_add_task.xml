@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FragmentAddTask">
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:text="Subject"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etSubject"
+                android:layout_width="0dp"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="2"
+                android:background="null"
+                android:hint="Enter subject"
+                android:textAlignment="viewEnd"
+                android:textSize="18sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:text="Task"
+                android:textSize="18sp" />
+
+            <EditText
+                android:id="@+id/etTask"
+                android:layout_width="0dp"
+                android:layout_marginEnd="15dp"
+                android:layout_weight="2"
+                android:background="null"
+                android:hint="Enter assignment title"
+                android:textAlignment="viewEnd"
+                android:textSize="18sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_marginStart="15dp"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:text="Due Date"
+                android:textSize="18sp" />
+
+            <DatePicker
+                android:id="@+id/dpDueDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/notes"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/task"
+                app:layout_constraintVertical_bias=".82" />
+
+        </TableRow>
+
+    </TableLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
