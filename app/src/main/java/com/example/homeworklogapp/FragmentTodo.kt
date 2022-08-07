@@ -36,14 +36,14 @@ class FragmentTodo : Fragment() {
         val files = requireContext().fileList()
         val numFiles = files.size
 
-        if (numFiles > 1) { // if "json_file" exists, since files[0] is a default-added file
+        if (numFiles > 1) { // if "fileAssignment" exists, since files[0] is a default-added file
 
             // check if file exists
-            val file = File(requireContext().filesDir, "json_file")
+            val file = File(requireContext().filesDir, "fileAssignment")
 
             // * deserialize and read .json *
             // read json file
-            val fileJson = file.readText() // todo: app crashes here
+            val fileJson = file.readText()
 
             // convert fileJson into listPerson: List
             JsonReader(StringReader(fileJson)).use { reader ->
@@ -69,7 +69,7 @@ class FragmentTodo : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
 
         _binding = FragmentTodoBinding.inflate(inflater, container, false)
         return binding.root
