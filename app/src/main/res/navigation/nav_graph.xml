@@ -3,21 +3,29 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragment1">
+    app:startDestination="@id/fragmentTodo">
 
     <fragment
-        android:id="@+id/fragment1"
+        android:id="@+id/fragmentTodo"
         android:name="com.example.homeworklogapp.FragmentTodo"
-        android:label="fragment_1"
-        tools:layout="@layout/fragment_todo" />
+        android:label="fragmentTodo"
+        tools:layout="@layout/fragment_todo" >
+        <action
+            android:id="@+id/action_fragmentTodo_to_fragmentAddTask"
+            app:destination="@id/fragmentAddTask" />
+    </fragment>
     <fragment
-        android:id="@+id/fragment2"
+        android:id="@+id/fragmentDone"
         android:name="com.example.homeworklogapp.FragmentDone"
-        android:label="fragment_2"
+        android:label="fragmentDone"
         tools:layout="@layout/fragment_done" />
     <fragment
         android:id="@+id/fragmentAddTask"
         android:name="com.example.homeworklogapp.FragmentAddTask"
         android:label="fragment_add_task"
-        tools:layout="@layout/fragment_add_task" />
+        tools:layout="@layout/fragment_add_task" >
+        <action
+            android:id="@+id/action_fragmentAddTask_to_fragmentTodo"
+            app:destination="@id/fragmentTodo" />
+    </fragment>
 </navigation>

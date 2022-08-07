@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.JsonReader
@@ -78,6 +79,11 @@ class FragmentTodo : Fragment() {
 
         // create recycler view
         createRV()
+
+        // fabAddTask
+        binding.fabAddTask.setOnClickListener() {
+            findNavController().navigate(FragmentTodoDirections.actionFragmentTodoToFragmentAddTask()) // todo: this crashes app 
+        }
     }
 
     override fun onDestroyView() {
