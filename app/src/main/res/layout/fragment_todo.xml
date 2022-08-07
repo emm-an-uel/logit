@@ -23,6 +23,7 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@android:drawable/ic_input_add"
-        app:tint="?attr/colorOnPrimary"/>
+        app:borderWidth="0dp"
+        app:tint="?attr/colorOnPrimary" />
 
 </RelativeLayout>
