@@ -14,16 +14,18 @@
         android:theme="@style/Theme.HomeworkLogApp"
         tools:targetApi="31">
         <activity
-            android:name=".MainLogActivity"
+            android:name=".ActivityAddTask"
+            android:exported="false"
+            android:parentActivityName=".ActivityMainLog" />
+        <activity
+            android:name=".ActivityMainLog"
             android:exported="true"
             android:label="Homework Log">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
     </application>
 

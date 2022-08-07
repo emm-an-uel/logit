@@ -1,5 +1,7 @@
 package com.example.homeworklogapp
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -82,7 +84,8 @@ class FragmentTodo : Fragment() {
 
         // fabAddTask
         binding.fabAddTask.setOnClickListener() {
-            findNavController().navigate(FragmentTodoDirections.actionFragmentTodoToFragmentAddTask()) // todo: this crashes app 
+            val intent = Intent(activity, ActivityAddTask::class.java)
+            activity?.startActivity(intent)
         }
     }
 

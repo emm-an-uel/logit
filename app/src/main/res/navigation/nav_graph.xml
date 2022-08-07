@@ -9,23 +9,10 @@
         android:id="@+id/fragmentTodo"
         android:name="com.example.homeworklogapp.FragmentTodo"
         android:label="fragmentTodo"
-        tools:layout="@layout/fragment_todo" >
-        <action
-            android:id="@+id/action_fragmentTodo_to_fragmentAddTask"
-            app:destination="@id/fragmentAddTask" />
-    </fragment>
+        tools:layout="@layout/fragment_todo" />
     <fragment
         android:id="@+id/fragmentDone"
         android:name="com.example.homeworklogapp.FragmentDone"
         android:label="fragmentDone"
         tools:layout="@layout/fragment_done" />
-    <fragment
-        android:id="@+id/fragmentAddTask"
-        android:name="com.example.homeworklogapp.FragmentAddTask"
-        android:label="fragment_add_task"
-        tools:layout="@layout/fragment_add_task" >
-        <action
-            android:id="@+id/action_fragmentAddTask_to_fragmentTodo"
-            app:destination="@id/fragmentTodo" />
-    </fragment>
 </navigation>
