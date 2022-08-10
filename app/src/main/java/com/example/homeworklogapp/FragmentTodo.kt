@@ -1,19 +1,16 @@
 package com.example.homeworklogapp
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.beust.klaxon.Klaxon
 import com.beust.klaxon.JsonReader
+import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
-import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.io.StringReader
 
