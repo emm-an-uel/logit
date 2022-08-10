@@ -1,5 +1,6 @@
 package com.example.homeworklogapp
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,6 +17,28 @@ import java.io.StringReader
 
 class FragmentTodo : Fragment() {
 
+    private fun taskCompleted(completedTask: Task) {
+
+        val newTaskList = taskList
+
+        for (task in newTaskList) {
+            if (task.id == completedTask.id) {
+                newTaskList.remove(task)
+                break
+            }
+        }
+
+        // change to reflect completed status
+        completedTask.status = true
+        newTaskList.add(completedTask)
+
+        // save locally
+        val updatedFile = Klaxon().toJsonString(newTaskList)
+        requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
+            it.write(updatedFile.toByteArray())
+        }
+    }
+
     private fun swipeFunctions() {
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -29,6 +52,10 @@ class FragmentTodo : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // change task status
+                val completedTask: Task = taskList[viewHolder.adapterPosition]
+                taskCompleted(completedTask)
+
                 // this method is called when item is swiped.
                 // below line is to remove item from our array list.
                 taskList.removeAt(viewHolder.adapterPosition)
