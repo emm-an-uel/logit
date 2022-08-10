@@ -14,7 +14,7 @@ class RVAdapter (
                 viewType: Int
             ): NewViewHolder {
                 val itemView = LayoutInflater.from(parent.context).inflate(
-                    R.layout.fragment_todo,
+                    R.layout.task_rv_item,
                     parent, false
                 )
 

@@ -122,8 +122,8 @@ class ActivityAddTask : AppCompatActivity() {
         // when button "confirm" is clicked
         findViewById<Button>(R.id.btnConfirm).setOnClickListener() {
 
-            val subject = findViewById<TextView>(R.id.etSubject).toString()
-            val task = findViewById<TextView>(R.id.etTask).toString()
+            val subject = findViewById<TextView>(R.id.etSubject).text.toString()
+            val task = findViewById<TextView>(R.id.etTask).text.toString()
             val status = false // false = undone, true = done
 
             // stores subject, task, notes in local file

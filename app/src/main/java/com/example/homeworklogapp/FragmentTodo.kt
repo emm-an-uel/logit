@@ -31,7 +31,7 @@ class FragmentTodo : Fragment() {
         RVAdapter.notifyDataSetChanged()
     }
 
-    private fun readJson() { // todo: fragment is run twice - doesn't crash if readJson isnt run
+    private fun readJson() { 
 
         val files = requireContext().fileList()
         val numFiles = files.size
