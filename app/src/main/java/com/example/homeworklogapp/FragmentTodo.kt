@@ -102,6 +102,9 @@ class FragmentTodo : Fragment() {
                     while (reader.hasNext()) {
                         val t = Klaxon().parse<Task>(reader)
 
+                        // todo: previous tasks marked as done are not shown when below is changed to t!! for testing purposes
+                        // todo: ie only the most recent "marked done" task is shown
+                        // todo: i feel like i've had this issue before - check github logs
                         if (!t!!.status) { // if task is undone
                             taskList.add(t)
                         }
