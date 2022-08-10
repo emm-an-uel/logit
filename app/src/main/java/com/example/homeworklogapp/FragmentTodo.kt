@@ -74,11 +74,16 @@ class FragmentTodo : Fragment() {
                 reader.beginArray {
                     while (reader.hasNext()) {
                         val t = Klaxon().parse<Task>(reader)
-                        taskList.add(t!!)
+
+                        if (!t!!.status) { // if task is undone
+                            taskList.add(t)
+                        }
                     }
                 }
             }
         }
+
+        taskList.sortBy { it.dateInt }
     }
 
     lateinit var RVTodo: RecyclerView
