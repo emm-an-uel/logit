@@ -8,14 +8,41 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.Klaxon
 import com.beust.klaxon.JsonReader
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.io.StringReader
 
 class FragmentTodo : Fragment() {
+
+    private fun swipeFunctions() {
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                // this method is called
+                // when the item is moved.
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                // this method is called when item is swiped.
+                // below line is to remove item from our array list.
+                taskList.removeAt(viewHolder.adapterPosition)
+
+                // below line is to notify our item is removed from adapter.
+                RVAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+            }
+            // at last we are adding this
+            // to our recycler view.
+        }).attachToRecyclerView(RVTodo)
+    }
 
     private fun createRV() {
         RVTodo = binding.rvTodo
@@ -87,6 +114,9 @@ class FragmentTodo : Fragment() {
             val intent = Intent(activity, ActivityAddTask::class.java)
             activity?.startActivity(intent)
         }
+
+        // swipe functions
+        swipeFunctions()
     }
 
     override fun onDestroyView() {
