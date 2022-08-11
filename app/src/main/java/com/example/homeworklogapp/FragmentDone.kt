@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
@@ -66,7 +67,8 @@ class FragmentDone : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // change task status
                 val deletedTask: Task = doneList[viewHolder.adapterPosition]
-                taskDeleted(deletedTask)
+                val position = viewHolder.adapterPosition
+                confirmDelete(deletedTask, position)
 
                 // this method is called when item is swiped.
                 // below line is to remove item from our array list.
@@ -126,6 +128,42 @@ class FragmentDone : Fragment() {
         }
 
         doneList.sortBy { it.dateInt }
+    }
+
+    private fun confirmDelete(deletedTask: Task, position: Int) {
+        var touched = false
+
+        // alert dialog
+        val alertDialog: AlertDialog = requireContext().let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setPositiveButton("Confirm"
+                ) { dialog, id ->
+                    taskDeleted(deletedTask)
+                    touched = true
+                }
+
+                setNegativeButton("Cancel"
+                ) { dialog, id ->
+                    doneList.add(position, deletedTask)
+                    RVAdapter.notifyItemInserted(position)
+                    touched = true
+                }
+            }
+
+            builder.setMessage("Confirm delete task?")
+
+            builder.create()
+        }
+
+        alertDialog.show()
+
+        alertDialog.setOnDismissListener {
+            if (!touched) { // if touched == false (ie user touched outside dialog box)
+                doneList.add(position, deletedTask)
+                RVAdapter.notifyItemInserted(position)
+            }
+        }
     }
 
     private fun taskDeleted(deletedTask: Task) {
