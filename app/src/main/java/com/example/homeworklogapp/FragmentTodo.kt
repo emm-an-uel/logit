@@ -19,21 +19,19 @@ class FragmentTodo : Fragment() {
 
     private fun taskCompleted(completedTask: Task) {
 
-        val newTaskList = taskList
-
-        for (task in newTaskList) {
+        for (task in allList) {
             if (task.id == completedTask.id) {
-                newTaskList.remove(task)
+                allList.remove(task)
                 break
             }
         }
 
         // change to reflect completed status
         completedTask.status = true
-        newTaskList.add(completedTask)
+        allList.add(completedTask)
 
         // save locally
-        val updatedFile = Klaxon().toJsonString(newTaskList)
+        val updatedFile = Klaxon().toJsonString(allList)
         requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
             it.write(updatedFile.toByteArray())
         }
@@ -71,6 +69,7 @@ class FragmentTodo : Fragment() {
     private fun createRV() {
         RVTodo = binding.rvTodo
         taskList = ArrayList()
+        allList = ArrayList()
         RVAdapter = RVAdapter(taskList)
 
         // set adapter to recycler view
@@ -102,7 +101,9 @@ class FragmentTodo : Fragment() {
                     while (reader.hasNext()) {
                         val t = Klaxon().parse<Task>(reader)
 
-                        if (!t!!.status) { // if task is undone
+                        allList.add(t!!) // add task to allList either way
+
+                        if (!t.status) { // if task is undone
                             taskList.add(t)
                         }
                     }
@@ -116,6 +117,7 @@ class FragmentTodo : Fragment() {
     lateinit var RVTodo: RecyclerView
     lateinit var RVAdapter: RVAdapter
     lateinit var taskList: ArrayList<Task>
+    lateinit var allList: ArrayList<Task>
 
     private var _binding: FragmentTodoBinding? = null
 
