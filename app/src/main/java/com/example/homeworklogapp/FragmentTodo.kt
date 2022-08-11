@@ -17,6 +17,47 @@ import java.io.StringReader
 
 class FragmentTodo : Fragment() {
 
+    lateinit var RVTodo: RecyclerView
+    lateinit var RVAdapter: RVAdapter
+    lateinit var taskList: ArrayList<Task>
+    lateinit var allList: ArrayList<Task>
+
+    private var _binding: FragmentTodoBinding? = null
+
+    // setup view binding
+    private val binding get() = _binding!!
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+
+        _binding = FragmentTodoBinding.inflate(inflater, container, false)
+        return binding.root
+
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // create recycler view
+        createRV()
+
+        // fabAddTask
+        binding.fabAddTask.setOnClickListener() {
+            val intent = Intent(activity, ActivityAddTask::class.java)
+            activity?.startActivity(intent)
+        }
+
+        // swipe functions
+        swipeFunctions()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     private fun taskCompleted(completedTask: Task) {
 
         for (task in allList) {
@@ -112,46 +153,5 @@ class FragmentTodo : Fragment() {
         }
 
         taskList.sortBy { it.dateInt }
-    }
-
-    lateinit var RVTodo: RecyclerView
-    lateinit var RVAdapter: RVAdapter
-    lateinit var taskList: ArrayList<Task>
-    lateinit var allList: ArrayList<Task>
-
-    private var _binding: FragmentTodoBinding? = null
-
-    // setup view binding
-    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-
-        _binding = FragmentTodoBinding.inflate(inflater, container, false)
-        return binding.root
-
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        // create recycler view
-        createRV()
-
-        // fabAddTask
-        binding.fabAddTask.setOnClickListener() {
-            val intent = Intent(activity, ActivityAddTask::class.java)
-            activity?.startActivity(intent)
-        }
-
-        // swipe functions
-        swipeFunctions()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 }
