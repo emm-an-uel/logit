@@ -52,6 +52,12 @@ class FragmentDone : Fragment() {
         _binding = null
     }
 
+    // refresh recyclerView
+    override fun onResume() {
+        super.onResume()
+        createRV()
+    }
+
     private fun swipeFunctions() {
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(

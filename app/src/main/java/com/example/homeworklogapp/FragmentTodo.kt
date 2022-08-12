@@ -58,6 +58,12 @@ class FragmentTodo : Fragment() {
         _binding = null
     }
 
+    // refresh recyclerView
+    override fun onResume() {
+        super.onResume()
+        createRV()
+    }
+
     private fun taskCompleted(completedTask: Task) {
 
         for (task in allList) {
@@ -76,6 +82,9 @@ class FragmentTodo : Fragment() {
         requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
             it.write(updatedFile.toByteArray())
         }
+
+        // refresh activity
+        ActivityMainLog().refresh()
     }
 
     private fun swipeFunctions() {
