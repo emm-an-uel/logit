@@ -27,8 +27,4 @@ class ActivityMainLog : AppCompatActivity() {
             tab.text = tabTitles[position]
         }.attach()
     }
-
-    fun refresh() {
-        val num = 0
-    }
 }

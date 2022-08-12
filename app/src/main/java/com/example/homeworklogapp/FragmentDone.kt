@@ -17,7 +17,7 @@ import java.io.StringReader
 
 class FragmentDone : Fragment() {
 
-    lateinit var RVTodo: RecyclerView
+    lateinit var RVDone: RecyclerView
     lateinit var RVAdapter: RVAdapter
     lateinit var doneList: ArrayList<Task>
     lateinit var allList: ArrayList<Task>
@@ -59,6 +59,28 @@ class FragmentDone : Fragment() {
     }
 
     private fun swipeFunctions() {
+
+        // restore task
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val restoredTask = doneList[viewHolder.adapterPosition]
+                val position = viewHolder.adapterPosition
+                restoreTask(restoredTask, position)
+
+                doneList.removeAt(position)
+                RVAdapter.notifyItemRemoved(position)
+            }
+        }).attachToRecyclerView(RVDone)
+
+        // delete permanently
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -85,17 +107,17 @@ class FragmentDone : Fragment() {
             }
             // at last we are adding this
             // to our recycler view.
-        }).attachToRecyclerView(RVTodo)
+        }).attachToRecyclerView(RVDone)
     }
 
     private fun createRV() {
-        RVTodo = binding.rvDone
+        RVDone = binding.rvDone
         doneList = ArrayList()
         allList = ArrayList()
         RVAdapter = RVAdapter(doneList)
 
         // set adapter to recycler view
-        RVTodo.adapter = RVAdapter
+        RVDone.adapter = RVAdapter
 
         // adding data to list
         readJson()
@@ -134,6 +156,28 @@ class FragmentDone : Fragment() {
         }
 
         doneList.sortBy { it.dateInt }
+    }
+
+    private fun restoreTask(restoredTask: Task, position: Int) {
+        // remove task with status true from allList
+        for (task in allList) {
+            if (task.id == restoredTask.id) {
+                allList.remove(task)
+                break
+            }
+        }
+
+        // change status to false
+        restoredTask.status = false
+
+        // update allList
+        allList.add(restoredTask)
+
+        // save Json 
+        val updatedFile = Klaxon().toJsonString(allList)
+        requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
+            it.write(updatedFile.toByteArray())
+        }
     }
 
     private fun confirmDelete(deletedTask: Task, position: Int) {

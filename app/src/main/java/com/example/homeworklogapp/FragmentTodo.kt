@@ -82,9 +82,6 @@ class FragmentTodo : Fragment() {
         requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
             it.write(updatedFile.toByteArray())
         }
-
-        // refresh activity
-        ActivityMainLog().refresh()
     }
 
     private fun swipeFunctions() {
