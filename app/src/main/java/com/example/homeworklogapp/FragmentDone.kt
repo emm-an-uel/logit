@@ -1,12 +1,14 @@
 package com.example.homeworklogapp
 
+import android.R
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
@@ -14,6 +16,7 @@ import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
 import java.io.File
 import java.io.StringReader
+
 
 class FragmentDone : Fragment() {
 
@@ -73,7 +76,7 @@ class FragmentDone : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val restoredTask = doneList[viewHolder.adapterPosition]
                 val position = viewHolder.adapterPosition
-                restoreTask(restoredTask, position)
+                restoreTask(restoredTask)
 
                 doneList.removeAt(position)
                 RVAdapter.notifyItemRemoved(position)
@@ -158,7 +161,7 @@ class FragmentDone : Fragment() {
         doneList.sortBy { it.dateInt }
     }
 
-    private fun restoreTask(restoredTask: Task, position: Int) {
+    private fun restoreTask(restoredTask: Task) {
         // remove task with status true from allList
         for (task in allList) {
             if (task.id == restoredTask.id) {
@@ -173,7 +176,7 @@ class FragmentDone : Fragment() {
         // update allList
         allList.add(restoredTask)
 
-        // save Json 
+        // save Json
         val updatedFile = Klaxon().toJsonString(allList)
         requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
             it.write(updatedFile.toByteArray())
@@ -207,6 +210,10 @@ class FragmentDone : Fragment() {
         }
 
         alertDialog.show()
+        val actualColorAccent = getColor(requireContext(), R.attr.colorAccent)
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
 
         alertDialog.setOnDismissListener {
             if (!touched) { // if touched == false (ie user touched outside dialog box)
@@ -229,5 +236,14 @@ class FragmentDone : Fragment() {
         requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
             it.write(updatedFile.toByteArray())
         }
+    }
+
+    private fun getColor(context: Context, colorResId: Int): Int {
+
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
     }
 }
