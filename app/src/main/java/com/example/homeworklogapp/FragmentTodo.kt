@@ -167,7 +167,7 @@ class FragmentTodo : Fragment() {
 
     private fun clickFunctions() {
         RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
+            override fun onItemClick(position: Int) { // todo: fix crash on this line tutorial: https://www.youtube.com/watch?v=dB9JOsVx-yY
                 Toast.makeText(requireContext(), "You clicked on item no. $position", Toast.LENGTH_SHORT).show()
             }
 
