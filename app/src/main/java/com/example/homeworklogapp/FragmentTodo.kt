@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -51,6 +52,9 @@ class FragmentTodo : Fragment() {
 
         // swipe functions
         swipeFunctions()
+
+        // click functions
+        clickFunctions()
     }
 
     override fun onDestroyView() {
@@ -159,5 +163,14 @@ class FragmentTodo : Fragment() {
         }
 
         taskList.sortBy { it.dateInt }
+    }
+
+    private fun clickFunctions() {
+        RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                Toast.makeText(requireContext(), "You clicked on item no. $position", Toast.LENGTH_SHORT).show()
+            }
+
+        })
     }
 }
