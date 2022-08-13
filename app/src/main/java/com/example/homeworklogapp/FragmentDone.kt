@@ -1,6 +1,7 @@
 package com.example.homeworklogapp
 
 import android.R
+import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.io.StringReader
 
@@ -48,6 +50,11 @@ class FragmentDone : Fragment() {
 
         // swipe functions
         swipeFunctions()
+
+        // clearAll
+        binding.fabClearAll.setOnClickListener() {
+            confirmClearAll()
+        }
     }
 
     override fun onDestroyView() {
@@ -245,5 +252,62 @@ class FragmentDone : Fragment() {
         val color = typedArray.getColor(0, 0)
         typedArray.recycle()
         return color
+    }
+
+    private fun confirmClearAll() {
+
+        if (doneList.size > 0) { // only if there's tasks being shown
+            // alert dialog
+            val alertDialog: AlertDialog = requireContext().let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setPositiveButton(
+                        "Confirm"
+                    ) { dialog, id ->
+                        clearAll()
+                    }
+
+                    setNegativeButton(
+                        "Cancel"
+                    ) { dialog, id ->
+                        // do nothing
+                    }
+                }
+
+                builder.setMessage("Confirm clear all tasks?")
+
+                builder.create()
+            }
+
+            alertDialog.show()
+            val actualColorAccent = getColor(requireContext(), R.attr.colorAccent)
+
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
+        } else {
+            Snackbar.make(requireContext(), requireView(), "No tasks to delete", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun clearAll() {
+        var n = 0
+        while (n < allList.size) {
+            val task = allList[n]
+
+            if (task.status) {
+                allList.remove(task)
+            } else {
+                n++
+            }
+        }
+
+        // save locally
+        val updatedFile = Klaxon().toJsonString(allList)
+        requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
+            it.write(updatedFile.toByteArray())
+        }
+
+        // refresh RV
+        createRV()
     }
 }
