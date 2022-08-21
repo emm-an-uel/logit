@@ -1,5 +1,6 @@
 package com.example.homeworklogapp
 
+import android.app.ProgressDialog.show
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -129,7 +130,7 @@ class FragmentTodo : Fragment() {
         // item click listener
         RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
-                Toast.makeText(requireContext(), "You clicked on item no. $position", Toast.LENGTH_SHORT).show()
+                
             }
 
         })
