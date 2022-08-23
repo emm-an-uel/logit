@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.fragment.findNavController
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -17,8 +18,77 @@ import com.example.homeworklogapp.databinding.ActivityAddTaskBinding
 import java.io.File
 import java.io.StringReader
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ActivityAddTask : AppCompatActivity() {
+
+    lateinit var dueDate: String
+    lateinit var listTask: ArrayList<Task>
+    var dateInt = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        val editTaskId = intent.getStringExtra("taskId")
+
+        if (editTaskId != null) {
+            val currentTask = findCurrentTask(editTaskId)
+        }
+
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_add_task)
+
+        // datePicker stuff
+        val today = Calendar.getInstance()
+        val datePicker: DatePicker = findViewById(R.id.dpDueDate)
+
+        datePicker.init(today.get(Calendar.YEAR),
+            today.get(Calendar.MONTH),
+            today.get(Calendar.DAY_OF_MONTH)) { view, year, month, day ->
+            val month = month + 1
+            dueDate = "$day $month $year"
+
+            dateInt = createDateInt(day, month, year)
+        }
+
+        // when button "confirm" is clicked
+        findViewById<Button>(R.id.btnConfirm).setOnClickListener() {
+
+            val subject = findViewById<TextView>(R.id.etSubject).text.toString()
+            val task = findViewById<TextView>(R.id.etTask).text.toString()
+            val status = false // false = undone, true = done
+
+            // stores subject, task, notes in local file
+            storeLocally(subject, task, status)
+
+            // start ActivityMainLog
+            val intent = Intent(this, ActivityMainLog::class.java)
+            startActivity(intent)
+            finish()
+        }
+    }
+
+    private fun findCurrentTask(editTaskId: String) {
+        val file = File(this.filesDir, "fileAssignment")
+
+        // * deserialize and read .json *
+        // read json file
+        val fileJson = file.readText()
+
+        // convert fileJson into listPerson: List
+        JsonReader(StringReader(fileJson)).use { reader ->
+            reader.beginArray {
+                while (reader.hasNext()) {
+                    val t = Klaxon().parse<Task>(reader)
+                    listTask.add(t!!)
+                }
+            }
+        }
+
+        for (task in listTask) {
+            if (task.id == editTaskId) {
+                
+            }
+        }
+    }
 
     private fun createDateInt(day: Int, month: Int, year: Int): Int {
         // * dueDateSort will be in format YYYYMMDD for easy sorting of due dates *
@@ -96,43 +166,6 @@ class ActivityAddTask : AppCompatActivity() {
             this.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
                 it.write(updatedFile.toByteArray())
             }
-        }
-    }
-
-    lateinit var dueDate: String
-    var dateInt = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_task)
-
-        // datePicker stuff
-        val today = Calendar.getInstance()
-        val datePicker: DatePicker = findViewById(R.id.dpDueDate)
-
-        datePicker.init(today.get(Calendar.YEAR),
-        today.get(Calendar.MONTH),
-        today.get(Calendar.DAY_OF_MONTH)) { view, year, month, day ->
-            val month = month + 1
-            dueDate = "$day $month $year"
-
-            dateInt = createDateInt(day, month, year)
-        }
-
-        // when button "confirm" is clicked
-        findViewById<Button>(R.id.btnConfirm).setOnClickListener() {
-
-            val subject = findViewById<TextView>(R.id.etSubject).text.toString()
-            val task = findViewById<TextView>(R.id.etTask).text.toString()
-            val status = false // false = undone, true = done
-
-            // stores subject, task, notes in local file
-            storeLocally(subject, task, status)
-
-            // start ActivityMainLog
-            val intent = Intent(this, ActivityMainLog::class.java)
-            startActivity(intent)
-            finish()
         }
     }
 }

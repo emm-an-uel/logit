@@ -1,5 +1,6 @@
 package com.example.homeworklogapp
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +10,7 @@ import androidx.fragment.app.DialogFragment
 import com.example.homeworklogapp.databinding.FragmentEditTaskDialogBinding
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
 
-class FragmentEditTaskDialog (val selectedTask: Task) : DialogFragment() {
+class FragmentEditTaskDialog (private val selectedTask: Task) : DialogFragment() {
 
     private var _binding: FragmentEditTaskDialogBinding? = null
 
@@ -32,5 +33,14 @@ class FragmentEditTaskDialog (val selectedTask: Task) : DialogFragment() {
         binding.tvTask.text = selectedTask.task
         binding.tvSubject.text = selectedTask.subject
         binding.tvDueDate.text = selectedTask.dueDate
+
+        // btn Edit
+        binding.btnEdit.setOnClickListener() {
+
+            // start ActivityAddTask
+            val intent = Intent(activity, ActivityAddTask::class.java)
+            intent.putExtra("taskId", selectedTask.id)
+            activity?.startActivity(intent)
+        }
     }
 }
