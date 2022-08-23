@@ -2,21 +2,16 @@ package com.example.homeworklogapp
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.TextView
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.navigation.fragment.findNavController
+import androidx.appcompat.app.AppCompatActivity
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
-import com.example.homeworklogapp.databinding.ActivityAddTaskBinding
 import java.io.File
 import java.io.StringReader
+import java.time.LocalDate
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -24,19 +19,24 @@ class ActivityAddTask : AppCompatActivity() {
 
     lateinit var dueDate: String
     lateinit var listTask: ArrayList<Task>
+    lateinit var currentTask: Task
     var dateInt = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val editTaskId = intent.getStringExtra("taskId")
 
         if (editTaskId != null) {
-            val currentTask = findCurrentTask(editTaskId)
+            currentTask = findCurrentTask(editTaskId)
         }
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
 
         // datePicker stuff
+        if (editTaskId != null) {
+            val today = LocalDate.parse(currentTask.dueDate) // todo: parse dueDate into date format
+        }
+
         val today = Calendar.getInstance()
         val datePicker: DatePicker = findViewById(R.id.dpDueDate)
 
@@ -66,14 +66,18 @@ class ActivityAddTask : AppCompatActivity() {
         }
     }
 
-    private fun findCurrentTask(editTaskId: String) {
+    private fun findCurrentTask(editTaskId: String): Task {
+
+        listTask = ArrayList()
+
         val file = File(this.filesDir, "fileAssignment")
+        lateinit var currentTask: Task
 
         // * deserialize and read .json *
         // read json file
         val fileJson = file.readText()
 
-        // convert fileJson into listPerson: List
+        // convert fileJson into listTask: List
         JsonReader(StringReader(fileJson)).use { reader ->
             reader.beginArray {
                 while (reader.hasNext()) {
@@ -85,9 +89,12 @@ class ActivityAddTask : AppCompatActivity() {
 
         for (task in listTask) {
             if (task.id == editTaskId) {
-                
+                currentTask = task
+                break
             }
         }
+
+        return currentTask
     }
 
     private fun createDateInt(day: Int, month: Int, year: Int): Int {
