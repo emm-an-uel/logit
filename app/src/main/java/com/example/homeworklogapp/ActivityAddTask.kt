@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.widget.Button
 import android.widget.DatePicker
+import android.widget.EditText
 import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -28,46 +30,60 @@ class ActivityAddTask : AppCompatActivity() {
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
-        val editTaskId = intent.getStringExtra("taskId")
-
-        if (editTaskId != null) {
-            currentTask = findCurrentTask(editTaskId)
-        }
-
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
 
-        // datePicker stuff
-        today = Calendar.getInstance() // set to today's date by default
+        val editTaskId = intent.getStringExtra("taskId")
 
-        if (editTaskId != null) {
+        if (editTaskId != null) { // if there's a task to be edited
+            currentTask = findCurrentTask(editTaskId)
+
+            // datePicker stuff
             val dateList = currentTask.dueDate.split(" ").toList()
 
-            val year = dateList[2].toInt()
-            val month = dateList[1].toInt() - 1
-            val day = dateList[0].toInt()
+            val dueYear = dateList[2].toInt()
+            val dueMonth = dateList[1].toInt() - 1
+            val dueDay = dateList[0].toInt()
 
-            today.set(year, month, day) // convert to dueDate if there's a task being edited
-        }
+            today = Calendar.getInstance()
+            today.set(dueYear, dueMonth, dueDay) // convert to dueDate if there's a task being edited
 
-        val datePicker: DatePicker = findViewById(R.id.dpDueDate)
+            val datePicker: DatePicker = findViewById(R.id.dpDueDate)
+            datePicker.init(today.get(Calendar.YEAR),
+                today.get(Calendar.MONTH),
+                today.get(Calendar.DAY_OF_MONTH)) { view, year, month, day ->
+                val month = month + 1
+                dueDate = "$day $month $year"
 
-        datePicker.init(today.get(Calendar.YEAR),
-            today.get(Calendar.MONTH),
-            today.get(Calendar.DAY_OF_MONTH)) { view, year, month, day ->
-            val month = month + 1
-            dueDate = "$day $month $year"
+                dateInt = createDateInt(day, month, year)
+            }
 
-            dateInt = createDateInt(day, month, year)
+            // set EditTexts' content appropriately
+            findViewById<EditText>(R.id.etTask).text = currentTask.task.toEditable()
+            findViewById<EditText>(R.id.etSubject).text = currentTask.subject.toEditable()
+
+        } else { // if there's no task to be edited
+            today = Calendar.getInstance()
+            val datePicker: DatePicker = findViewById(R.id.dpDueDate)
+
+            datePicker.init(today.get(Calendar.YEAR),
+                today.get(Calendar.MONTH),
+                today.get(Calendar.DAY_OF_MONTH)) { view, year, month, day ->
+                val month = month + 1
+                dueDate = "$day $month $year"
+
+                dateInt = createDateInt(day, month, year)
+            }
         }
 
         // when button "confirm" is clicked
         findViewById<Button>(R.id.btnConfirm).setOnClickListener() {
 
             // todo: if any of the fields aren't filled, raise error
+            // todo: trim - remove end space
 
-            val subject = findViewById<TextView>(R.id.etSubject).text.toString()
-            val task = findViewById<TextView>(R.id.etTask).text.toString()
+            val subject = findViewById<EditText>(R.id.etSubject).text.toString()
+            val task = findViewById<EditText>(R.id.etTask).text.toString()
             val status = false // false = undone, true = done
 
             // stores subject, task, notes in local file
@@ -80,8 +96,9 @@ class ActivityAddTask : AppCompatActivity() {
         }
     }
 
-    private fun findCurrentTask(editTaskId: String): Task {
+    private fun String.toEditable(): Editable = Editable.Factory.getInstance().newEditable(this)
 
+    private fun findCurrentTask(editTaskId: String): Task {
         listTask = ArrayList()
 
         val file = File(this.filesDir, "fileAssignment")
@@ -135,7 +152,6 @@ class ActivityAddTask : AppCompatActivity() {
     }
 
     private fun storeLocally(subject : String, task : String, status: Boolean) {
-
         val id = UUID.randomUUID().toString()
 
         // create val "assignment" using Class "Assignment" parameters
