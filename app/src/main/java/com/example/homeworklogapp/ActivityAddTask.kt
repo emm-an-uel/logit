@@ -2,16 +2,19 @@ package com.example.homeworklogapp
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.TextView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import java.io.File
 import java.io.StringReader
 import java.time.LocalDate
+import java.time.Year
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -22,6 +25,7 @@ class ActivityAddTask : AppCompatActivity() {
     lateinit var currentTask: Task
     var dateInt = 0
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         val editTaskId = intent.getStringExtra("taskId")
 
@@ -34,7 +38,12 @@ class ActivityAddTask : AppCompatActivity() {
 
         // datePicker stuff
         if (editTaskId != null) {
-            val today = LocalDate.parse(currentTask.dueDate) // todo: parse dueDate into date format
+            val dateString = currentTask.dateInt.toString()
+            // insert "-" between year, month, day values (to allow parse to work)
+            var dueDateYYYYMMDD = StringBuilder(dateString).insert(4, "-")
+            dueDateYYYYMMDD = StringBuilder(dueDateYYYYMMDD).insert(7, "-")
+
+            val today = LocalDate.parse(dueDateYYYYMMDD)
         }
 
         val today = Calendar.getInstance()
@@ -51,6 +60,8 @@ class ActivityAddTask : AppCompatActivity() {
 
         // when button "confirm" is clicked
         findViewById<Button>(R.id.btnConfirm).setOnClickListener() {
+
+            // todo: if any of the fields aren't filled, raise error
 
             val subject = findViewById<TextView>(R.id.etSubject).text.toString()
             val task = findViewById<TextView>(R.id.etTask).text.toString()
