@@ -36,6 +36,8 @@ class ActivityAddTask : AppCompatActivity() {
         val editTaskId = intent.getStringExtra("taskId")
 
         if (editTaskId != null) { // if there's a task to be edited
+            // todo: fix crash when task is edited
+            
             currentTask = findCurrentTask(editTaskId)
 
             // datePicker stuff
