@@ -23,6 +23,7 @@ class ActivityAddTask : AppCompatActivity() {
     lateinit var dueDate: String
     lateinit var listTask: ArrayList<Task>
     lateinit var currentTask: Task
+    lateinit var today: Calendar
     var dateInt = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -37,16 +38,18 @@ class ActivityAddTask : AppCompatActivity() {
         setContentView(R.layout.activity_add_task)
 
         // datePicker stuff
-        if (editTaskId != null) {
-            val dateString = currentTask.dateInt.toString()
-            // insert "-" between year, month, day values (to allow parse to work)
-            var dueDateYYYYMMDD = StringBuilder(dateString).insert(4, "-")
-            dueDateYYYYMMDD = StringBuilder(dueDateYYYYMMDD).insert(7, "-")
+        today = Calendar.getInstance() // set to today's date by default
 
-            val today = LocalDate.parse(dueDateYYYYMMDD)
+        if (editTaskId != null) {
+            val dateList = currentTask.dueDate.split(" ").toList()
+
+            val year = dateList[2].toInt()
+            val month = dateList[1].toInt() - 1
+            val day = dateList[0].toInt()
+
+            today.set(year, month, day) // convert to dueDate if there's a task being edited
         }
 
-        val today = Calendar.getInstance()
         val datePicker: DatePicker = findViewById(R.id.dpDueDate)
 
         datePicker.init(today.get(Calendar.YEAR),
