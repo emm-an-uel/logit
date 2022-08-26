@@ -27,6 +27,8 @@ class ActivityAddTask : AppCompatActivity() {
     lateinit var etTask: EditText
     lateinit var etSubject: EditText
 
+    var editedTask = false
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,8 @@ class ActivityAddTask : AppCompatActivity() {
         val editTaskId = intent.getStringExtra("taskId")
 
         if (editTaskId != null) { // if there's a task to be edited
+
+            editedTask = true
 
             currentTask = findCurrentTask(editTaskId)
 
@@ -194,6 +198,16 @@ class ActivityAddTask : AppCompatActivity() {
                     while (reader.hasNext()) {
                         val assignment = Klaxon().parse<Task>(reader)
                         listAssignments.add(assignment!!)
+                    }
+                }
+            }
+
+            // delete original task (if applicable)
+            if (editedTask) { // if there was a task which got edited
+                for (task in listAssignments) {
+                    if (task.id == currentTask.id) {
+                        listAssignments.remove(task)
+                        break
                     }
                 }
             }
