@@ -42,11 +42,11 @@ class ActivityAddTask : AppCompatActivity() {
             // datePicker stuff
             val dateList = currentTask.dueDate.split(" ").toList()
 
-            var dueYear = dateList[2].toInt()
-            var dueMonth = dateList[1].toInt() - 1
-            var dueDay = dateList[0].toInt()
+            val dueYear = dateList[2].toInt()
+            val dueMonth = dateList[1].toInt() - 1
+            val dueDay = dateList[0].toInt()
 
-            val dueMonthCurrent = dateList[1].toInt() // dueMonth is month - 1, which satisfies DatePicker but is not the actual month 
+            val dueMonthCurrent = dateList[1].toInt() // dueMonth is month - 1, which satisfies DatePicker but is not the actual month
             dueDate = "$dueDay $dueMonthCurrent $dueYear"
             dateInt = createDateInt(dueDay, dueMonthCurrent, dueYear)
 
@@ -57,13 +57,10 @@ class ActivityAddTask : AppCompatActivity() {
             datePicker.init(today.get(Calendar.YEAR),
                 today.get(Calendar.MONTH),
                 today.get(Calendar.DAY_OF_MONTH)) { view, year, month, day ->
+                val month = month + 1
 
-                dueYear = year
-                dueMonth = month + 1
-                dueDay = day
-
-                dueDate = "$dueDay $dueMonth $dueYear"
-                dateInt = createDateInt(dueDay, dueMonth, dueYear)
+                dueDate = "$day $month $year"
+                dateInt = createDateInt(day, month, year)
             }
 
             // set EditTexts' content appropriately
@@ -74,12 +71,19 @@ class ActivityAddTask : AppCompatActivity() {
             today = Calendar.getInstance()
             val datePicker: DatePicker = findViewById(R.id.dpDueDate)
 
+            // default due date is today's date
+            val todayDay = today.get(Calendar.DAY_OF_MONTH)
+            val todayMonth = today.get(Calendar.MONTH) + 1
+            val todayYear = today.get(Calendar.YEAR)
+            dueDate = "$todayDay $todayMonth $todayYear"
+            dateInt = createDateInt(todayDay, todayMonth, todayYear)
+
             datePicker.init(today.get(Calendar.YEAR),
                 today.get(Calendar.MONTH),
                 today.get(Calendar.DAY_OF_MONTH)) { view, year, month, day ->
                 val month = month + 1
-                dueDate = "$day $month $year"
 
+                dueDate = "$day $month $year"
                 dateInt = createDateInt(day, month, year)
             }
         }
