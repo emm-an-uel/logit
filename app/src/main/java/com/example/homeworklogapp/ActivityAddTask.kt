@@ -36,16 +36,19 @@ class ActivityAddTask : AppCompatActivity() {
         val editTaskId = intent.getStringExtra("taskId")
 
         if (editTaskId != null) { // if there's a task to be edited
-            // todo: fix crash when task is edited
-            
+
             currentTask = findCurrentTask(editTaskId)
 
             // datePicker stuff
             val dateList = currentTask.dueDate.split(" ").toList()
 
-            val dueYear = dateList[2].toInt()
-            val dueMonth = dateList[1].toInt() - 1
-            val dueDay = dateList[0].toInt()
+            var dueYear = dateList[2].toInt()
+            var dueMonth = dateList[1].toInt() - 1
+            var dueDay = dateList[0].toInt()
+
+            val dueMonthCurrent = dateList[1].toInt() // dueMonth is month - 1, which satisfies DatePicker but is not the actual month 
+            dueDate = "$dueDay $dueMonthCurrent $dueYear"
+            dateInt = createDateInt(dueDay, dueMonthCurrent, dueYear)
 
             today = Calendar.getInstance()
             today.set(dueYear, dueMonth, dueDay) // convert to dueDate if there's a task being edited
@@ -54,10 +57,13 @@ class ActivityAddTask : AppCompatActivity() {
             datePicker.init(today.get(Calendar.YEAR),
                 today.get(Calendar.MONTH),
                 today.get(Calendar.DAY_OF_MONTH)) { view, year, month, day ->
-                val month = month + 1
-                dueDate = "$day $month $year"
 
-                dateInt = createDateInt(day, month, year)
+                dueYear = year
+                dueMonth = month + 1
+                dueDay = day
+
+                dueDate = "$dueDay $dueMonth $dueYear"
+                dateInt = createDateInt(dueDay, dueMonth, dueYear)
             }
 
             // set EditTexts' content appropriately
