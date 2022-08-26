@@ -220,7 +220,7 @@ class FragmentDone : Fragment() {
                 }
             }
 
-            builder.setMessage("Confirm delete task?")
+            builder.setMessage("Clear this task?")
 
             builder.create()
         }
@@ -283,7 +283,7 @@ class FragmentDone : Fragment() {
                     }
                 }
 
-                builder.setMessage("Confirm clear all tasks?")
+                builder.setMessage("Clear all tasks?")
 
                 builder.create()
             }

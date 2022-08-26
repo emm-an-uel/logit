@@ -98,10 +98,9 @@ class ActivityAddTask : AppCompatActivity() {
         findViewById<Button>(R.id.btnConfirm).setOnClickListener() {
 
             // todo: if any of the fields aren't filled, raise error
-            // todo: trim - remove end space
 
-            val subject = etSubject.text.toString()
-            val task = etTask.text.toString()
+            val subject = etSubject.text.toString().trim()
+            val task = etTask.text.toString().trim()
             val status = false // false = undone, true = done
 
             // stores subject, task, notes in local file

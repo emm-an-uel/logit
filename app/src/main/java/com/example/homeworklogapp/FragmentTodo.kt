@@ -128,8 +128,13 @@ class FragmentTodo : Fragment() {
         // item click listener
         RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
+
                 val selectedTask = taskList[position]
-                FragmentEditTaskDialog(selectedTask).show(childFragmentManager, "editTaskDialog")
+
+                // start ActivityAddTask
+                val intent = Intent(activity, ActivityAddTask::class.java)
+                intent.putExtra("taskId", selectedTask.id)
+                activity?.startActivity(intent)
             }
 
         })
