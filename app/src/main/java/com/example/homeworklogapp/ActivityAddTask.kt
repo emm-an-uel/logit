@@ -8,17 +8,13 @@ import android.text.Editable
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
-import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import java.io.File
 import java.io.StringReader
-import java.time.LocalDate
-import java.time.Year
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ActivityAddTask : AppCompatActivity() {
 
@@ -28,10 +24,16 @@ class ActivityAddTask : AppCompatActivity() {
     lateinit var today: Calendar
     var dateInt = 0
 
+    lateinit var etTask: EditText
+    lateinit var etSubject: EditText
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
+
+        etTask = findViewById(R.id.etTask)
+        etSubject = findViewById(R.id.etSubject)
 
         val editTaskId = intent.getStringExtra("taskId")
 
@@ -64,8 +66,8 @@ class ActivityAddTask : AppCompatActivity() {
             }
 
             // set EditTexts' content appropriately
-            findViewById<EditText>(R.id.etTask).text = currentTask.task.toEditable()
-            findViewById<EditText>(R.id.etSubject).text = currentTask.subject.toEditable()
+            etTask.text = currentTask.task.toEditable()
+            etSubject.text = currentTask.subject.toEditable()
 
         } else { // if there's no task to be edited
             today = Calendar.getInstance()
@@ -94,8 +96,8 @@ class ActivityAddTask : AppCompatActivity() {
             // todo: if any of the fields aren't filled, raise error
             // todo: trim - remove end space
 
-            val subject = findViewById<EditText>(R.id.etSubject).text.toString()
-            val task = findViewById<EditText>(R.id.etTask).text.toString()
+            val subject = etSubject.text.toString()
+            val task = etTask.text.toString()
             val status = false // false = undone, true = done
 
             // stores subject, task, notes in local file
