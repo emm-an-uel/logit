@@ -294,7 +294,7 @@ class FragmentDone : Fragment() {
             alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
             alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
         } else {
-            Snackbar.make(requireContext(), requireView(), "No tasks to delete", Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(requireContext(), requireView(), "No tasks to clear", Snackbar.LENGTH_SHORT).show()
         }
     }
 

@@ -97,9 +97,14 @@ class ActivityAddTask : AppCompatActivity() {
         // when button "confirm" is clicked
         findViewById<Button>(R.id.btnConfirm).setOnClickListener() {
 
-            // todo: if any of the fields aren't filled, raise error
+            // todo: show confirm button only if task is filled 
 
-            val subject = etSubject.text.toString().trim()
+            val subject = if (etSubject.text.toString() == "") { // subject = "Other" if not filled by user
+                "Other"
+            } else {
+                etSubject.text.toString().trim()
+            }
+
             val task = etTask.text.toString().trim()
             val status = false // false = undone, true = done
 
