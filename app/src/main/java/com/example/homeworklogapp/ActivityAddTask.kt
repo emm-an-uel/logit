@@ -57,6 +57,7 @@ class ActivityAddTask : AppCompatActivity() {
             val dueMonth = dateList[1].toInt() - 1
             val dueDay = dateList[0].toInt()
 
+            // default due date = current due date
             val dueMonthCurrent = dateList[1].toInt() // dueMonth is month - 1, which satisfies DatePicker but is not the actual month
             dueDate = "$dueDay $dueMonthCurrent $dueYear"
             dateInt = createDateInt(dueDay, dueMonthCurrent, dueYear)
@@ -72,6 +73,13 @@ class ActivityAddTask : AppCompatActivity() {
 
                 dueDate = "$day $month $year"
                 dateInt = createDateInt(day, month, year)
+
+                // set btnConfirm's visibility
+                if (dueDate != currentTask.dueDate) { // if due date has been changed
+                    btnConfirm.visibility = View.VISIBLE
+                } else {
+                    btnConfirm.visibility = View.INVISIBLE
+                }
             }
 
             // set EditTexts' content appropriately
@@ -112,9 +120,6 @@ class ActivityAddTask : AppCompatActivity() {
 
         // when button "confirm" is clicked
         btnConfirm.setOnClickListener() {
-
-            // todo: show confirm button only if task is filled
-
             val subject = if (etSubject.text.toString() == "") { // subject = "Other" if not filled by user
                 "Other"
             } else {
@@ -170,9 +175,9 @@ class ActivityAddTask : AppCompatActivity() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (etSubject.text.toString().trim() == currentTask.subject) { // if task is unchanged
+            if (etSubject.text.toString().trim() == currentTask.subject) { // if subject is unchanged
                 btnConfirm.visibility = View.INVISIBLE
-            } else if (etSubject.text.toString().trim() == "") { // if task is empty
+            } else if (etSubject.text.toString().trim() == "") { // if subject is empty
                 btnConfirm.visibility = View.INVISIBLE
             } else {
                 btnConfirm.visibility = View.VISIBLE
