@@ -5,9 +5,12 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.beust.klaxon.JsonReader
@@ -26,6 +29,7 @@ class ActivityAddTask : AppCompatActivity() {
 
     lateinit var etTask: EditText
     lateinit var etSubject: EditText
+    lateinit var btnConfirm: Button
 
     var editedTask = false
 
@@ -36,6 +40,7 @@ class ActivityAddTask : AppCompatActivity() {
 
         etTask = findViewById(R.id.etTask)
         etSubject = findViewById(R.id.etSubject)
+        btnConfirm = findViewById(R.id.btnConfirm)
 
         val editTaskId = intent.getStringExtra("taskId")
 
@@ -94,10 +99,21 @@ class ActivityAddTask : AppCompatActivity() {
             }
         }
 
-        // when button "confirm" is clicked
-        findViewById<Button>(R.id.btnConfirm).setOnClickListener() {
+        // set btnConfirm to invisible by default
+        btnConfirm.visibility = View.INVISIBLE
 
-            // todo: show confirm button only if task is filled 
+        // change to visible when either a) something changed if existing task or b) etTask is filled if new task
+        if (editedTask) {
+            etTask.addTextChangedListener(textWatcherTask)
+            etSubject.addTextChangedListener(textWatcherSubject)
+        } else {
+            etTask.addTextChangedListener(textWatcher)
+        }
+
+        // when button "confirm" is clicked
+        btnConfirm.setOnClickListener() {
+
+            // todo: show confirm button only if task is filled
 
             val subject = if (etSubject.text.toString() == "") { // subject = "Other" if not filled by user
                 "Other"
@@ -115,6 +131,52 @@ class ActivityAddTask : AppCompatActivity() {
             val intent = Intent(this, ActivityMainLog::class.java)
             startActivity(intent)
             finish()
+        }
+    }
+
+    private val textWatcher = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (etTask.text.toString().trim() != "") {
+                btnConfirm.visibility = View.VISIBLE
+            } else {
+                btnConfirm.visibility = View.INVISIBLE
+            }
+        }
+    }
+
+    private val textWatcherTask = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (etTask.text.toString().trim() == currentTask.task) { // if task is unchanged
+                btnConfirm.visibility = View.INVISIBLE
+            } else if (etTask.text.toString().trim() == "") { // if task is empty
+                btnConfirm.visibility = View.INVISIBLE
+            } else {
+                btnConfirm.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private val textWatcherSubject = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (etSubject.text.toString().trim() == currentTask.subject) { // if task is unchanged
+                btnConfirm.visibility = View.INVISIBLE
+            } else if (etSubject.text.toString().trim() == "") { // if task is empty
+                btnConfirm.visibility = View.INVISIBLE
+            } else {
+                btnConfirm.visibility = View.VISIBLE
+            }
         }
     }
 
