@@ -16,12 +16,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.io.StringReader
 
 
 class FragmentDone : Fragment() {
+
+    lateinit var fabClearAll: FloatingActionButton
 
     lateinit var RVDone: RecyclerView
     lateinit var RVAdapter: RVAdapter
@@ -51,11 +54,6 @@ class FragmentDone : Fragment() {
 
         // swipe functions
         swipeFunctions()
-
-        // clearAll
-        binding.fabClearAll.setOnClickListener() {
-            confirmClearAll()
-        }
     }
 
     override fun onDestroyView() {
@@ -88,6 +86,8 @@ class FragmentDone : Fragment() {
 
                 doneList.removeAt(position)
                 RVAdapter.notifyItemRemoved(position)
+
+                fabVisibility()
             }
         }).attachToRecyclerView(RVDone)
 
@@ -121,6 +121,19 @@ class FragmentDone : Fragment() {
         }).attachToRecyclerView(RVDone)
     }
 
+    private fun fabVisibility() {
+        fabClearAll = binding.fabClearAll // declare fabClearAll
+
+        if (doneList.size == 0) {
+            fabClearAll.visibility = View.INVISIBLE
+        } else {
+            fabClearAll.visibility = View.VISIBLE
+            fabClearAll.setOnClickListener() {
+                confirmClearAll()
+            }
+        }
+    }
+
     private fun createRV() {
         RVDone = binding.rvDone
         doneList = ArrayList()
@@ -142,6 +155,8 @@ class FragmentDone : Fragment() {
         })
 
         RVAdapter.notifyDataSetChanged()
+
+        fabVisibility()
     }
 
     private fun readJson() {
