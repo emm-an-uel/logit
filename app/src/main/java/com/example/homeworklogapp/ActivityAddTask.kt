@@ -10,7 +10,6 @@ import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
-import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.beust.klaxon.JsonReader
@@ -30,6 +29,7 @@ class ActivityAddTask : AppCompatActivity() {
     lateinit var etTask: EditText
     lateinit var etSubject: EditText
     lateinit var btnConfirm: Button
+    lateinit var etNotes: EditText
 
     var editedTask = false
 
@@ -41,6 +41,7 @@ class ActivityAddTask : AppCompatActivity() {
         etTask = findViewById(R.id.etTask)
         etSubject = findViewById(R.id.etSubject)
         btnConfirm = findViewById(R.id.btnConfirm)
+        etNotes = findViewById(R.id.etNotes)
 
         val editTaskId = intent.getStringExtra("taskId")
 
@@ -85,6 +86,7 @@ class ActivityAddTask : AppCompatActivity() {
             // set EditTexts' content appropriately
             etTask.text = currentTask.task.toEditable()
             etSubject.text = currentTask.subject.toEditable()
+            etNotes.text = currentTask.notes.toEditable()
 
         } else { // if there's no task to be edited
             today = Calendar.getInstance()
@@ -114,6 +116,7 @@ class ActivityAddTask : AppCompatActivity() {
         if (editedTask) {
             etTask.addTextChangedListener(textWatcherTask)
             etSubject.addTextChangedListener(textWatcherSubject)
+            etNotes.addTextChangedListener(textWatcherNotes)
         } else {
             etTask.addTextChangedListener(textWatcher)
         }
@@ -132,8 +135,10 @@ class ActivityAddTask : AppCompatActivity() {
             val task = etTask.text.toString().trim()
             val status = false // false = undone, true = done
 
+            val notes = etNotes.text.toString().trim()
+
             // stores subject, task, notes in local file
-            storeLocally(subject, task, status)
+            storeLocally(subject, task, status, notes)
 
             // start ActivityMainLog
             val intent = Intent(this, ActivityMainLog::class.java)
@@ -180,7 +185,19 @@ class ActivityAddTask : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etSubject.text.toString().trim() == currentTask.subject) { // if subject is unchanged
                 btnConfirm.visibility = View.INVISIBLE
-            } else if (etSubject.text.toString().trim() == "") { // if subject is empty
+            } else {
+                btnConfirm.visibility = View.VISIBLE
+            }
+        }
+    }
+
+    private val textWatcherNotes = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (etNotes.text.toString().trim() == currentTask.notes) { // if notes is unchanged
                 btnConfirm.visibility = View.INVISIBLE
             } else {
                 btnConfirm.visibility = View.VISIBLE
@@ -243,11 +260,11 @@ class ActivityAddTask : AppCompatActivity() {
         return(dateInt)
     }
 
-    private fun storeLocally(subject : String, task : String, status: Boolean) {
+    private fun storeLocally(subject : String, task : String, status: Boolean, notes: String) {
         val id = UUID.randomUUID().toString()
 
         // create val "assignment" using Class "Task" parameters
-        val newAssignment = Task(id, subject, task, dueDate, dateInt, status)
+        val newAssignment = Task(id, subject, task, dueDate, dateInt, status, notes)
 
         // check if there's existing "fileAssignments"
         var fileExists = false
