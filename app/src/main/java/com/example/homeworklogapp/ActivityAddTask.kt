@@ -123,9 +123,7 @@ class ActivityAddTask : AppCompatActivity() {
 
         // when button "confirm" is clicked
         btnConfirm.setOnClickListener() {
-
-            //todo: "notes" section of a task
-
+            
             val subject = if (etSubject.text.toString() == "") { // subject = "Other" if not filled by user
                 "Other"
             } else {
