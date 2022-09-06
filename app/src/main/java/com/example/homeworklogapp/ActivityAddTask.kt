@@ -6,6 +6,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
@@ -78,8 +79,10 @@ class ActivityAddTask : AppCompatActivity() {
                 // set btnConfirm's clickability
                 if (dueDate != currentTask.dueDate) { // if due date has been changed
                     btnConfirm.isEnabled = true
+                    btnEnabled()
                 } else {
                     btnConfirm.isEnabled = false
+                    btnDisabled()
                 }
             }
 
@@ -111,6 +114,7 @@ class ActivityAddTask : AppCompatActivity() {
 
         // set btnConfirm to unclickable by default
         btnConfirm.isEnabled = false
+        btnDisabled()
 
         // change to clickable when either a) something changed if existing task or b) etTask is filled if new task
         if (editedTask) {
@@ -143,12 +147,25 @@ class ActivityAddTask : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
-        // btnConfirm color
-        if (btnConfirm.isEnabled) {
-            btnConfirm.setBackgroundColor()
-        }
     }
+
+    private fun btnDisabled() {
+        val btnColor = getColor(this, R.color.gray)
+        // todo: set btnConfirm color to gray when btnDisabled 
+    }
+
+    private fun btnEnabled() {
+        val btnColor = getColor(this, com.google.android.material.R.attr.colorPrimaryVariant)
+    }
+
+    private fun getColor(context: Context, colorResId: Int): Int {
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
+    }
+
 
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {
@@ -158,8 +175,10 @@ class ActivityAddTask : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etTask.text.toString().trim() != "") {
                 btnConfirm.isEnabled = true
+                btnEnabled()
             } else {
                 btnConfirm.isEnabled = false
+                btnDisabled()
             }
         }
     }
@@ -172,10 +191,13 @@ class ActivityAddTask : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etTask.text.toString().trim() == currentTask.task) { // if task is unchanged
                 btnConfirm.isEnabled = false
+                btnDisabled()
             } else if (etTask.text.toString().trim() == "") { // if task is empty
                 btnConfirm.isEnabled = false
+                btnDisabled()
             } else {
                 btnConfirm.isEnabled = true
+                btnEnabled()
             }
         }
     }
@@ -188,8 +210,10 @@ class ActivityAddTask : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etSubject.text.toString().trim() == currentTask.subject) { // if subject is unchanged
                 btnConfirm.isEnabled = false
+                btnDisabled()
             } else {
                 btnConfirm.isEnabled = true
+                btnEnabled()
             }
         }
     }
@@ -202,8 +226,10 @@ class ActivityAddTask : AppCompatActivity() {
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etNotes.text.toString().trim() == currentTask.notes) { // if notes is unchanged
                 btnConfirm.isEnabled = false
+                btnDisabled()
             } else {
                 btnConfirm.isEnabled = true
+                btnEnabled()
             }
         }
     }
