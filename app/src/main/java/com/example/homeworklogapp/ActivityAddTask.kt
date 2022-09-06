@@ -75,11 +75,11 @@ class ActivityAddTask : AppCompatActivity() {
                 dueDate = "$day $month $year"
                 dateInt = createDateInt(day, month, year)
 
-                // set btnConfirm's visibility
+                // set btnConfirm's clickability
                 if (dueDate != currentTask.dueDate) { // if due date has been changed
-                    btnConfirm.visibility = View.VISIBLE
+                    btnConfirm.isEnabled = true
                 } else {
-                    btnConfirm.visibility = View.INVISIBLE
+                    btnConfirm.isEnabled = false
                 }
             }
 
@@ -109,10 +109,10 @@ class ActivityAddTask : AppCompatActivity() {
             }
         }
 
-        // set btnConfirm to invisible by default
-        btnConfirm.visibility = View.INVISIBLE
+        // set btnConfirm to unclickable by default
+        btnConfirm.isEnabled = false
 
-        // change to visible when either a) something changed if existing task or b) etTask is filled if new task
+        // change to clickable when either a) something changed if existing task or b) etTask is filled if new task
         if (editedTask) {
             etTask.addTextChangedListener(textWatcherTask)
             etSubject.addTextChangedListener(textWatcherSubject)
@@ -143,6 +143,11 @@ class ActivityAddTask : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        // btnConfirm color
+        if (btnConfirm.isEnabled) {
+            btnConfirm.setBackgroundColor()
+        }
     }
 
     private val textWatcher = object : TextWatcher {
@@ -152,9 +157,9 @@ class ActivityAddTask : AppCompatActivity() {
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etTask.text.toString().trim() != "") {
-                btnConfirm.visibility = View.VISIBLE
+                btnConfirm.isEnabled = true
             } else {
-                btnConfirm.visibility = View.INVISIBLE
+                btnConfirm.isEnabled = false
             }
         }
     }
@@ -166,11 +171,11 @@ class ActivityAddTask : AppCompatActivity() {
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etTask.text.toString().trim() == currentTask.task) { // if task is unchanged
-                btnConfirm.visibility = View.INVISIBLE
+                btnConfirm.isEnabled = false
             } else if (etTask.text.toString().trim() == "") { // if task is empty
-                btnConfirm.visibility = View.INVISIBLE
+                btnConfirm.isEnabled = false
             } else {
-                btnConfirm.visibility = View.VISIBLE
+                btnConfirm.isEnabled = true
             }
         }
     }
@@ -182,9 +187,9 @@ class ActivityAddTask : AppCompatActivity() {
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etSubject.text.toString().trim() == currentTask.subject) { // if subject is unchanged
-                btnConfirm.visibility = View.INVISIBLE
+                btnConfirm.isEnabled = false
             } else {
-                btnConfirm.visibility = View.VISIBLE
+                btnConfirm.isEnabled = true
             }
         }
     }
@@ -196,9 +201,9 @@ class ActivityAddTask : AppCompatActivity() {
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etNotes.text.toString().trim() == currentTask.notes) { // if notes is unchanged
-                btnConfirm.visibility = View.INVISIBLE
+                btnConfirm.isEnabled = false
             } else {
-                btnConfirm.visibility = View.VISIBLE
+                btnConfirm.isEnabled = true
             }
         }
     }
