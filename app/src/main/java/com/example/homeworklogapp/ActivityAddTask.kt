@@ -148,7 +148,7 @@ class ActivityAddTask : AppCompatActivity() {
 
     private fun btnDisabled() {
         btnConfirm.isEnabled = false
-        btnConfirm.background.alpha = 45
+        btnConfirm.background.alpha = 20
     }
 
     private fun btnEnabled() {
