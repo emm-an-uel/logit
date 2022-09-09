@@ -3,6 +3,7 @@ package com.example.homeworklogapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -37,6 +38,21 @@ class ActivityMainLog : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val postiion = tabLayout.selectedTabPosition
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                val position = tab?.position
+                if (position == 0) {
+                    fabTask.visibility = View.VISIBLE
+                } else {
+                    fabTask.visibility = View.INVISIBLE
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+        })
     }
 }
