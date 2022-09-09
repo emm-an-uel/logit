@@ -43,12 +43,6 @@ class FragmentTodo : Fragment() {
         // create recycler view
         createRV()
 
-        // fabAddTask
-        binding.fabAddTask.setOnClickListener() {
-            val intent = Intent(activity, ActivityAddTask::class.java)
-            activity?.startActivity(intent)
-        }
-
         // swipe functions
         swipeFunctions()
     }

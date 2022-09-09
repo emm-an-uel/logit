@@ -1,9 +1,11 @@
 package com.example.homeworklogapp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
@@ -26,5 +28,12 @@ class ActivityMainLog : AppCompatActivity() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
+
+        // fabTask
+        val fabTask : FloatingActionButton = findViewById(R.id.fabTask)
+        fabTask.setOnClickListener() {
+            val intent = Intent(this, ActivityAddTask::class.java)
+            startActivity(intent)
+        }
     }
 }
