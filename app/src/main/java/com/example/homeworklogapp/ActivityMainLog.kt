@@ -33,26 +33,33 @@ class ActivityMainLog : AppCompatActivity() {
 
         // fabTask
         fabTask = findViewById(R.id.fabTask)
-        fabTask.setOnClickListener() {
-            val intent = Intent(this, ActivityAddTask::class.java)
-            startActivity(intent)
-        }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val position = tab?.position
                 if (position == 0) {
-                    fabTask.visibility = View.VISIBLE
+                    fabTask.setImageResource(android.R.drawable.ic_input_add)
+                    fabTask.setOnClickListener() {
+                        val intent = Intent(this@ActivityMainLog, ActivityAddTask::class.java)
+                        startActivity(intent)
+                    }
+
                 } else {
-                    fabTask.visibility = View.INVISIBLE
+                    fabTask.setImageResource(R.drawable.icon_trash)
+                    fabTask.setOnClickListener() {
+                        //confirmClearAll() todo: implement this 
+                    }
                 }
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
+                fabTask.setOnClickListener(null) // removes onClickListener
             }
 
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
     }
+
+
 }
