@@ -13,6 +13,7 @@ class ActivityMainLog : AppCompatActivity() {
 
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
+    lateinit var fabTask: FloatingActionButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +31,12 @@ class ActivityMainLog : AppCompatActivity() {
         }.attach()
 
         // fabTask
-        val fabTask : FloatingActionButton = findViewById(R.id.fabTask)
+        fabTask = findViewById(R.id.fabTask)
         fabTask.setOnClickListener() {
             val intent = Intent(this, ActivityAddTask::class.java)
             startActivity(intent)
         }
+
+        val postiion = tabLayout.selectedTabPosition
     }
 }
