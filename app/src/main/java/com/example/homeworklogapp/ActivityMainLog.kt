@@ -3,18 +3,21 @@ package com.example.homeworklogapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.widget.ViewPager2
+import com.beust.klaxon.JsonReader
+import com.beust.klaxon.Klaxon
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import java.io.File
+import java.io.StringReader
 
 class ActivityMainLog : AppCompatActivity() {
 
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
     lateinit var fabTask: FloatingActionButton
+    lateinit var allList: ArrayList<Task>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +33,9 @@ class ActivityMainLog : AppCompatActivity() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
+
+        // read "fileAssignment"
+        readJson()
 
         // fabTask
         fabTask = findViewById(R.id.fabTask)
@@ -61,5 +67,31 @@ class ActivityMainLog : AppCompatActivity() {
         })
     }
 
+    private fun readJson() {
+        val files = this.fileList()
+        if (files.size > 1) { // if "fileAssignment" exists, since files[0] is a default-added file
 
+            val file = File(this.filesDir, "fileAssignment")
+
+            // deserialize and read json
+            val fileJson = file.readText() // read file
+
+            // convert fileJson into list
+            JsonReader(StringReader(fileJson)).use { reader ->
+                reader.beginArray {
+                    while (reader.hasNext()) {
+                        val t = Klaxon().parse<Task>(reader)
+                        allList.add(t!!) // add all tasks to allList
+                    }
+                }
+            }
+        }
+
+        allList.sortBy { it.dateInt }
+    }
+
+    @JvmName("getAllList1")
+    fun getAllList(): ArrayList<Task> {
+        return allList
+    }
 }

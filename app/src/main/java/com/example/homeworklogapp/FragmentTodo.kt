@@ -40,6 +40,9 @@ class FragmentTodo : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // update allList from ActivityMainLog
+        updateAllList()
+
         // create recycler view
         createRV()
 
@@ -56,6 +59,10 @@ class FragmentTodo : Fragment() {
     override fun onResume() {
         super.onResume()
         createRV()
+    }
+
+    private fun updateAllList() {
+        allList =
     }
 
     private fun taskCompleted(completedTask: Task) {
