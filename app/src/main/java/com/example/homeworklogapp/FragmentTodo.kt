@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -21,6 +22,8 @@ class FragmentTodo : Fragment() {
     lateinit var RVAdapter: RVAdapter
     lateinit var taskList: ArrayList<Task>
     lateinit var allList: ArrayList<Task>
+
+    lateinit var testList: ArrayList<Task>
 
     private var _binding: FragmentTodoBinding? = null
 
@@ -62,7 +65,7 @@ class FragmentTodo : Fragment() {
     }
 
     private fun updateAllList() {
-        allList =
+        testList = ActivityMainLog().getAllList() // todo: initializes new instance of ActivityMainLog, so testList = null 
     }
 
     private fun taskCompleted(completedTask: Task) {

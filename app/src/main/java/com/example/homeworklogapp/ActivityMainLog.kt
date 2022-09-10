@@ -23,6 +23,9 @@ class ActivityMainLog : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_log)
 
+        // initialize allList
+        allList = ArrayList()
+
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
