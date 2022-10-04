@@ -65,7 +65,7 @@ class FragmentTodo : Fragment() {
     }
 
     private fun updateAllList() {
-        testList = ActivityMainLog().getAllList() // todo: initializes new instance of ActivityMainLog, so testList = null 
+        testList = ActivityMainLog().getAllList() // todo: initializes new instance of ActivityMainLog, so testList = null
     }
 
     private fun taskCompleted(completedTask: Task) {
