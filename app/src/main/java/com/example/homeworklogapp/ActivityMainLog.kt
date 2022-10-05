@@ -17,14 +17,16 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
     lateinit var fabTask: FloatingActionButton
-    lateinit var allList: ArrayList<Task>
+    lateinit var toDoList: ArrayList<Task>
+    lateinit var doneList: ArrayList<Task>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_log)
 
-        // initialize allList
-        allList = ArrayList()
+        // initialize lists
+        toDoList = ArrayList()
+        doneList = ArrayList()
 
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
@@ -84,17 +86,17 @@ class ActivityMainLog : AppCompatActivity() {
                 reader.beginArray {
                     while (reader.hasNext()) {
                         val t = Klaxon().parse<Task>(reader)
-                        allList.add(t!!) // add all tasks to allList
+                        toDoList.add(t!!) // add all tasks to allList
                     }
                 }
             }
         }
 
-        allList.sortBy { it.dateInt }
+        toDoList.sortBy { it.dateInt }
     }
 
     @JvmName("getAllList1")
     fun getAllList(): ArrayList<Task> {
-        return allList
+        return toDoList
     }
 }
