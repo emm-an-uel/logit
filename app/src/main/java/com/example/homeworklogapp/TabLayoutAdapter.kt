@@ -1,5 +1,6 @@
 package com.example.homeworklogapp
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -15,10 +16,16 @@ class TabLayoutAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
             }
 
             override fun createFragment(position: Int): Fragment {
+
+                val fragmentTodo = FragmentTodo()
+                val fragmentDone = FragmentDone()
+                fragmentTodo.arguments = bundleTodo
+
+
                 when (position) {
-                    0 -> return FragmentTodo()
+                    0 -> return fragmentTodo
                 }
 
-                return FragmentDone()
+                return fragmentDone
             }
         }

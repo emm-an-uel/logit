@@ -19,6 +19,8 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var fabTask: FloatingActionButton
     lateinit var toDoList: ArrayList<Task>
     lateinit var doneList: ArrayList<Task>
+    lateinit var bundleTodo: Bundle
+    lateinit var bundleDone: Bundle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -86,17 +88,25 @@ class ActivityMainLog : AppCompatActivity() {
                 reader.beginArray {
                     while (reader.hasNext()) {
                         val t = Klaxon().parse<Task>(reader)
-                        toDoList.add(t!!) // add all tasks to allList
+
+                        if (!t!!.status) { // undone
+                            toDoList.add(t)
+                        } else { // done
+                            doneList.add(t)
+                        }
                     }
                 }
             }
         }
 
+        // sort both lists by due date
         toDoList.sortBy { it.dateInt }
-    }
+        doneList.sortBy { it.dateInt }
 
-    @JvmName("getAllList1")
-    fun getAllList(): ArrayList<Task> {
-        return toDoList
+        bundleTodo = Bundle()
+        bundleTodo.putParcelableArrayList("toDoList", toDoList)
+
+        bundleDone = Bundle()
+        bundleDone.putParcelableArrayList("doneList", doneList)
     }
 }
