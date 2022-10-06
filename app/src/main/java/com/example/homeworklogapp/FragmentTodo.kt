@@ -1,30 +1,22 @@
 package com.example.homeworklogapp
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.beust.klaxon.JsonReader
-import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
-import java.io.File
-import java.io.StringReader
 
 class FragmentTodo : Fragment() {
 
     lateinit var RVTodo: RecyclerView
     lateinit var RVAdapter: RVAdapter
-    lateinit var taskList: ArrayList<Task>
-    lateinit var allList: ArrayList<Task>
-
-    lateinit var testList: ArrayList<Task>
-
+    lateinit var todoList: ArrayList<Task>
     private var _binding: FragmentTodoBinding? = null
 
     // setup view binding
@@ -42,9 +34,6 @@ class FragmentTodo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // update allList from ActivityMainLog
-        updateAllList()
 
         // create recycler view
         createRV()
@@ -64,30 +53,6 @@ class FragmentTodo : Fragment() {
         createRV()
     }
 
-    private fun updateAllList() {
-        // testList = ActivityMainLog().getAllList() todo: initializes new instance of ActivityMainLog, so testList = null
-    }
-
-    private fun taskCompleted(completedTask: Task) {
-
-        for (task in allList) {
-            if (task.id == completedTask.id) {
-                allList.remove(task)
-                break
-            }
-        }
-
-        // change to reflect completed status
-        completedTask.status = true
-        allList.add(completedTask)
-
-        // save locally
-        val updatedFile = Klaxon().toJsonString(allList)
-        requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
-            it.write(updatedFile.toByteArray())
-        }
-    }
-
     private fun swipeFunctions() {
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(
@@ -102,12 +67,12 @@ class FragmentTodo : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // change task status
-                val completedTask: Task = taskList[viewHolder.adapterPosition]
-                taskCompleted(completedTask)
+                val completedTask: Task = todoList[viewHolder.adapterPosition]
+                // todo: implemented completed task functionality
 
                 // this method is called when item is swiped.
                 // below line is to remove item from our array list.
-                taskList.removeAt(viewHolder.adapterPosition)
+                todoList.removeAt(viewHolder.adapterPosition)
 
                 // below line is to notify our item is removed from adapter.
                 RVAdapter.notifyItemRemoved(viewHolder.adapterPosition)
@@ -119,22 +84,20 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         RVTodo = binding.rvTodo
-        taskList = ArrayList()
-        allList = ArrayList()
-        RVAdapter = RVAdapter(taskList)
+        todoList = ArrayList()
+        RVAdapter = RVAdapter(todoList)
 
         // set adapter to recycler view
         RVTodo.adapter = RVAdapter
 
         // adding data to list
         getFromBundle()
-        readJson()
 
         // item click listener
         RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
 
-                val selectedTask = taskList[position]
+                val selectedTask = todoList[position]
 
                 // start ActivityAddTask
                 val intent = Intent(activity, ActivityAddTask::class.java)
@@ -148,41 +111,9 @@ class FragmentTodo : Fragment() {
     }
 
     private fun getFromBundle() {
-        val data = arguments
-        val todoList = data!!.get("toDoList")
-        // val num = 0
-    }
-
-    private fun readJson() {
-
-        val files = requireContext().fileList()
-        val numFiles = files.size
-
-        if (numFiles > 1) { // if "fileAssignment" exists, since files[0] is a default-added file
-
-            // check if file exists
-            val file = File(requireContext().filesDir, "fileAssignment")
-
-            // * deserialize and read .json *
-            // read json file
-            val fileJson = file.readText()
-
-            // convert fileJson into list
-            JsonReader(StringReader(fileJson)).use { reader ->
-                reader.beginArray {
-                    while (reader.hasNext()) {
-                        val t = Klaxon().parse<Task>(reader)
-
-                        allList.add(t!!) // add task to allList either way
-
-                        if (!t.status) { // if task is undone
-                            taskList.add(t)
-                        }
-                    }
-                }
-            }
+        setFragmentResultListener("rqTodoList") { requestKey, bundle ->
+            todoList = bundle.getParcelableArrayList("todoList")!!
+            Log.i("message", todoList[0].subject)
         }
-
-        taskList.sortBy { it.dateInt }
     }
 }

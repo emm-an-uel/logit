@@ -3,6 +3,7 @@ package com.example.homeworklogapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.core.os.bundleOf
 import androidx.viewpager2.widget.ViewPager2
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -37,7 +38,7 @@ class ActivityMainLog : AppCompatActivity() {
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
         val tabTitles = listOf("to do", "done")
-        val adapter = TabLayoutAdapter(supportFragmentManager, lifecycle, bundleTodo, bundleDone)
+        val adapter = TabLayoutAdapter(supportFragmentManager, lifecycle)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -104,9 +105,11 @@ class ActivityMainLog : AppCompatActivity() {
         doneList.sortBy { it.dateInt }
 
         bundleTodo = Bundle()
-        bundleTodo.putParcelableArrayList("toDoList", toDoList)
+        bundleTodo.putParcelableArrayList("todoList", toDoList)
+        supportFragmentManager.setFragmentResult("rqTodoList", bundleTodo) // passes bundleTodo to FragmentManager
 
         bundleDone = Bundle()
         bundleDone.putParcelableArrayList("doneList", doneList)
+        supportFragmentManager.setFragmentResult("rqDoneList", bundleDone)
     }
 }
