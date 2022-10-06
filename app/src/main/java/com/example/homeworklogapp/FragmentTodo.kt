@@ -149,7 +149,7 @@ class FragmentTodo : Fragment() {
 
     private fun getFromBundle() {
         val data = arguments
-        // val todoList = data!!.get("toDoList")
+        val todoList = data!!.get("toDoList")
         // val num = 0
     }
 

@@ -19,13 +19,14 @@ class TabLayoutAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle,
     val bundleFragmentDone = bundleDone
 
             override fun getItemCount(): Int {
+
+                fragmentTodo.arguments = bundleFragmentTodo
+                fragmentDone.arguments = bundleFragmentDone
+
                 return totalTabs
             }
 
             override fun createFragment(position: Int): Fragment {
-
-                fragmentTodo.arguments = bundleFragmentTodo
-                fragmentDone.arguments = bundleFragmentDone
 
                 when (position) {
                     0 -> return fragmentTodo
