@@ -8,13 +8,13 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 
 const val totalTabs = 2
 
-class TabLayoutAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle, bundleTodo: Bundle, bundleDone: Bundle) :
+class TabLayoutAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle,
+                       bundleTodo: Bundle, bundleDone: Bundle) :
         FragmentStateAdapter(fragmentManager, lifecycle) {
 
     val fragmentTodo = FragmentTodo()
-    val bundleFragmentTodo = bundleTodo
-
     val fragmentDone = FragmentDone()
+    val bundleFragmentTodo = bundleTodo
     val bundleFragmentDone = bundleDone
 
             override fun getItemCount(): Int {

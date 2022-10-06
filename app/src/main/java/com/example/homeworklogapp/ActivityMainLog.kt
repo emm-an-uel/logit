@@ -30,6 +30,9 @@ class ActivityMainLog : AppCompatActivity() {
         toDoList = ArrayList()
         doneList = ArrayList()
 
+        // read "fileAssignment"
+        readJson()
+
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
@@ -40,9 +43,6 @@ class ActivityMainLog : AppCompatActivity() {
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.text = tabTitles[position]
         }.attach()
-
-        // read "fileAssignment"
-        readJson()
 
         // fabTask
         fabTask = findViewById(R.id.fabTask)
