@@ -19,8 +19,6 @@ class TabLayoutAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
 
                 val fragmentTodo = FragmentTodo()
                 val fragmentDone = FragmentDone()
-                fragmentTodo.arguments = bundleTodo
-
 
                 when (position) {
                     0 -> return fragmentTodo
