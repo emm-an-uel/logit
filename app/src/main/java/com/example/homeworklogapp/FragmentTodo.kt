@@ -127,6 +127,7 @@ class FragmentTodo : Fragment() {
         RVTodo.adapter = RVAdapter
 
         // adding data to list
+        getFromBundle()
         readJson()
 
         // item click listener
@@ -144,6 +145,12 @@ class FragmentTodo : Fragment() {
         })
 
         RVAdapter.notifyDataSetChanged()
+    }
+
+    private fun getFromBundle() {
+        val data = arguments
+        // val todoList = data!!.get("toDoList")
+        // val num = 0
     }
 
     private fun readJson() {
