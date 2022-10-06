@@ -34,7 +34,7 @@ class ActivityMainLog : AppCompatActivity() {
         tabLayout = findViewById(R.id.tabLayout)
         viewPager = findViewById(R.id.viewPager)
         val tabTitles = listOf("to do", "done")
-        val adapter = TabLayoutAdapter(supportFragmentManager, lifecycle)
+        val adapter = TabLayoutAdapter(supportFragmentManager, lifecycle, bundleTodo, bundleDone)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
