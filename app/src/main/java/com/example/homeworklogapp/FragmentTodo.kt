@@ -35,11 +35,8 @@ class FragmentTodo : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // create recycler view
-        createRV()
-
-        // swipe functions
-        swipeFunctions()
+        // retrieve bundle
+        getFromBundle()
     }
 
     override fun onDestroyView() {
@@ -50,7 +47,7 @@ class FragmentTodo : Fragment() {
     // refresh recyclerView
     override fun onResume() {
         super.onResume()
-        createRV()
+        getFromBundle()
     }
 
     private fun swipeFunctions() {
@@ -84,14 +81,10 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         RVTodo = binding.rvTodo
-        todoList = ArrayList()
         RVAdapter = RVAdapter(todoList)
 
         // set adapter to recycler view
         RVTodo.adapter = RVAdapter
-
-        // adding data to list
-        getFromBundle()
 
         // item click listener
         RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener {
@@ -112,9 +105,12 @@ class FragmentTodo : Fragment() {
 
     private fun getFromBundle() {
         setFragmentResultListener("rqTodoList") { requestKey, bundle ->
+            todoList = ArrayList()
             todoList = bundle.getParcelableArrayList("todoList")!!
+            createRV()
+            Log.i("myMessage", todoList.size.toString())
             // todo: potential cause of issue - setFragmentResultListener returns a delayed result (refer to Notes)
-            // todo: before todoList is set, it is passed to RVAdapter as empty; RVAdapter returns taskList.size = 0 and doesn't run anything 
+            // todo: before todoList is set, it is passed to RVAdapter as empty; RVAdapter returns taskList.size = 0 and doesn't run anything
         }
     }
 }
