@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.LifecycleOwner
 import androidx.viewpager2.widget.ViewPager2
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -73,6 +75,8 @@ class ActivityMainLog : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
+
+        taskCompleted()
     }
 
     private fun readJson() {
@@ -104,6 +108,10 @@ class ActivityMainLog : AppCompatActivity() {
         toDoList.sortBy { it.dateInt }
         doneList.sortBy { it.dateInt }
 
+        passBundles()
+    }
+
+    private fun passBundles() {
         bundleTodo = Bundle()
         bundleTodo.putParcelableArrayList("todoList", toDoList)
         supportFragmentManager.setFragmentResult("rqTodoList", bundleTodo) // passes bundleTodo to FragmentManager
@@ -111,5 +119,23 @@ class ActivityMainLog : AppCompatActivity() {
         bundleDone = Bundle()
         bundleDone.putParcelableArrayList("doneList", doneList)
         supportFragmentManager.setFragmentResult("rqDoneList", bundleDone)
+    }
+
+    private fun taskCompleted() {
+        supportFragmentManager.setFragmentResultListener("rqCompletedTask", this) { requestKey, bundle ->
+            val completedTask = bundle.getParcelable<Task>("bundleCompletedTask")!!
+
+            for (task in toDoList) { // remove completedTask from toDoList
+                if (task.id == completedTask.id) {
+                    toDoList.remove(task)
+                    break
+                }
+            }
+
+            completedTask.status = true
+            doneList.add(completedTask) // add completedTask to doneList
+
+            passBundles() // update lists
+        }
     }
 }

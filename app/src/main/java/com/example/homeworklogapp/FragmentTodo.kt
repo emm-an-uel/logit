@@ -6,7 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -65,7 +67,7 @@ class FragmentTodo : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // change task status
                 val completedTask: Task = todoList[viewHolder.adapterPosition]
-                // todo: implemented completed task functionality
+                // todo: implement completed task functionality
 
                 // this method is called when item is swiped.
                 // below line is to remove item from our array list.
@@ -73,6 +75,8 @@ class FragmentTodo : Fragment() {
 
                 // below line is to notify our item is removed from adapter.
                 RVAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+
+                taskCompleted(completedTask)
             }
             // at last we are adding this
             // to our recycler view.
@@ -85,6 +89,8 @@ class FragmentTodo : Fragment() {
 
         // set adapter to recycler view
         RVTodo.adapter = RVAdapter
+
+        swipeFunctions()
 
         // item click listener
         RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener {
@@ -108,9 +114,10 @@ class FragmentTodo : Fragment() {
             todoList = ArrayList()
             todoList = bundle.getParcelableArrayList("todoList")!!
             createRV()
-            Log.i("myMessage", todoList.size.toString())
-            // todo: potential cause of issue - setFragmentResultListener returns a delayed result (refer to Notes)
-            // todo: before todoList is set, it is passed to RVAdapter as empty; RVAdapter returns taskList.size = 0 and doesn't run anything
         }
+    }
+
+    private fun taskCompleted(completedTask: Task) {
+        setFragmentResult("rqCompletedTask", bundleOf("bundleCompletedTask" to completedTask))
     }
 }
