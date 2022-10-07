@@ -113,7 +113,8 @@ class FragmentTodo : Fragment() {
     private fun getFromBundle() {
         setFragmentResultListener("rqTodoList") { requestKey, bundle ->
             todoList = bundle.getParcelableArrayList("todoList")!!
-            Log.i("message", todoList[0].subject)
+            // todo: potential cause of issue - setFragmentResultListener returns a delayed result (refer to Notes)
+            // todo: before todoList is set, it is passed to RVAdapter as empty; RVAdapter returns taskList.size = 0 and doesn't run anything 
         }
     }
 }
