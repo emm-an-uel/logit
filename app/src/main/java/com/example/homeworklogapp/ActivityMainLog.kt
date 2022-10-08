@@ -76,7 +76,9 @@ class ActivityMainLog : AppCompatActivity() {
             }
         })
 
+        // the following functions handle the changing of task statuses upon swiping
         taskCompleted()
+        restoreTask()
     }
 
     private fun readJson() {
@@ -103,15 +105,15 @@ class ActivityMainLog : AppCompatActivity() {
                 }
             }
         }
-
-        // sort both lists by due date
-        toDoList.sortBy { it.dateInt }
-        doneList.sortBy { it.dateInt }
-
+        
         passBundles()
     }
 
     private fun passBundles() {
+        // sort both lists by due date
+        toDoList.sortBy { it.dateInt }
+        doneList.sortBy { it.dateInt }
+
         bundleTodo = Bundle()
         bundleTodo.putParcelableArrayList("todoList", toDoList)
         supportFragmentManager.setFragmentResult("rqTodoList", bundleTodo) // passes bundleTodo to FragmentManager
@@ -132,8 +134,26 @@ class ActivityMainLog : AppCompatActivity() {
                 }
             }
 
-            completedTask.status = true
+            completedTask.status = true // set to done
             doneList.add(completedTask) // add completedTask to doneList
+
+            passBundles() // update lists
+        }
+    }
+
+    private fun restoreTask() {
+        supportFragmentManager.setFragmentResultListener("rqRestoredTask", this) { requestKey, bundle ->
+            val restoredTask = bundle.getParcelable<Task>("bundleRestoredTask")!!
+
+            for (task in doneList) { // remove restoredTask from doneList
+                if (task.id == restoredTask.id) {
+                    doneList.remove(task)
+                    break
+                }
+            }
+
+            restoredTask.status = false // set to undone
+            toDoList.add(restoredTask) // add restoredTask to toDoList
 
             passBundles() // update lists
         }

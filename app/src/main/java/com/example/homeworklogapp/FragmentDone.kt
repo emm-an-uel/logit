@@ -10,7 +10,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
@@ -18,13 +21,12 @@ import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.fragment_done.*
 import java.io.File
 import java.io.StringReader
 
 
 class FragmentDone : Fragment() {
-
-    lateinit var fabClearAll: FloatingActionButton
 
     lateinit var RVDone: RecyclerView
     lateinit var RVAdapter: RVAdapter
@@ -49,11 +51,8 @@ class FragmentDone : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // create recycler view
-        createRV()
-
-        // swipe functions
-        swipeFunctions()
+        // retrieve bundle
+        getFromBundle()
     }
 
     override fun onDestroyView() {
@@ -64,7 +63,7 @@ class FragmentDone : Fragment() {
     // refresh recyclerView
     override fun onResume() {
         super.onResume()
-        createRV()
+        getFromBundle()
     }
 
     private fun swipeFunctions() {
@@ -82,12 +81,11 @@ class FragmentDone : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val restoredTask = doneList[viewHolder.adapterPosition]
                 val position = viewHolder.adapterPosition
-                restoreTask(restoredTask)
 
                 doneList.removeAt(position)
                 RVAdapter.notifyItemRemoved(position)
 
-                fabVisibility()
+                restoreTask(restoredTask)
             }
         }).attachToRecyclerView(RVDone)
 
@@ -121,30 +119,14 @@ class FragmentDone : Fragment() {
         }).attachToRecyclerView(RVDone)
     }
 
-    private fun fabVisibility() {
-        fabClearAll = binding.fabClearAll // declare fabClearAll
-
-        if (doneList.size == 0) {
-            fabClearAll.visibility = View.INVISIBLE
-        } else {
-            fabClearAll.visibility = View.VISIBLE
-            fabClearAll.setOnClickListener() {
-                confirmClearAll()
-            }
-        }
-    }
-
     private fun createRV() {
         RVDone = binding.rvDone
-        doneList = ArrayList()
-        allList = ArrayList()
         RVAdapter = RVAdapter(doneList)
 
         // set adapter to recycler view
         RVDone.adapter = RVAdapter
 
-        // adding data to list
-        readJson()
+        swipeFunctions()
 
         // item click listener
         RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener {
@@ -155,63 +137,10 @@ class FragmentDone : Fragment() {
         })
 
         RVAdapter.notifyDataSetChanged()
-
-        fabVisibility()
-    }
-
-    private fun readJson() {
-
-        val files = requireContext().fileList()
-        val numFiles = files.size
-
-        if (numFiles > 1) { // if "fileAssignment" exists, since files[0] is a default-added file
-
-            // check if file exists
-            val file = File(requireContext().filesDir, "fileAssignment")
-
-            // * deserialize and read .json *
-            // read json file
-            val fileJson = file.readText()
-
-            // convert fileJson into listPerson: List
-            JsonReader(StringReader(fileJson)).use { reader ->
-                reader.beginArray {
-                    while (reader.hasNext()) {
-                        val t = Klaxon().parse<Task>(reader)
-
-                        allList.add(t!!) // add task to allList either way
-
-                        if (t.status) { // if task is done
-                            doneList.add(t)
-                        }
-                    }
-                }
-            }
-        }
-
-        doneList.sortBy { it.dateInt }
     }
 
     private fun restoreTask(restoredTask: Task) {
-        // remove task with status true from allList
-        for (task in allList) {
-            if (task.id == restoredTask.id) {
-                allList.remove(task)
-                break
-            }
-        }
-
-        // change status to false
-        restoredTask.status = false
-
-        // update allList
-        allList.add(restoredTask)
-
-        // save Json
-        val updatedFile = Klaxon().toJsonString(allList)
-        requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
-            it.write(updatedFile.toByteArray())
-        }
+        setFragmentResult("rqRestoredTask", bundleOf("bundleRestoredTask" to restoredTask))
     }
 
     private fun confirmDelete(deletedTask: Task, position: Int) {
@@ -333,5 +262,12 @@ class FragmentDone : Fragment() {
 
         // refresh RV
         createRV()
+    }
+
+    private fun getFromBundle() {
+        setFragmentResultListener("rqDoneList") { requestKey, bundle ->
+            doneList = bundle.getParcelableArrayList("doneList")!!
+            createRV()
+        }
     }
 }

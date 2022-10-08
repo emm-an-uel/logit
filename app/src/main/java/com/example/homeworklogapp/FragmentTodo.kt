@@ -67,7 +67,6 @@ class FragmentTodo : Fragment() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 // change task status
                 val completedTask: Task = todoList[viewHolder.adapterPosition]
-                // todo: implement completed task functionality
 
                 // this method is called when item is swiped.
                 // below line is to remove item from our array list.
@@ -111,7 +110,6 @@ class FragmentTodo : Fragment() {
 
     private fun getFromBundle() {
         setFragmentResultListener("rqTodoList") { requestKey, bundle ->
-            todoList = ArrayList()
             todoList = bundle.getParcelableArrayList("todoList")!!
             createRV()
         }
