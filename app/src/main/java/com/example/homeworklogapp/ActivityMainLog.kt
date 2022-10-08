@@ -1,10 +1,10 @@
 package com.example.homeworklogapp
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResult
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.viewpager2.widget.ViewPager2
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -19,7 +19,7 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
     lateinit var fabTask: FloatingActionButton
-    lateinit var toDoList: ArrayList<Task>
+    lateinit var todoList: ArrayList<Task>
     lateinit var doneList: ArrayList<Task>
     lateinit var bundleTodo: Bundle
     lateinit var bundleDone: Bundle
@@ -29,7 +29,7 @@ class ActivityMainLog : AppCompatActivity() {
         setContentView(R.layout.activity_main_log)
 
         // initialize lists
-        toDoList = ArrayList()
+        todoList = ArrayList()
         doneList = ArrayList()
 
         // read "fileAssignment"
@@ -97,7 +97,7 @@ class ActivityMainLog : AppCompatActivity() {
                         val t = Klaxon().parse<Task>(reader)
 
                         if (!t!!.status) { // undone
-                            toDoList.add(t)
+                            todoList.add(t)
                         } else { // done
                             doneList.add(t)
                         }
@@ -111,11 +111,11 @@ class ActivityMainLog : AppCompatActivity() {
 
     private fun passBundles() {
         // sort both lists by due date
-        toDoList.sortBy { it.dateInt }
+        todoList.sortBy { it.dateInt }
         doneList.sortBy { it.dateInt }
 
         bundleTodo = Bundle()
-        bundleTodo.putParcelableArrayList("todoList", toDoList)
+        bundleTodo.putParcelableArrayList("todoList", todoList)
         supportFragmentManager.setFragmentResult("rqTodoList", bundleTodo) // passes bundleTodo to FragmentManager
 
         bundleDone = Bundle()
@@ -127,9 +127,9 @@ class ActivityMainLog : AppCompatActivity() {
         supportFragmentManager.setFragmentResultListener("rqCompletedTask", this) { requestKey, bundle ->
             val completedTask = bundle.getParcelable<Task>("bundleCompletedTask")!!
 
-            for (task in toDoList) { // remove completedTask from toDoList
+            for (task in todoList) { // remove completedTask from toDoList
                 if (task.id == completedTask.id) {
-                    toDoList.remove(task)
+                    todoList.remove(task)
                     break
                 }
             }
@@ -137,7 +137,8 @@ class ActivityMainLog : AppCompatActivity() {
             completedTask.status = true // set to done
             doneList.add(completedTask) // add completedTask to doneList
 
-            passBundles() // update lists
+            passBundles() // update lists\
+            saveJson()
         }
     }
 
@@ -153,9 +154,10 @@ class ActivityMainLog : AppCompatActivity() {
             }
 
             restoredTask.status = false // set to undone
-            toDoList.add(restoredTask) // add restoredTask to toDoList
+            todoList.add(restoredTask) // add restoredTask to toDoList
 
             passBundles() // update lists
+            saveJson()
         }
     }
 
@@ -166,9 +168,24 @@ class ActivityMainLog : AppCompatActivity() {
             for (task in doneList) { // remove deletedTask from doneList
                 if (task.id == deletedTask.id) {
                     doneList.remove(task)
-                    break 
+                    break
                 }
             }
+        }
+
+        saveJson()
+    }
+
+    private fun saveJson() {
+        // combine todoList and doneList
+        val allList: ArrayList<Task> = ArrayList()
+        allList.addAll(todoList)
+        allList.addAll(doneList)
+
+        // save locally as json file
+        val updatedFile = Klaxon().toJsonString(allList)
+        this.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
+            it.write(updatedFile.toByteArray())
         }
     }
 }
