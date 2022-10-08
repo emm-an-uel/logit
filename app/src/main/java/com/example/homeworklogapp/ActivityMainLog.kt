@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.viewpager2.widget.ViewPager2
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import java.io.File
@@ -49,20 +52,25 @@ class ActivityMainLog : AppCompatActivity() {
         // fabTask
         fabTask = findViewById(R.id.fabTask)
 
+        fabTask.setOnClickListener { // default onClickListener is addTask
+            val intent = Intent(this@ActivityMainLog, ActivityAddTask::class.java)
+            startActivity(intent)
+        }
+
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val position = tab?.position
                 if (position == 0) {
                     fabTask.setImageResource(android.R.drawable.ic_input_add)
-                    fabTask.setOnClickListener() {
+                    fabTask.setOnClickListener {
                         val intent = Intent(this@ActivityMainLog, ActivityAddTask::class.java)
                         startActivity(intent)
                     }
 
                 } else {
                     fabTask.setImageResource(R.drawable.icon_trash)
-                    fabTask.setOnClickListener() {
-                        //confirmClearAll() todo: implement this 
+                    fabTask.setOnClickListener {
+                        confirmClearAll()
                     }
                 }
             }
@@ -187,5 +195,56 @@ class ActivityMainLog : AppCompatActivity() {
         this.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
             it.write(updatedFile.toByteArray())
         }
+    }
+
+    private fun confirmClearAll() {
+        if (doneList.size > 0) { // only if there's tasks being shown
+            // alert dialog
+            val alertDialog: AlertDialog = this.let {
+                val builder = AlertDialog.Builder(it)
+                builder.apply {
+                    setPositiveButton(
+                        "Confirm"
+                    ) { dialog, id ->
+                        clearAll()
+                    }
+
+                    setNegativeButton(
+                        "Cancel"
+                    ) { dialog, id ->
+                        // do nothing
+                    }
+                }
+
+                builder.setMessage("Clear all tasks?")
+
+                builder.create()
+            }
+
+            alertDialog.show()
+            val actualColorAccent = getColor(this, android.R.attr.colorAccent)
+
+            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
+            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
+        } else {
+            Snackbar.make(this, findViewById(R.id.tabLayout), "No tasks to clear", Snackbar.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun getColor(context: Context, colorResId: Int): Int {
+
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
+    }
+
+    private fun clearAll() { // delete all items in doneList
+
+        doneList = ArrayList() // blank ArrayList
+
+        saveJson()
+        passBundles()
     }
 }
