@@ -4,8 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.os.bundleOf
-import androidx.fragment.app.setFragmentResultListener
-import androidx.lifecycle.LifecycleOwner
+import androidx.fragment.app.setFragmentResult
 import androidx.viewpager2.widget.ViewPager2
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -77,8 +76,9 @@ class ActivityMainLog : AppCompatActivity() {
         })
 
         // the following functions handle the changing of task statuses upon swiping
-        taskCompleted()
+        completeTask()
         restoreTask()
+        deleteTask()
     }
 
     private fun readJson() {
@@ -105,7 +105,7 @@ class ActivityMainLog : AppCompatActivity() {
                 }
             }
         }
-        
+
         passBundles()
     }
 
@@ -123,7 +123,7 @@ class ActivityMainLog : AppCompatActivity() {
         supportFragmentManager.setFragmentResult("rqDoneList", bundleDone)
     }
 
-    private fun taskCompleted() {
+    private fun completeTask() {
         supportFragmentManager.setFragmentResultListener("rqCompletedTask", this) { requestKey, bundle ->
             val completedTask = bundle.getParcelable<Task>("bundleCompletedTask")!!
 
@@ -156,6 +156,19 @@ class ActivityMainLog : AppCompatActivity() {
             toDoList.add(restoredTask) // add restoredTask to toDoList
 
             passBundles() // update lists
+        }
+    }
+
+    private fun deleteTask() {
+        supportFragmentManager.setFragmentResultListener("rqDeletedTask", this) { requestKey, bundle ->
+            val deletedTask = bundle.getParcelable<Task>("bundleDeletedTask")!!
+
+            for (task in doneList) { // remove deletedTask from doneList
+                if (task.id == deletedTask.id) {
+                    doneList.remove(task)
+                    break 
+                }
+            }
         }
     }
 }

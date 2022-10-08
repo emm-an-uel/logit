@@ -1,14 +1,12 @@
 package com.example.homeworklogapp
 
 import android.R
-import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -16,14 +14,9 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.fragment_done.*
-import java.io.File
-import java.io.StringReader
 
 
 class FragmentDone : Fragment() {
@@ -105,7 +98,6 @@ class FragmentDone : Fragment() {
                 // change task status
                 val deletedTask: Task = doneList[viewHolder.adapterPosition]
                 val position = viewHolder.adapterPosition
-                confirmDelete(deletedTask, position)
 
                 // this method is called when item is swiped.
                 // below line is to remove item from our array list.
@@ -113,6 +105,8 @@ class FragmentDone : Fragment() {
 
                 // below line is to notify our item is removed from adapter.
                 RVAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+
+                confirmDelete(deletedTask, position)
             }
             // at last we are adding this
             // to our recycler view.
@@ -152,7 +146,7 @@ class FragmentDone : Fragment() {
             builder.apply {
                 setPositiveButton("Confirm"
                 ) { dialog, id ->
-                    taskDeleted(deletedTask)
+                    deleteTask(deletedTask)
                     touched = true
                 }
 
@@ -183,19 +177,8 @@ class FragmentDone : Fragment() {
         }
     }
 
-    private fun taskDeleted(deletedTask: Task) {
-        for (task in allList) {
-            if (task.id == deletedTask.id) {
-                allList.remove(task)
-                break
-            }
-        }
-
-        // save locally
-        val updatedFile = Klaxon().toJsonString(allList)
-        requireContext().openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
-            it.write(updatedFile.toByteArray())
-        }
+    private fun deleteTask(deletedTask: Task) {
+        setFragmentResult("rqDeletedTask", bundleOf("bundleDeletedTask" to deletedTask))
     }
 
     private fun getColor(context: Context, colorResId: Int): Int {
