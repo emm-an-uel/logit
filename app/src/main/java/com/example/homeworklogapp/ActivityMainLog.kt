@@ -14,6 +14,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.activity_add_task.*
 import java.io.File
 import java.io.StringReader
 
@@ -60,15 +61,21 @@ class ActivityMainLog : AppCompatActivity() {
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val position = tab?.position
-                if (position == 0) {
+
+                if (position == 0) { // if in fragmentTodo
+                    fabEnabled()
+
                     fabTask.setImageResource(android.R.drawable.ic_input_add)
                     fabTask.setOnClickListener {
                         val intent = Intent(this@ActivityMainLog, ActivityAddTask::class.java)
                         startActivity(intent)
                     }
 
-                } else {
+                } else { // if in fragmentDone
                     fabTask.setImageResource(R.drawable.icon_trash)
+
+                    fabClickability() // set clickability
+
                     fabTask.setOnClickListener {
                         confirmClearAll()
                     }
@@ -166,6 +173,7 @@ class ActivityMainLog : AppCompatActivity() {
 
             passBundles() // update lists
             saveJson()
+            fabClickability() // set fab clickability depending on if there's any remaining tasks in doneList 
         }
     }
 
@@ -246,5 +254,25 @@ class ActivityMainLog : AppCompatActivity() {
 
         saveJson()
         passBundles()
+        fabDisabled()
+    }
+
+    private fun fabClickability() {
+        // faded fab and unclickable when doneList is empty
+        if (doneList.size > 0) {
+            fabEnabled()
+        } else {
+            fabDisabled()
+        }
+    }
+
+    private fun fabDisabled() {
+        fabTask.isEnabled = false
+        fabTask.background.alpha = 45
+    }
+
+    private fun fabEnabled() {
+        fabTask.isEnabled = true
+        fabTask.background.alpha = 255
     }
 }
