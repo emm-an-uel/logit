@@ -96,7 +96,7 @@ class ActivityMainLog : AppCompatActivity() {
         deleteTask()
     }
 
-    private fun readJson() {
+    private fun readJson() { // TODO: use ViewModel to read json file then pass to ActivityMainLog for better efficiency
         val files = this.fileList()
         if (files.size > 1) { // if "fileAssignment" exists, since files[0] is a default-added file
 

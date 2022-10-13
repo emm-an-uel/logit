@@ -96,6 +96,7 @@ class FragmentTodo : Fragment() {
             override fun onItemClick(position: Int) {
 
                 val selectedTask = todoList[position]
+                // do something with selectedTask
 
                 // start ActivityAddTask
                 val intent = Intent(activity, ActivityAddTask::class.java)
