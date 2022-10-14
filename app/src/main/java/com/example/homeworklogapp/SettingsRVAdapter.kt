@@ -43,10 +43,14 @@ class SettingsRVAdapter (
         holder: NewViewHolder,
         position: Int
     ) { // populate views with data from list
-        holder.etSubject.text = listSubjectColor[position].subject
+
+        val subject = listSubjectColor[position].subject
+        val colorIndex = listSubjectColor[position].colorIndex
+
+        holder.etSubject.text = subject
 
         holder.spinnerColor.adapter = holder.adapter
-        // holder.spinnerColor.selectedItem = TODO: implement: spinner's default selectedItem is the subject's color code
+        holder.spinnerColor.setSelection(colorIndex)
     }
 
     override fun getItemCount(): Int {
