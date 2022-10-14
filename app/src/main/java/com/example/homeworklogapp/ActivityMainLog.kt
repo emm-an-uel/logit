@@ -278,6 +278,7 @@ class ActivityMainLog : AppCompatActivity() {
         fabTask.background.alpha = 255
     }
 
+    // action bar stuff 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.settings_menu, menu)
         return true
