@@ -8,7 +8,6 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.viewpager2.widget.ViewPager2
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -16,7 +15,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.activity_add_task.*
 import java.io.File
 import java.io.StringReader
 
@@ -278,9 +276,9 @@ class ActivityMainLog : AppCompatActivity() {
         fabTask.background.alpha = 255
     }
 
-    // action bar stuff 
+    // action bar stuff
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.settings_menu, menu)
+        menuInflater.inflate(R.menu.main_log_menu, menu)
         return true
     }
 

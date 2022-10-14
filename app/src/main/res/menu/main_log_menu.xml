@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/save"
-        android:title="Save"
+        android:id="@+id/settings"
+        android:title="Settings"
+        android:icon="@drawable/ic_settings"
         app:showAsAction="always"/>
 
 </menu>

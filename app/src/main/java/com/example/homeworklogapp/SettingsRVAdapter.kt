@@ -25,7 +25,7 @@ class SettingsRVAdapter (
     }
 
     class NewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { // initialize views
-        val tvSubject: TextView = itemView.findViewById(R.id.tvSubject)
+        val etSubject: TextView = itemView.findViewById(R.id.etSubject)
 
         val listColors = arrayListOf(
                 R.color.blue,
@@ -36,14 +36,14 @@ class SettingsRVAdapter (
             )
 
         val spinnerColor: Spinner = itemView.findViewById(R.id.spinnerColor)
-        val adapter = SettingsSpinnerAdapter(tvSubject.context, listColors)
+        val adapter = SettingsSpinnerAdapter(etSubject.context, listColors)
     }
 
     override fun onBindViewHolder(
         holder: NewViewHolder,
         position: Int
     ) { // populate views with data from list
-        holder.tvSubject.text = listSubjectColor[position].subject
+        holder.etSubject.text = listSubjectColor[position].subject
 
         holder.spinnerColor.adapter = holder.adapter
         // holder.spinnerColor.selectedItem = TODO: implement: spinner's default selectedItem is the subject's color code
