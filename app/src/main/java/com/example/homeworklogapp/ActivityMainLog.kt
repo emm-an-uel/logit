@@ -40,10 +40,10 @@ class ActivityMainLog : AppCompatActivity() {
         doneList = ArrayList()
 
         // read "fileAssignment"
-        readFileAssignment()
+        readJsonFileAssignment()
 
         // read "listSubjectColor"
-        readListSubjectColor()
+        readJsonListSubjectColor()
 
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
@@ -102,8 +102,10 @@ class ActivityMainLog : AppCompatActivity() {
         deleteTask()
     }
 
-    private fun readFileAssignment() { // TODO: use ViewModel to read json file then pass to ActivityMainLog for better efficiency
+    private fun readJsonFileAssignment() { // TODO: use ViewModel to read json file then pass to ActivityMainLog for better efficiency
         val files = this.fileList()
+
+        // TODO: change below to if (files.exist) ...
         if (files.size > 1) { // if "fileAssignment" exists, since files[0] is a default-added file
 
             val file = File(this.filesDir, "fileAssignment")
@@ -300,7 +302,7 @@ class ActivityMainLog : AppCompatActivity() {
         }
     }
 
-    private fun readListSubjectColor() {
+    private fun readJsonListSubjectColor() {
         listSubjectColor = arrayListOf()
 
         val file = File(this.filesDir, "listSubjectColor")

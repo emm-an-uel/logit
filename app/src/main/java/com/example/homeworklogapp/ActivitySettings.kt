@@ -1,14 +1,19 @@
 package com.example.homeworklogapp
 
+import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -17,7 +22,6 @@ import java.io.File
 import java.io.StringReader
 
 class ActivitySettings : AppCompatActivity() {
-
     lateinit var rvSettings: RecyclerView
     lateinit var rvAdapter: SettingsRVAdapter
 
@@ -41,7 +45,7 @@ class ActivitySettings : AppCompatActivity() {
         }
 
         if (listSubjectColor.size == 0) { // if list is empty
-            val blankSubjectColor = SubjectColor("blankSubject", 0) // add a blank subjectColor with color blue (since its index is 0)
+            val blankSubjectColor = SubjectColor("", 0) // add a blank subjectColor with color blue (since its index is 0)
             listSubjectColor.add(blankSubjectColor)
         }
 
@@ -71,6 +75,73 @@ class ActivitySettings : AppCompatActivity() {
         rvSettings = findViewById(R.id.rvSettings)
         rvAdapter = SettingsRVAdapter(listSubjectColor)
         rvSettings.adapter = rvAdapter
+
+        swipeFunctions()
+    }
+
+    private fun swipeFunctions() {
+        ItemTouchHelper(object: ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+
+                val subjectColor = listSubjectColor[viewHolder.adapterPosition]
+                val position = viewHolder.adapterPosition
+                confirmDelete(subjectColor, position)
+
+                listSubjectColor.removeAt(viewHolder.adapterPosition)
+                rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+            }
+        }).attachToRecyclerView(rvSettings)
+    }
+
+    private fun confirmDelete(subjectColor: SubjectColor, position: Int) {
+        var touched = false
+
+        // alert dialog
+        val alertDialog: AlertDialog = this.let {
+            val builder = AlertDialog.Builder(it)
+            builder.apply {
+                setPositiveButton("Confirm") {
+                    dialog, id ->
+                    touched = true
+                }
+
+                setNegativeButton("Cancel") {
+                    dialog, id ->
+                    cancelDelete(subjectColor, position)
+                    touched = true
+                }
+            }
+
+            val subject = subjectColor.subject
+            builder.setMessage("Remove ${subject}'s color code?")
+
+            builder.create()
+        }
+
+        alertDialog.show()
+        val actualColorAccent = getColor(this, androidx.appcompat.R.attr.colorAccent)
+
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
+
+        alertDialog.setOnDismissListener {
+            if (!touched) {
+                cancelDelete(subjectColor, position)
+            }
+        }
+    }
+
+    private fun cancelDelete(subjectColor: SubjectColor, position: Int) {
+        listSubjectColor.add(position, subjectColor)
+        rvAdapter.notifyItemInserted(position)
     }
 
     private fun addSubjectColor() {
@@ -141,5 +212,14 @@ class ActivitySettings : AppCompatActivity() {
         val intent = Intent(this, ActivityMainLog::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun getColor(context: Context, colorResId: Int): Int {
+
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
     }
 }

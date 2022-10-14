@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 
 class SettingsRVAdapter (
@@ -56,5 +57,4 @@ class SettingsRVAdapter (
     override fun getItemCount(): Int {
         return listSubjectColor.size
     }
-
 }

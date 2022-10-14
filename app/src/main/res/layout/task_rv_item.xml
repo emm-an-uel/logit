@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingVertical="4dp"
         android:orientation="horizontal">
 
         <TextView
@@ -20,7 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:padding="10dp"
-            android:text="subject" />
+            android:text="subject"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tvTask"
@@ -28,7 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:padding="10dp"
-            android:text="task" />
+            android:text="task"
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/tvDueDate"
@@ -37,7 +40,8 @@
             android:layout_weight="1"
             android:padding="10dp"
             android:text="due date"
-            android:textAlignment="textEnd" />
+            android:textAlignment="textEnd"
+            android:textSize="16sp" />
 
     </LinearLayout>
 
