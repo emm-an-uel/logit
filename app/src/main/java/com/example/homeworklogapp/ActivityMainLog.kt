@@ -5,6 +5,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.viewpager2.widget.ViewPager2
@@ -274,5 +276,21 @@ class ActivityMainLog : AppCompatActivity() {
     private fun fabEnabled() {
         fabTask.isEnabled = true
         fabTask.background.alpha = 255
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.settings_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.settings -> {
+                val intent = Intent(this, ActivitySettings::class.java)
+                startActivity(intent)
+
+                return true
+            } else -> super.onOptionsItemSelected(item)
+        }
     }
 }

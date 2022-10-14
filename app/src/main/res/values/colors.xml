@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="red">#A93F3B</color>
-    <color name="pink">#D38582</color>
     <color name="purple">#4c2c8b</color>
     <color name="light_purple">#6e599b</color>
     <color name="black">#FF000000</color>
@@ -9,4 +7,9 @@
     <color name="blue">#4285F4</color>
     <color name="light_blue">#8FD3FE</color>
     <color name="gray">#808080</color>
+
+    <color name="red">#DB4437</color>
+    <color name="yellow">#F4B400</color>
+    <color name="green">#0F9D58</color>
+    <color name="pink">#BDA2CD</color>
 </resources>
