@@ -61,21 +61,9 @@ class ActivitySettings : AppCompatActivity() {
     private fun initListSubjectColor() {
         listSubjectColor = arrayListOf()
 
-        val file = File(this.filesDir, "listSubjectColor")
-
-        if (file.exists()) {
-
-            val fileJson = file.readText()
-
-            // convert into list
-            JsonReader(StringReader(fileJson)).use { reader ->
-                reader.beginArray {
-                    while (reader.hasNext()) {
-                        val subjectColor = Klaxon().parse<SubjectColor>(reader)
-                        listSubjectColor.add(subjectColor!!)
-                    }
-                }
-            }
+        val bundle = intent.extras
+        if (bundle != null) {
+            listSubjectColor = bundle.getParcelableArrayList("bundleListSubjectColor")!!
         }
     }
 
@@ -140,6 +128,8 @@ class ActivitySettings : AppCompatActivity() {
     }
 
     private fun saveSubjectColors() {
+
+        // TODO: prevent duplicate subjects
 
         updateList()
 

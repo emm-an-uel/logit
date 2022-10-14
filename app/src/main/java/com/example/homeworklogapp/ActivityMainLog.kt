@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.viewpager2.widget.ViewPager2
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -28,6 +29,8 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var bundleTodo: Bundle
     lateinit var bundleDone: Bundle
 
+    lateinit var listSubjectColor: ArrayList<SubjectColor>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_log)
@@ -37,7 +40,10 @@ class ActivityMainLog : AppCompatActivity() {
         doneList = ArrayList()
 
         // read "fileAssignment"
-        readJson()
+        readFileAssignment()
+
+        // read "listSubjectColor"
+        readListSubjectColor()
 
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
@@ -96,7 +102,7 @@ class ActivityMainLog : AppCompatActivity() {
         deleteTask()
     }
 
-    private fun readJson() { // TODO: use ViewModel to read json file then pass to ActivityMainLog for better efficiency
+    private fun readFileAssignment() { // TODO: use ViewModel to read json file then pass to ActivityMainLog for better efficiency
         val files = this.fileList()
         if (files.size > 1) { // if "fileAssignment" exists, since files[0] is a default-added file
 
@@ -286,10 +292,32 @@ class ActivityMainLog : AppCompatActivity() {
         return when (item.itemId) {
             R.id.settings -> {
                 val intent = Intent(this, ActivitySettings::class.java)
+                intent.putExtras(bundleOf("bundleListSubjectColor" to listSubjectColor))
                 startActivity(intent)
 
                 return true
             } else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun readListSubjectColor() {
+        listSubjectColor = arrayListOf()
+
+        val file = File(this.filesDir, "listSubjectColor")
+
+        if (file.exists()) {
+
+            val fileJson = file.readText()
+
+            // convert into list
+            JsonReader(StringReader(fileJson)).use { reader ->
+                reader.beginArray {
+                    while (reader.hasNext()) {
+                        val subjectColor = Klaxon().parse<SubjectColor>(reader)
+                        listSubjectColor.add(subjectColor!!)
+                    }
+                }
+            }
         }
     }
 }
