@@ -103,12 +103,10 @@ class ActivityMainLog : AppCompatActivity() {
     }
 
     private fun readJsonFileAssignment() { // TODO: use ViewModel to read json file then pass to ActivityMainLog for better efficiency
-        val files = this.fileList()
 
-        // TODO: change below to if (files.exist) ...
-        if (files.size > 1) { // if "fileAssignment" exists, since files[0] is a default-added file
+        val file = File(this.filesDir, "fileAssignment")
 
-            val file = File(this.filesDir, "fileAssignment")
+        if (file.exists()) {
 
             // deserialize and read json
             val fileJson = file.readText() // read file
