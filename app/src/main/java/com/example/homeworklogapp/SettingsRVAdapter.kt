@@ -32,7 +32,7 @@ class SettingsRVAdapter (
 
     class NewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { // initialize views
 
-        val etSubject: TextView = itemView.findViewById(R.id.etSubject)
+        val etSubject: EditText = itemView.findViewById(R.id.etSubject)
 
         val context = etSubject.context
 
@@ -56,7 +56,7 @@ class SettingsRVAdapter (
         val subject = listSubjectColor[position].subject
         val colorIndex = listSubjectColor[position].colorIndex
 
-        holder.etSubject.text = subject
+        holder.etSubject.setText(subject)
         holder.etSubject.addTextChangedListener(
             textWatcher(
                 holder.etSubject,
@@ -72,7 +72,7 @@ class SettingsRVAdapter (
         return listSubjectColor.size
     }
 
-    class textWatcher(val view: TextView, val listSubject: ArrayList<String>) : TextWatcher {
+    class textWatcher(val view: EditText, val listSubject: ArrayList<String>) : TextWatcher {
 
         val context = view.context
 
