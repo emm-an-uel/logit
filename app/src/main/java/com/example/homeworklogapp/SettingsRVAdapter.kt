@@ -37,12 +37,12 @@ class SettingsRVAdapter (
         val context = etSubject.context
 
         val listColors = arrayListOf(
-                R.color.blue,
-                R.color.red,
-                R.color.yellow,
-                R.color.green,
-                R.color.pink
-            )
+            R.color.blue,
+            R.color.red,
+            R.color.yellow,
+            R.color.green,
+            R.color.pink
+        )
 
         val spinnerColor: Spinner = itemView.findViewById(R.id.spinnerColor)
         val adapter = SettingsSpinnerAdapter(context, listColors)
@@ -57,7 +57,12 @@ class SettingsRVAdapter (
         val colorIndex = listSubjectColor[position].colorIndex
 
         holder.etSubject.text = subject
-        holder.etSubject.addTextChangedListener(textWatcher) // to watch for duplicate subject entries
+        holder.etSubject.addTextChangedListener(
+            textWatcher(
+                holder.etSubject,
+                listSubject
+            )
+        ) // to watch for duplicate subject entries
 
         holder.spinnerColor.adapter = holder.adapter
         holder.spinnerColor.setSelection(colorIndex)
@@ -67,7 +72,10 @@ class SettingsRVAdapter (
         return listSubjectColor.size
     }
 
-    private val textWatcher = object: TextWatcher {
+    class textWatcher(val view: TextView, val listSubject: ArrayList<String>) : TextWatcher {
+
+        val context = view.context
+
         override fun afterTextChanged(p0: Editable?) {
         }
 
@@ -76,9 +84,10 @@ class SettingsRVAdapter (
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (listSubject.contains(p0.toString())) {
-                // TODO: prevent duplicate subjects
 
-                //Toast.makeText()
+                Toast.makeText(context, "Duplicate", Toast.LENGTH_SHORT).show()
+
+                // TODO: prevent duplicate subjects
             }
         }
     }
