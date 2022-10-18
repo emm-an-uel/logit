@@ -26,6 +26,7 @@ class ActivitySettings : AppCompatActivity() {
     lateinit var rvAdapter: SettingsRVAdapter
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
+    lateinit var listSubject: ArrayList<String>
 
     lateinit var fabAddColor: FloatingActionButton
 
@@ -64,16 +65,22 @@ class ActivitySettings : AppCompatActivity() {
 
     private fun initListSubjectColor() {
         listSubjectColor = arrayListOf()
+        listSubject = arrayListOf()
 
         val bundle = intent.extras
         if (bundle != null) {
             listSubjectColor = bundle.getParcelableArrayList("bundleListSubjectColor")!!
+
+            for (subjectColor in listSubjectColor) {
+                val subject = subjectColor.subject
+                listSubject.add(subject)
+            }
         }
     }
 
     private fun setupRecyclerView() {
         rvSettings = findViewById(R.id.rvSettings)
-        rvAdapter = SettingsRVAdapter(listSubjectColor)
+        rvAdapter = SettingsRVAdapter(listSubjectColor, listSubject)
         rvSettings.adapter = rvAdapter
 
         swipeFunctions()
@@ -199,8 +206,6 @@ class ActivitySettings : AppCompatActivity() {
     }
 
     private fun saveSubjectColors() {
-
-        // TODO: prevent duplicate subjects
 
         updateList()
 
