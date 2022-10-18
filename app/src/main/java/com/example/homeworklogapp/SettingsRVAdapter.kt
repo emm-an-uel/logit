@@ -1,6 +1,5 @@
 package com.example.homeworklogapp
 
-import android.content.Context
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -8,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
 class SettingsRVAdapter (
@@ -72,9 +71,11 @@ class SettingsRVAdapter (
         return listSubjectColor.size
     }
 
-    class textWatcher(val view: EditText, val listSubject: ArrayList<String>) : TextWatcher {
+    class textWatcher(val etSubject: EditText, val listSubject: ArrayList<String>) : TextWatcher {
 
-        val context = view.context
+        val context = etSubject.context
+
+        val defaultColor = etSubject.currentTextColor
 
         override fun afterTextChanged(p0: Editable?) {
         }
@@ -83,11 +84,11 @@ class SettingsRVAdapter (
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            if (listSubject.contains(p0.toString())) {
+            if (listSubject.contains(p0.toString().trim())) {
+                etSubject.setTextColor(ContextCompat.getColor(context, R.color.red)) // sets text color to red
 
-                Toast.makeText(context, "Duplicate", Toast.LENGTH_SHORT).show()
-
-                // TODO: prevent duplicate subjects
+            } else {
+                etSubject.setTextColor(defaultColor) // revert to default color
             }
         }
     }

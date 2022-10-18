@@ -207,6 +207,9 @@ class ActivitySettings : AppCompatActivity() {
 
     private fun saveSubjectColors() {
 
+        // TODO: prevent duplicates
+        // don't allow save if there's duplicate subjects
+
         updateList()
 
         val file = Klaxon().toJsonString(listSubjectColor)
