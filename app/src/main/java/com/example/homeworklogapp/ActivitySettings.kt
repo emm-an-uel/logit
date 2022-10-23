@@ -1,6 +1,5 @@
 package com.example.homeworklogapp
 
-import android.content.ClipData
 import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -12,14 +11,10 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import java.io.File
-import java.io.StringReader
 
 class ActivitySettings : AppCompatActivity() {
     lateinit var rvSettings: RecyclerView
@@ -185,6 +180,14 @@ class ActivitySettings : AppCompatActivity() {
         }
 
         listSubjectColor = newListSubjectColor
+
+        // update listSubject
+        listSubject = arrayListOf()
+
+        for (subjectColor in listSubjectColor) {
+            val subject = subjectColor.subject
+            listSubject.add(subject)
+        }
     }
 
     // action bar stuff
@@ -198,7 +201,6 @@ class ActivitySettings : AppCompatActivity() {
             R.id.save -> {
 
                 saveSubjectColors()
-                Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
 
                 return true
             } else -> super.onOptionsItemSelected(item)
@@ -207,19 +209,35 @@ class ActivitySettings : AppCompatActivity() {
 
     private fun saveSubjectColors() {
 
-        // TODO: prevent duplicates
-        // don't allow save if there's duplicate subjects
-
         updateList()
 
-        val file = Klaxon().toJsonString(listSubjectColor)
-        this.openFileOutput("listSubjectColor", Context.MODE_PRIVATE).use {
-            it.write(file.toByteArray())
-        }
+        // TODO: add subject, make duplicate subject, save, remove subject -> results in a blank subject item being added to rv. when blank subject is removed, activity crashes
 
-        val intent = Intent(this, ActivityMainLog::class.java)
-        startActivity(intent)
-        finish()
+        // TODO: find a way to add blank subject without re-initializing the entire rv
+        // TODO: ^ instead of re-initializing the entire rv, update listSubjectColor when addSubjectColor() is called, then notifyDataSetChanged
+
+        // only saves if there's no duplicate subjects
+        if (noDuplicates()) { // if returns true (ie no duplicates)
+            val file = Klaxon().toJsonString(listSubjectColor)
+            this.openFileOutput("listSubjectColor", Context.MODE_PRIVATE).use {
+                it.write(file.toByteArray())
+            }
+
+            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+
+            val intent = Intent(this, ActivityMainLog::class.java)
+            startActivity(intent)
+            finish()
+
+        } else {
+            Toast.makeText(this, "Please remove duplicate subjects", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun noDuplicates(): Boolean {
+        val listSubjectDistinct = listSubject.distinct() // returns a list of distinct elements (ie duplicates removed)
+
+        return listSubjectDistinct.size == listSubject.size // returns true if size == size, returns false otherwise
     }
 
     private fun getColor(context: Context, colorResId: Int): Int {

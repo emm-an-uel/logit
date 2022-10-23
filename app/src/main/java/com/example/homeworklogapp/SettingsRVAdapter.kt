@@ -63,8 +63,18 @@ class SettingsRVAdapter (
             )
         ) // to watch for duplicate subject entries
 
+        checkForDuplicates(subject, holder.etSubject)
+        // TODO: set etSubject text color to red if there are duplicate entries (not exclusively when that editText is being edited - which is what textWatcher does)
+
         holder.spinnerColor.adapter = holder.adapter
         holder.spinnerColor.setSelection(colorIndex)
+    }
+
+    private fun checkForDuplicates(subject: String, etSubject: EditText) {
+        // TODO: check if this works; if it does, remove the TODO above too
+        val context = etSubject.context
+        val defaultColor = etSubject.currentTextColor
+
     }
 
     override fun getItemCount(): Int {
