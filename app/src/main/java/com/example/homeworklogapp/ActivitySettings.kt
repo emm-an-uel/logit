@@ -153,8 +153,7 @@ class ActivitySettings : AppCompatActivity() {
         // add new item in recycler view
         val newSubjectColor = SubjectColor("", 0) // adds an empty subject string with color blue
         listSubjectColor.add(newSubjectColor)
-
-        setupRecyclerView()
+        rvAdapter.notifyDataSetChanged()
     }
 
     private fun updateList() {
@@ -179,7 +178,9 @@ class ActivitySettings : AppCompatActivity() {
             }
         }
 
-        listSubjectColor = newListSubjectColor
+        listSubjectColor.clear()
+        listSubjectColor.addAll(newListSubjectColor)
+        rvAdapter.notifyDataSetChanged()
 
         // update listSubject
         listSubject = arrayListOf()
@@ -212,10 +213,7 @@ class ActivitySettings : AppCompatActivity() {
         updateList()
 
         // TODO: add subject, make duplicate subject, save, remove subject -> results in a blank subject item being added to rv. when blank subject is removed, activity crashes
-
-        // TODO: find a way to add blank subject without re-initializing the entire rv
-        // TODO: ^ instead of re-initializing the entire rv, update listSubjectColor when addSubjectColor() is called, then notifyDataSetChanged
-
+        
         // only saves if there's no duplicate subjects
         if (noDuplicates()) { // if returns true (ie no duplicates)
             val file = Klaxon().toJsonString(listSubjectColor)
