@@ -11,6 +11,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.Klaxon
@@ -98,6 +99,7 @@ class ActivitySettings : AppCompatActivity() {
                 confirmDelete(subjectColor, position)
 
                 listSubjectColor.removeAt(viewHolder.adapterPosition)
+                listSubject.removeAt(viewHolder.adapterPosition)
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
             }
         }).attachToRecyclerView(rvSettings)
@@ -113,6 +115,7 @@ class ActivitySettings : AppCompatActivity() {
                 setPositiveButton("Confirm") {
                     dialog, id ->
                     touched = true
+                    checkDuplicates()
                 }
 
                 setNegativeButton("Cancel") {
@@ -144,6 +147,7 @@ class ActivitySettings : AppCompatActivity() {
 
     private fun cancelDelete(subjectColor: SubjectColor, position: Int) {
         listSubjectColor.add(position, subjectColor)
+        listSubject.add(position, subjectColor.subject)
         rvAdapter.notifyItemInserted(position)
     }
 
@@ -154,6 +158,8 @@ class ActivitySettings : AppCompatActivity() {
         // add new item in recycler view
         val newSubjectColor = SubjectColor("", 0) // adds an empty subject string with color blue
         listSubjectColor.add(newSubjectColor)
+
+        listSubject.add("")
         rvAdapter.notifyDataSetChanged()
     }
 
@@ -246,5 +252,29 @@ class ActivitySettings : AppCompatActivity() {
         val color = typedArray.getColor(0, 0)
         typedArray.recycle()
         return color
+    }
+
+    fun updateListSubject(subject: String, position: Int) {
+        listSubject[position] = subject
+    }
+
+    fun checkDuplicates() {
+        val itemCount = rvSettings.adapter!!.itemCount
+
+        for (i in 0 until itemCount) {
+            val holder = rvSettings.findViewHolderForAdapterPosition(i)
+            if (holder != null) {
+                val etSubject = holder.itemView.findViewById<EditText>(R.id.etSubject)
+                val subject = etSubject.text.toString().trim()
+
+                val count = listSubject.count { it == subject }
+
+                if (count > 1) {
+                    etSubject.setTextColor(ContextCompat.getColor(this, R.color.red))
+                } else {
+                    etSubject.setTextColor(getColor(this, com.google.android.material.R.attr.colorOnSecondary))
+                }
+            }
+        }
     }
 }

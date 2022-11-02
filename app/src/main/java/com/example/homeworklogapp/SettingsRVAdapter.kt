@@ -7,14 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 
-class SettingsRVAdapter (
+class SettingsRVAdapter(
     private val listSubjectColor: ArrayList<SubjectColor>, // list of items to populate rv with
     private val listSubject: ArrayList<String>
-        ) : RecyclerView.Adapter<SettingsRVAdapter.NewViewHolder>() {
+) : RecyclerView.Adapter<SettingsRVAdapter.NewViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -59,51 +58,34 @@ class SettingsRVAdapter (
         holder.etSubject.addTextChangedListener(
             textWatcher(
                 holder.etSubject,
-                listSubject
+                position
             )
         ) // to watch for duplicate subject entries
 
-        checkForDuplicates(subject, holder.etSubject)
-        // TODO: set etSubject text color to red if there are duplicate entries (not exclusively when that editText is being edited - which is what textWatcher does)
-
         holder.spinnerColor.adapter = holder.adapter
         holder.spinnerColor.setSelection(colorIndex)
-    }
-
-    private fun checkForDuplicates(subject: String, etSubject: EditText) {
-        // TODO: check if this works; if it does, remove the TODO above too
-        val context = etSubject.context
-        val defaultColor = etSubject.currentTextColor
-
     }
 
     override fun getItemCount(): Int {
         return listSubjectColor.size
     }
 
-    class textWatcher(val etSubject: EditText, val listSubject: ArrayList<String>) : TextWatcher {
+    class textWatcher(val etSubject: EditText, val position: Int) : TextWatcher {
 
         val context = etSubject.context
-
-        val defaultColor = etSubject.currentTextColor
-
-        override fun afterTextChanged(p0: Editable?) {
-        }
 
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+        }
 
-            val subject = p0.toString().trim()
-            val count = listSubject.count{it == subject}
+        override fun afterTextChanged(p0: Editable?) {
+            val input = p0.toString().trim()
 
-            if (count > 1) {
-                etSubject.setTextColor(ContextCompat.getColor(context, R.color.red)) // sets text color to red
+            (context as ActivitySettings).updateListSubject(input, position) // update listSubject to match changes
 
-            } else {
-                etSubject.setTextColor(defaultColor) // revert to default color
-            }
+            (context as ActivitySettings).checkDuplicates() // checkDuplicates() is run in MainActivity so it can iterate through all items in rvList
         }
     }
 }
