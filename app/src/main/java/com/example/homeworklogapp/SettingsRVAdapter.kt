@@ -94,7 +94,11 @@ class SettingsRVAdapter (
         }
 
         override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            if (listSubject.contains(p0.toString().trim())) {
+
+            val subject = p0.toString().trim()
+            val count = listSubject.count{it == subject}
+
+            if (count > 1) {
                 etSubject.setTextColor(ContextCompat.getColor(context, R.color.red)) // sets text color to red
 
             } else {

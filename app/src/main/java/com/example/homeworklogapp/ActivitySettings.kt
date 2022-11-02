@@ -124,6 +124,7 @@ class ActivitySettings : AppCompatActivity() {
 
             val subject = subjectColor.subject
             builder.setMessage("Remove ${subject}'s color code?")
+            // TODO: {subject} is currently referring to the subject in listSubjectColor; doesn't reflect changes made if the user hasn't saved
 
             builder.create()
         }
@@ -180,15 +181,17 @@ class ActivitySettings : AppCompatActivity() {
 
         listSubjectColor.clear()
         listSubjectColor.addAll(newListSubjectColor)
-        rvAdapter.notifyDataSetChanged()
 
         // update listSubject
-        listSubject = arrayListOf()
+        val newListSubject = arrayListOf<String>()
 
         for (subjectColor in listSubjectColor) {
             val subject = subjectColor.subject
-            listSubject.add(subject)
+            newListSubject.add(subject)
         }
+
+        listSubject.clear()
+        listSubject.addAll(newListSubject)
     }
 
     // action bar stuff
@@ -212,8 +215,6 @@ class ActivitySettings : AppCompatActivity() {
 
         updateList()
 
-        // TODO: add subject, make duplicate subject, save, remove subject -> results in a blank subject item being added to rv. when blank subject is removed, activity crashes
-        
         // only saves if there's no duplicate subjects
         if (noDuplicates()) { // if returns true (ie no duplicates)
             val file = Klaxon().toJsonString(listSubjectColor)
