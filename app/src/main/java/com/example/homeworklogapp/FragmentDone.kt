@@ -14,16 +14,13 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
-import com.google.android.material.snackbar.Snackbar
-import javax.security.auth.Subject
 
 
 class FragmentDone : Fragment() {
 
     lateinit var RVDone: RecyclerView
-    lateinit var RVAdapter: RVAdapter
+    lateinit var mainLogRVAdapter: MainLogRVAdapter
     lateinit var doneList: ArrayList<Task>
 
     private var _binding: FragmentDoneBinding? = null
@@ -78,7 +75,7 @@ class FragmentDone : Fragment() {
                 val position = viewHolder.adapterPosition
 
                 doneList.removeAt(position)
-                RVAdapter.notifyItemRemoved(position)
+                mainLogRVAdapter.notifyItemRemoved(position)
 
                 restoreTask(restoredTask)
             }
@@ -106,7 +103,7 @@ class FragmentDone : Fragment() {
                 doneList.removeAt(viewHolder.adapterPosition)
 
                 // below line is to notify our item is removed from adapter.
-                RVAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+                mainLogRVAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
                 confirmDelete(deletedTask, position)
             }
@@ -117,22 +114,22 @@ class FragmentDone : Fragment() {
 
     private fun createRV() {
         RVDone = binding.rvDone
-        RVAdapter = RVAdapter(doneList, mapSubjectColor)
+        mainLogRVAdapter = MainLogRVAdapter(doneList, mapSubjectColor)
 
         // set adapter to recycler view
-        RVDone.adapter = RVAdapter
+        RVDone.adapter = mainLogRVAdapter
 
         swipeFunctions()
 
         // item click listener
-        RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener {
+        mainLogRVAdapter.setOnItemClickListener(object: MainLogRVAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
                 // do nothing
             }
 
         })
 
-        RVAdapter.notifyDataSetChanged()
+        mainLogRVAdapter.notifyDataSetChanged()
     }
 
     private fun restoreTask(restoredTask: Task) {
@@ -155,7 +152,7 @@ class FragmentDone : Fragment() {
                 setNegativeButton("Cancel"
                 ) { dialog, id ->
                     doneList.add(position, deletedTask)
-                    RVAdapter.notifyItemInserted(position)
+                    mainLogRVAdapter.notifyItemInserted(position)
                     touched = true
                 }
             }
@@ -174,7 +171,7 @@ class FragmentDone : Fragment() {
         alertDialog.setOnDismissListener {
             if (!touched) { // if touched == false (ie user touched outside dialog box)
                 doneList.add(position, deletedTask)
-                RVAdapter.notifyItemInserted(position)
+                mainLogRVAdapter.notifyItemInserted(position)
             }
         }
     }

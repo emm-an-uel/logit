@@ -12,12 +12,11 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
-import java.io.Serializable
 
 class FragmentTodo : Fragment() {
 
     lateinit var RVTodo: RecyclerView
-    lateinit var RVAdapter: RVAdapter
+    lateinit var RVAdapter: MainLogRVAdapter
     lateinit var todoList: ArrayList<Task>
     private var _binding: FragmentTodoBinding? = null
 
@@ -86,7 +85,7 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         RVTodo = binding.rvTodo
-        RVAdapter = RVAdapter(todoList, mapSubjectColor)
+        RVAdapter = MainLogRVAdapter(todoList, mapSubjectColor)
 
         // set adapter to recycler view
         RVTodo.adapter = RVAdapter
@@ -94,7 +93,7 @@ class FragmentTodo : Fragment() {
         swipeFunctions()
 
         // item click listener
-        RVAdapter.setOnItemClickListener(object: RVAdapter.onItemClickListener {
+        RVAdapter.setOnItemClickListener(object: MainLogRVAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
 
                 val selectedTask = todoList[position]

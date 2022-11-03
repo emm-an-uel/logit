@@ -51,6 +51,8 @@ class SettingsRVAdapter(
         position: Int
     ) { // populate views with data from list
 
+        holder.setIsRecyclable(false) // prevent "recycling" the views - keeps EditText content/position from being jumbled up
+
         val subject = listSubjectColor[position].subject
         val colorIndex = listSubjectColor[position].colorIndex
 
@@ -87,5 +89,13 @@ class SettingsRVAdapter(
 
             (context as ActivitySettings).checkDuplicates() // checkDuplicates() is run in MainActivity so it can iterate through all items in rvList
         }
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 }

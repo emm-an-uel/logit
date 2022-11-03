@@ -7,16 +7,13 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.Klaxon
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.settings_rv_item.view.*
 
 class ActivitySettings : AppCompatActivity() {
     lateinit var rvSettings: RecyclerView
@@ -72,6 +69,12 @@ class ActivitySettings : AppCompatActivity() {
                 val subject = subjectColor.subject
                 listSubject.add(subject)
             }
+        }
+
+        if (listSubjectColor.size == 0) { // if no existing data, add blank data to initialize list[0]
+            val subjectColor = SubjectColor("", 0)
+            listSubjectColor.add(subjectColor)
+            listSubject.add("")
         }
     }
 

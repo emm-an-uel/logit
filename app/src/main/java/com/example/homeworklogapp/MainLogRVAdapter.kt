@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
-class RVAdapter (
+class MainLogRVAdapter (
     private val taskList: ArrayList<Task>, // list of items to populate recycler view with
     private val mapSubjectColor: HashMap<String, Int> // list of subject-color pairs
-        ): RecyclerView.Adapter<RVAdapter.NewViewHolder>() {
+        ): RecyclerView.Adapter<MainLogRVAdapter.NewViewHolder>() {
 
             override fun onCreateViewHolder(
                 parent: ViewGroup,
@@ -46,7 +46,7 @@ class RVAdapter (
         holder.tvTask.text = taskList[position].task
         holder.tvDueDate.text = taskList[position].dueDate
 
-        val backgroundColor = mapSubjectColor[subject] // TODO: set background color of task_rv_item according to subject
+        val backgroundColorIndex = mapSubjectColor[subject] // TODO: set background color of task_rv_item according to subject
         //holder.cardView.setBackgroundColor()
     }
 

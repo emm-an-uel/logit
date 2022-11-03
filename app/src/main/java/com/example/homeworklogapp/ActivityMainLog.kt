@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Parcelable
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -32,6 +33,8 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var listSubjectColor: ArrayList<SubjectColor>
     lateinit var mapSubjectColor: HashMap<String, Int>
 
+    lateinit var listColors: ArrayList<Int>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_log)
@@ -39,6 +42,9 @@ class ActivityMainLog : AppCompatActivity() {
         // initialize lists
         todoList = ArrayList()
         doneList = ArrayList()
+
+        // initialize listColors
+        initListColors()
 
         // read "fileAssignment"
         readJsonFileAssignment()
@@ -336,5 +342,23 @@ class ActivityMainLog : AppCompatActivity() {
 
         bundleMapSubjectColor.putSerializable("mapSubjectColor", mapSubjectColor)
         supportFragmentManager.setFragmentResult("rqMapSubjectColor", bundleMapSubjectColor) // passes bundleMapSubjectColor to FragmentManager
+    }
+
+    private fun initListColors() {
+        listColors = arrayListOf(
+            R.color.blue,
+            R.color.red,
+            R.color.yellow,
+            R.color.green,
+            R.color.pink
+        )
+
+        passBundleListColors()
+    }
+
+    private fun passBundleListColors() {
+        val bundleListColors = Bundle()
+
+        bundleListColors.putParcelableArrayList(listColors)
     }
 }
