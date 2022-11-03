@@ -33,7 +33,7 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var listSubjectColor: ArrayList<SubjectColor>
     lateinit var mapSubjectColor: HashMap<String, Int>
 
-    lateinit var listColors: ArrayList<Int>
+    lateinit var listColors: ArrayList<Color>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -346,11 +346,11 @@ class ActivityMainLog : AppCompatActivity() {
 
     private fun initListColors() {
         listColors = arrayListOf(
-            R.color.blue,
-            R.color.red,
-            R.color.yellow,
-            R.color.green,
-            R.color.pink
+            Color(R.color.blue),
+            Color(R.color.red),
+            Color(R.color.yellow),
+            Color(R.color.green),
+            Color(R.color.pink)
         )
 
         passBundleListColors()
@@ -359,6 +359,6 @@ class ActivityMainLog : AppCompatActivity() {
     private fun passBundleListColors() {
         val bundleListColors = Bundle()
 
-        bundleListColors.putParcelableArrayList(listColors)
+        bundleListColors.putParcelableArrayList("listColors", listColors)
     }
 }
