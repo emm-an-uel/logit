@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.Klaxon
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import kotlinx.android.synthetic.main.settings_rv_item.view.*
 
 class ActivitySettings : AppCompatActivity() {
     lateinit var rvSettings: RecyclerView
@@ -94,9 +95,20 @@ class ActivitySettings : AppCompatActivity() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
-                val subjectColor = listSubjectColor[viewHolder.adapterPosition]
-                val position = viewHolder.adapterPosition
-                confirmDelete(subjectColor, position)
+                val etSubject = viewHolder.itemView.findViewById<EditText>(R.id.etSubject)
+                val subject = etSubject.text.toString().trim()
+                if (subject != "") { // show an AlertDialog only if subject isn't blank
+
+                    val spinnerColor = viewHolder.itemView.findViewById<Spinner>(R.id.spinnerColor)
+                    val colorIndex = spinnerColor.selectedItemPosition
+
+                    val subjectColor = SubjectColor(subject, colorIndex)
+                    val position = viewHolder.adapterPosition
+
+                    listSubjectColor[position] = subjectColor // updates listSubjectColor to reflect the current text in EditText
+                    listSubject[position] = subject // updates listSubject
+                    confirmDelete(subjectColor, position)
+                }
 
                 listSubjectColor.removeAt(viewHolder.adapterPosition)
                 listSubject.removeAt(viewHolder.adapterPosition)
@@ -127,7 +139,6 @@ class ActivitySettings : AppCompatActivity() {
 
             val subject = subjectColor.subject
             builder.setMessage("Remove ${subject}'s color code?")
-            // TODO: {subject} is currently referring to the subject in listSubjectColor; doesn't reflect changes made if the user hasn't saved
 
             builder.create()
         }

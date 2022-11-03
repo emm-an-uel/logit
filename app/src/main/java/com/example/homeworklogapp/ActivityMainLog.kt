@@ -127,10 +127,10 @@ class ActivityMainLog : AppCompatActivity() {
             }
         }
 
-        passBundles()
+        passBundlesTaskLists()
     }
 
-    private fun passBundles() {
+    private fun passBundlesTaskLists() {
         // sort both lists by due date
         todoList.sortBy { it.dateInt }
         doneList.sortBy { it.dateInt }
@@ -158,7 +158,7 @@ class ActivityMainLog : AppCompatActivity() {
             completedTask.status = true // set to done
             doneList.add(completedTask) // add completedTask to doneList
 
-            passBundles() // update lists\
+            passBundlesTaskLists() // update lists\
             saveJson()
         }
     }
@@ -177,7 +177,7 @@ class ActivityMainLog : AppCompatActivity() {
             restoredTask.status = false // set to undone
             todoList.add(restoredTask) // add restoredTask to toDoList
 
-            passBundles() // update lists
+            passBundlesTaskLists() // update lists
             saveJson()
             fabClickability() // set fab clickability depending on if there's any remaining tasks in doneList 
         }
@@ -259,7 +259,7 @@ class ActivityMainLog : AppCompatActivity() {
         doneList = ArrayList() // blank ArrayList
 
         saveJson()
-        passBundles()
+        passBundlesTaskLists()
         fabDisabled()
     }
 
@@ -319,5 +319,14 @@ class ActivityMainLog : AppCompatActivity() {
                 }
             }
         }
+
+        passBundlesSubjectColors()
+    }
+
+    private fun passBundlesSubjectColors() {
+        val bundleListSubjectColor = Bundle()
+
+        bundleListSubjectColor.putParcelableArrayList("listSubjectColor", listSubjectColor)
+        supportFragmentManager.setFragmentResult("rqListSubjectColor", bundleListSubjectColor) // passes bundleListSubjectColor to FragmentManager
     }
 }

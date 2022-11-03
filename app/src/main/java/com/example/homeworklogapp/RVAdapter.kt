@@ -4,13 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
 class RVAdapter (
-
-    // TODO: set background color of task_rv_item according to subject
-
     private val taskList: ArrayList<Task>, // list of items to populate recycler view with
+    private val listSubjectColor: ArrayList<SubjectColor> // list of subject-color pairs
         ): RecyclerView.Adapter<RVAdapter.NewViewHolder>() {
 
             override fun onCreateViewHolder(
@@ -31,6 +30,8 @@ class RVAdapter (
         val tvTask: TextView = itemView.findViewById(R.id.tvTask)
         val tvDueDate: TextView = itemView.findViewById(R.id.tvDueDate)
 
+        val cardView: CardView = itemView.findViewById(R.id.cardView)
+
         init {
             itemView.setOnClickListener() {
                 listener.onItemClick(adapterPosition)
@@ -39,9 +40,14 @@ class RVAdapter (
     }
 
     override fun onBindViewHolder(holder: NewViewHolder, position: Int) { // populate views with data from list
-        holder.tvSubject.text = taskList[position].subject
+        val subject = taskList[position].subject
+
+        holder.tvSubject.text = subject
         holder.tvTask.text = taskList[position].task
         holder.tvDueDate.text = taskList[position].dueDate
+
+        val backgroundColor = listSubjectColor // TODO: set background color of task_rv_item according to subject
+        holder.cardView.setBackgroundColor()
     }
 
     override fun getItemCount(): Int { // this function is required

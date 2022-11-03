@@ -13,6 +13,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
+import javax.security.auth.Subject
 
 class FragmentTodo : Fragment() {
 
@@ -20,6 +21,8 @@ class FragmentTodo : Fragment() {
     lateinit var RVAdapter: RVAdapter
     lateinit var todoList: ArrayList<Task>
     private var _binding: FragmentTodoBinding? = null
+
+    lateinit var listSubjectColor: ArrayList<SubjectColor>
 
     // setup view binding
     private val binding get() = _binding!!
@@ -84,7 +87,7 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         RVTodo = binding.rvTodo
-        RVAdapter = RVAdapter(todoList)
+        RVAdapter = RVAdapter(todoList, listSubjectColor)
 
         // set adapter to recycler view
         RVTodo.adapter = RVAdapter
@@ -111,7 +114,11 @@ class FragmentTodo : Fragment() {
     private fun getFromBundle() {
         setFragmentResultListener("rqTodoList") { requestKey, bundle ->
             todoList = bundle.getParcelableArrayList("todoList")!!
-            createRV()
+
+            setFragmentResultListener("rqListSubjectColor") { requestKey, bundle ->
+                listSubjectColor = bundle.getParcelableArrayList("listSubjectColor")!!
+                createRV()
+            }
         }
     }
 

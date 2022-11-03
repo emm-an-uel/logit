@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.Klaxon
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
 import com.google.android.material.snackbar.Snackbar
+import javax.security.auth.Subject
 
 
 class FragmentDone : Fragment() {
@@ -27,6 +28,8 @@ class FragmentDone : Fragment() {
     lateinit var allList: ArrayList<Task>
 
     private var _binding: FragmentDoneBinding? = null
+
+    lateinit var listSubjectColor: ArrayList<SubjectColor>
 
     // setup view binding
     private val binding get() = _binding!!
@@ -115,7 +118,7 @@ class FragmentDone : Fragment() {
 
     private fun createRV() {
         RVDone = binding.rvDone
-        RVAdapter = RVAdapter(doneList)
+        RVAdapter = RVAdapter(doneList, listSubjectColor)
 
         // set adapter to recycler view
         RVDone.adapter = RVAdapter
@@ -193,7 +196,11 @@ class FragmentDone : Fragment() {
     private fun getFromBundle() {
         setFragmentResultListener("rqDoneList") { requestKey, bundle ->
             doneList = bundle.getParcelableArrayList("doneList")!!
-            createRV()
+
+            setFragmentResultListener("rqListSubjectColor") { requestKey, bundle ->
+                listSubjectColor = bundle.getParcelableArrayList("listSubjectColor")!!
+                createRV()
+            }
         }
     }
 }
