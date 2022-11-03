@@ -341,7 +341,8 @@ class ActivityMainLog : AppCompatActivity() {
         val bundleMapSubjectColor = Bundle()
 
         bundleMapSubjectColor.putSerializable("mapSubjectColor", mapSubjectColor)
-        supportFragmentManager.setFragmentResult("rqMapSubjectColor", bundleMapSubjectColor) // passes bundleMapSubjectColor to FragmentManager
+        supportFragmentManager.setFragmentResult("rqMapSubjectColorTodo", bundleMapSubjectColor) // passes bundleMapSubjectColor to FragmentManager
+        supportFragmentManager.setFragmentResult("rqMapSubjectColorDone", bundleMapSubjectColor)
     }
 
     private fun initListColors() {
@@ -360,5 +361,7 @@ class ActivityMainLog : AppCompatActivity() {
         val bundleListColors = Bundle()
 
         bundleListColors.putParcelableArrayList("listColors", listColors)
+        supportFragmentManager.setFragmentResult("rqListColorsTodo", bundleListColors)
+        supportFragmentManager.setFragmentResult("rqListColorsDone", bundleListColors)
     }
 }

@@ -22,6 +22,8 @@ class FragmentTodo : Fragment() {
 
     lateinit var mapSubjectColor: HashMap<String, Int>
 
+    lateinit var listColors: ArrayList<Color>
+
     // setup view binding
     private val binding get() = _binding!!
 
@@ -85,7 +87,7 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         RVTodo = binding.rvTodo
-        RVAdapter = MainLogRVAdapter(todoList, mapSubjectColor)
+        RVAdapter = MainLogRVAdapter(todoList, mapSubjectColor, listColors)
 
         // set adapter to recycler view
         RVTodo.adapter = RVAdapter
@@ -113,10 +115,15 @@ class FragmentTodo : Fragment() {
         setFragmentResultListener("rqTodoList") { requestKey, bundle ->
             todoList = bundle.getParcelableArrayList("todoList")!!
 
-            setFragmentResultListener("rqMapSubjectColor") { requestKey, bundle ->
+            setFragmentResultListener("rqMapSubjectColorTodo") { requestKey, bundle ->
                 mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
                 createRV()
-            }
+            } // TODO: createRV() is called only after rqMapSubjectColorTodo is received. this does not refresh the RV upon swipes 
+        }
+
+        // retrieve listColors
+        setFragmentResultListener("rqListColorsTodo") { requestKey, bundle ->
+            listColors = bundle.getParcelableArrayList("listColors")!!
         }
     }
 

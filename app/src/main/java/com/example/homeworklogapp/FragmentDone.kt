@@ -27,6 +27,8 @@ class FragmentDone : Fragment() {
 
     lateinit var mapSubjectColor: HashMap<String, Int>
 
+    lateinit var listColors: ArrayList<Color>
+
     // setup view binding
     private val binding get() = _binding!!
 
@@ -114,7 +116,7 @@ class FragmentDone : Fragment() {
 
     private fun createRV() {
         RVDone = binding.rvDone
-        mainLogRVAdapter = MainLogRVAdapter(doneList, mapSubjectColor)
+        mainLogRVAdapter = MainLogRVAdapter(doneList, mapSubjectColor, listColors)
 
         // set adapter to recycler view
         RVDone.adapter = mainLogRVAdapter
@@ -193,10 +195,15 @@ class FragmentDone : Fragment() {
         setFragmentResultListener("rqDoneList") { requestKey, bundle ->
             doneList = bundle.getParcelableArrayList("doneList")!!
 
-            setFragmentResultListener("rqMapSubjectColor") { requestKey, bundle ->
+            setFragmentResultListener("rqMapSubjectColorDone") { requestKey, bundle ->
                 mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
                 createRV()
             }
+        }
+
+        // retrieve listColors
+        setFragmentResultListener("rqListColorsDone") { requestKey, bundle ->
+            listColors = bundle.getParcelableArrayList("listColors")!!
         }
     }
 }
