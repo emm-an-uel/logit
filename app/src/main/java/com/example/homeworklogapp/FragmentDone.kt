@@ -25,11 +25,10 @@ class FragmentDone : Fragment() {
     lateinit var RVDone: RecyclerView
     lateinit var RVAdapter: RVAdapter
     lateinit var doneList: ArrayList<Task>
-    lateinit var allList: ArrayList<Task>
 
     private var _binding: FragmentDoneBinding? = null
 
-    lateinit var listSubjectColor: ArrayList<SubjectColor>
+    lateinit var mapSubjectColor: HashMap<String, Int>
 
     // setup view binding
     private val binding get() = _binding!!
@@ -118,7 +117,7 @@ class FragmentDone : Fragment() {
 
     private fun createRV() {
         RVDone = binding.rvDone
-        RVAdapter = RVAdapter(doneList, listSubjectColor)
+        RVAdapter = RVAdapter(doneList, mapSubjectColor)
 
         // set adapter to recycler view
         RVDone.adapter = RVAdapter
@@ -197,8 +196,8 @@ class FragmentDone : Fragment() {
         setFragmentResultListener("rqDoneList") { requestKey, bundle ->
             doneList = bundle.getParcelableArrayList("doneList")!!
 
-            setFragmentResultListener("rqListSubjectColor") { requestKey, bundle ->
-                listSubjectColor = bundle.getParcelableArrayList("listSubjectColor")!!
+            setFragmentResultListener("rqMapSubjectColor") { requestKey, bundle ->
+                mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
                 createRV()
             }
         }

@@ -2,7 +2,6 @@ package com.example.homeworklogapp
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +12,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
-import javax.security.auth.Subject
+import java.io.Serializable
 
 class FragmentTodo : Fragment() {
 
@@ -22,7 +21,7 @@ class FragmentTodo : Fragment() {
     lateinit var todoList: ArrayList<Task>
     private var _binding: FragmentTodoBinding? = null
 
-    lateinit var listSubjectColor: ArrayList<SubjectColor>
+    lateinit var mapSubjectColor: HashMap<String, Int>
 
     // setup view binding
     private val binding get() = _binding!!
@@ -87,7 +86,7 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         RVTodo = binding.rvTodo
-        RVAdapter = RVAdapter(todoList, listSubjectColor)
+        RVAdapter = RVAdapter(todoList, mapSubjectColor)
 
         // set adapter to recycler view
         RVTodo.adapter = RVAdapter
@@ -115,8 +114,8 @@ class FragmentTodo : Fragment() {
         setFragmentResultListener("rqTodoList") { requestKey, bundle ->
             todoList = bundle.getParcelableArrayList("todoList")!!
 
-            setFragmentResultListener("rqListSubjectColor") { requestKey, bundle ->
-                listSubjectColor = bundle.getParcelableArrayList("listSubjectColor")!!
+            setFragmentResultListener("rqMapSubjectColor") { requestKey, bundle ->
+                mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
                 createRV()
             }
         }

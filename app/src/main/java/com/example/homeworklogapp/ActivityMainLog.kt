@@ -30,6 +30,7 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var bundleDone: Bundle
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
+    lateinit var mapSubjectColor: HashMap<String, Int>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -302,6 +303,7 @@ class ActivityMainLog : AppCompatActivity() {
 
     private fun readJsonListSubjectColor() {
         listSubjectColor = arrayListOf()
+        mapSubjectColor = hashMapOf()
 
         val file = File(this.filesDir, "listSubjectColor")
 
@@ -309,24 +311,30 @@ class ActivityMainLog : AppCompatActivity() {
 
             val fileJson = file.readText()
 
-            // convert into list
+            // convert into map
             JsonReader(StringReader(fileJson)).use { reader ->
                 reader.beginArray {
                     while (reader.hasNext()) {
                         val subjectColor = Klaxon().parse<SubjectColor>(reader)
+
                         listSubjectColor.add(subjectColor!!)
+                        
+                        val subject = subjectColor.subject
+                        val color = subjectColor.colorIndex
+                        
+                        mapSubjectColor.put(subject, color)
                     }
                 }
             }
         }
 
-        passBundlesSubjectColors()
+        passBundleSubjectColors()
     }
 
-    private fun passBundlesSubjectColors() {
-        val bundleListSubjectColor = Bundle()
+    private fun passBundleSubjectColors() {
+        val bundleMapSubjectColor = Bundle()
 
-        bundleListSubjectColor.putParcelableArrayList("listSubjectColor", listSubjectColor)
-        supportFragmentManager.setFragmentResult("rqListSubjectColor", bundleListSubjectColor) // passes bundleListSubjectColor to FragmentManager
+        bundleMapSubjectColor.putSerializable("mapSubjectColor", mapSubjectColor)
+        supportFragmentManager.setFragmentResult("rqMapSubjectColor", bundleMapSubjectColor) // passes bundleMapSubjectColor to FragmentManager
     }
 }
