@@ -12,7 +12,8 @@ import androidx.recyclerview.widget.RecyclerView
 
 class SettingsRVAdapter(
     private val listSubjectColor: ArrayList<SubjectColor>, // list of items to populate rv with
-    private val listSubject: ArrayList<String>
+    private val listSubject: ArrayList<String>,
+    private val listColors: ArrayList<Int>
 ) : RecyclerView.Adapter<SettingsRVAdapter.NewViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -25,22 +26,14 @@ class SettingsRVAdapter(
             false
         )
 
-        return NewViewHolder(itemView)
+        return NewViewHolder(itemView, listColors)
     }
 
-    class NewViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) { // initialize views
+    class NewViewHolder(itemView: View, listColors: ArrayList<Int>) : RecyclerView.ViewHolder(itemView) { // initialize views
 
         val etSubject: EditText = itemView.findViewById(R.id.etSubject)
 
         val context = etSubject.context
-
-        val listColors = arrayListOf(
-            R.color.blue,
-            R.color.red,
-            R.color.yellow,
-            R.color.green,
-            R.color.pink
-        )
 
         val spinnerColor: Spinner = itemView.findViewById(R.id.spinnerColor)
         val adapter = SettingsSpinnerAdapter(context, listColors)

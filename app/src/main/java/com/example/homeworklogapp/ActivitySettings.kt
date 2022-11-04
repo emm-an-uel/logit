@@ -49,8 +49,8 @@ class ActivitySettings : AppCompatActivity() {
 
     private fun initListColors() {
         listColors = arrayListOf(
-            R.color.blue,
-            R.color.red,
+            R.color.pastel_blue,
+            R.color.pastel_red,
             R.color.yellow,
             R.color.green,
             R.color.pink
@@ -80,7 +80,7 @@ class ActivitySettings : AppCompatActivity() {
 
     private fun setupRecyclerView() {
         rvSettings = findViewById(R.id.rvSettings)
-        rvAdapter = SettingsRVAdapter(listSubjectColor, listSubject)
+        rvAdapter = SettingsRVAdapter(listSubjectColor, listSubject, listColors)
         rvSettings.adapter = rvAdapter
 
         swipeFunctions()
