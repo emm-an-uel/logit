@@ -195,9 +195,13 @@ class FragmentDone : Fragment() {
         setFragmentResultListener("rqDoneList") { requestKey, bundle ->
             doneList = bundle.getParcelableArrayList("doneList")!!
 
-            setFragmentResultListener("rqMapSubjectColorDone") { requestKey, bundle ->
-                mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
+            if (mapSubjectColor != null) {
                 createRV()
+            } else {
+                setFragmentResultListener("rqMapSubjectColorDone") { requestKey, bundle ->
+                    mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
+                    createRV()
+                }
             }
         }
 
