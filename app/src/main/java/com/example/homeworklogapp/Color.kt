@@ -5,5 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 class Color (
-    val color: Int
+    val backgroundColor: Int,
+    val textColor: Int
         ) : Parcelable

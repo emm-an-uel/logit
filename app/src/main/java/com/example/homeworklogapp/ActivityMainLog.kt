@@ -347,11 +347,11 @@ class ActivityMainLog : AppCompatActivity() {
 
     private fun initListColors() {
         listColors = arrayListOf(
-            Color(R.color.blue),
-            Color(R.color.red),
-            Color(R.color.yellow),
-            Color(R.color.green),
-            Color(R.color.pink)
+            Color(R.color.blue, R.color.white),
+            Color(R.color.red, R.color.white),
+            Color(R.color.yellow, R.color.black),
+            Color(R.color.green, R.color.white),
+            Color(R.color.pink, R.color.black)
         )
 
         passBundleListColors()

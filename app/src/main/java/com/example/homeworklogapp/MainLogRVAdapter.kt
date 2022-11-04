@@ -49,11 +49,17 @@ class MainLogRVAdapter (
         holder.tvTask.text = taskList[position].task
         holder.tvDueDate.text = taskList[position].dueDate
 
-        val backgroundColorIndex = mapSubjectColor[subject] // TODO: set background color of task_rv_item according to subject
+        val backgroundColorIndex = mapSubjectColor[subject] // TODO: set text color according to background color
 
         if (backgroundColorIndex != null) {
-            val color = listColors[backgroundColorIndex].color
-            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, color))
+            val backgroundColor = ContextCompat.getColor(context, listColors[backgroundColorIndex].backgroundColor)
+            val textColor = ContextCompat.getColor(context, listColors[backgroundColorIndex].textColor)
+
+            holder.cardView.setCardBackgroundColor(backgroundColor)
+
+            holder.tvSubject.setTextColor(textColor)
+            holder.tvTask.setTextColor(textColor)
+            holder.tvDueDate.setTextColor(textColor)
         }
     }
 
