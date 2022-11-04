@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 class MainLogRVAdapter (
     private val taskList: ArrayList<Task>, // list of items to populate recycler view with
     private val mapSubjectColor: HashMap<String, Int>, // list of subject-color pairs
-    private val listColors: ArrayList<Color> // list of Colors
+    private val listColors: ArrayList<CardColor> // list of Colors
         ): RecyclerView.Adapter<MainLogRVAdapter.NewViewHolder>() {
 
             override fun onCreateViewHolder(
@@ -49,7 +49,7 @@ class MainLogRVAdapter (
         holder.tvTask.text = taskList[position].task
         holder.tvDueDate.text = taskList[position].dueDate
 
-        val backgroundColorIndex = mapSubjectColor[subject] // TODO: set text color according to background color
+        val backgroundColorIndex = mapSubjectColor[subject]
 
         if (backgroundColorIndex != null) {
             val backgroundColor = ContextCompat.getColor(context, listColors[backgroundColorIndex].backgroundColor)

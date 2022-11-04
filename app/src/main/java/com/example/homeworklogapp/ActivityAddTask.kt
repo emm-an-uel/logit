@@ -39,6 +39,8 @@ class ActivityAddTask : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)
 
+        // TODO: change etSubject to a spinner selection of existing subjects (in listSubjectColor) or a custom subject with no color code
+
         etTask = findViewById(R.id.etTask)
         etSubject = findViewById(R.id.etSubject)
         btnConfirm = findViewById(R.id.btnConfirm)

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.os.Parcelable
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
@@ -33,7 +32,7 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var listSubjectColor: ArrayList<SubjectColor>
     lateinit var mapSubjectColor: HashMap<String, Int>
 
-    lateinit var listColors: ArrayList<Color>
+    lateinit var listColors: ArrayList<CardColor>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -347,11 +346,11 @@ class ActivityMainLog : AppCompatActivity() {
 
     private fun initListColors() {
         listColors = arrayListOf(
-            Color(R.color.blue, R.color.white),
-            Color(R.color.red, R.color.white),
-            Color(R.color.yellow, R.color.black),
-            Color(R.color.green, R.color.white),
-            Color(R.color.pink, R.color.black)
+            CardColor(R.color.pastel_blue, R.color.black),
+            CardColor(R.color.pastel_red, R.color.black),
+            CardColor(R.color.yellow, R.color.black),
+            CardColor(R.color.green, R.color.black),
+            CardColor(R.color.pink, R.color.black)
         )
 
         passBundleListColors()

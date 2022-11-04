@@ -27,7 +27,7 @@ class FragmentDone : Fragment() {
 
     lateinit var mapSubjectColor: HashMap<String, Int>
 
-    lateinit var listColors: ArrayList<Color>
+    lateinit var listColors: ArrayList<CardColor>
 
     // setup view binding
     private val binding get() = _binding!!

@@ -9,7 +9,10 @@
     <color name="gray">#808080</color>
 
     <color name="red">#C81927</color>
-    <color name="yellow">#F4B400</color>
-    <color name="green">#0F9D58</color>
-    <color name="pink">#BDA2CD</color>
+
+    <color name="pastel_blue">#C5DAFC</color>
+    <color name="pastel_red">#F39197</color>
+    <color name="yellow">#FFDE85</color>
+    <color name="green">#55F1A6</color>
+    <color name="pink">#BCA3CC</color>
 </resources>
