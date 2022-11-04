@@ -45,6 +45,9 @@ class FragmentDone : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // initialize map
+        mapSubjectColor = hashMapOf()
+
         // retrieve bundle
         getFromBundle()
     }
@@ -195,7 +198,7 @@ class FragmentDone : Fragment() {
         setFragmentResultListener("rqDoneList") { requestKey, bundle ->
             doneList = bundle.getParcelableArrayList("doneList")!!
 
-            if (mapSubjectColor != null) {
+            if (mapSubjectColor.size > 0) {
                 createRV()
             } else {
                 setFragmentResultListener("rqMapSubjectColorDone") { requestKey, bundle ->
