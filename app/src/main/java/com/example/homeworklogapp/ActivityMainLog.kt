@@ -346,11 +346,11 @@ class ActivityMainLog : AppCompatActivity() {
 
     private fun initListColors() {
         listColors = arrayListOf(
-            CardColor(R.color.pastel_blue, R.color.black),
-            CardColor(R.color.pastel_red, R.color.black),
-            CardColor(R.color.yellow, R.color.black),
-            CardColor(R.color.green, R.color.black),
-            CardColor(R.color.pink, R.color.black)
+            CardColor(R.color.cardview_blue, R.color.white),
+            CardColor(R.color.cardview_red, R.color.white),
+            CardColor(R.color.cardview_yellow, R.color.black),
+            CardColor(R.color.cardview_green, R.color.white),
+            CardColor(R.color.cardview_purple, R.color.white)
         )
 
         passBundleListColors()

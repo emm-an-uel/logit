@@ -49,11 +49,11 @@ class ActivitySettings : AppCompatActivity() {
 
     private fun initListColors() {
         listColors = arrayListOf(
-            R.color.pastel_blue,
-            R.color.pastel_red,
-            R.color.yellow,
-            R.color.green,
-            R.color.pink
+            R.color.cardview_blue,
+            R.color.cardview_red,
+            R.color.cardview_yellow,
+            R.color.cardview_green,
+            R.color.cardview_purple
         )
     }
 

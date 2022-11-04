@@ -7,7 +7,7 @@
         <item name="colorOnPrimary">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/white</item>
-        <item name="colorSecondaryVariant">@color/pink</item>
+        <item name="colorSecondaryVariant">@color/cardview_purple</item>
         <item name="colorOnSecondary">@color/white</item>
         <item name="colorPrimaryInverse">@color/white</item>
         <!-- Status bar color. -->
