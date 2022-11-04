@@ -53,7 +53,7 @@ class MainLogRVAdapter (
 
         if (backgroundColorIndex != null) {
             val color = listColors[backgroundColorIndex].color
-            holder.cardView.setBackgroundColor(ContextCompat.getColor(context, color))
+            holder.cardView.setCardBackgroundColor(ContextCompat.getColor(context, color))
         }
     }
 

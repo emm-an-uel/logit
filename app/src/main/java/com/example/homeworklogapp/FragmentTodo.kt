@@ -118,13 +118,14 @@ class FragmentTodo : Fragment() {
         setFragmentResultListener("rqTodoList") { requestKey, bundle ->
             todoList = bundle.getParcelableArrayList("todoList")!!
 
-            if (mapSubjectColor.size > 0) {
-                createRV()
-            } else {
+            if (mapSubjectColor.size > 0) { // if mapSubjectColor already exists (ie not the first time loading up this fragment)
+                createRV() // createRV() is called here to reflect changes when user swipes
+
+            } else { // if it is the first time loading up this fragment
                 setFragmentResultListener("rqMapSubjectColorTodo") { requestKey, bundle ->
                     mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
-                    createRV()
-                } // TODO: createRV() is called only after rqMapSubjectColorTodo is received. this does not refresh the RV upon swipes
+                    createRV() // createRV() is called here only after getting mapSubjectColor (if it's the first time loading up this fragment)
+                }
             }
         }
 
