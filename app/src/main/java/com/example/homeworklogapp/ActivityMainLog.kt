@@ -108,7 +108,7 @@ class ActivityMainLog : AppCompatActivity() {
         deleteTask()
     }
 
-    private fun readJsonFileAssignment() { // TODO: use ViewModel to read json file then pass to ActivityMainLog for better efficiency
+    private fun readJsonFileAssignment() { // TODO: instantiate ViewModel
 
         val file = File(this.filesDir, "fileAssignment")
 

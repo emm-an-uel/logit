@@ -40,6 +40,9 @@ android {
 
 dependencies {
 
+    // viewmodel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
+
     // klaxon
     implementation 'com.beust:klaxon:5.5'
 
