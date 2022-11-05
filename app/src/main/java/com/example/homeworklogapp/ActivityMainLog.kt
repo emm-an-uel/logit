@@ -9,6 +9,7 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
@@ -34,9 +35,14 @@ class ActivityMainLog : AppCompatActivity() {
 
     lateinit var listColors: ArrayList<CardColor>
 
+    lateinit var viewModel: ViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_log)
+
+        // instantiate viewModel
+        viewModel = ViewModelProvider(this).get(ViewModel::class.java) 
 
         // initialize lists
         todoList = ArrayList()
@@ -108,30 +114,12 @@ class ActivityMainLog : AppCompatActivity() {
         deleteTask()
     }
 
-    private fun readJsonFileAssignment() { // TODO: instantiate ViewModel
+    private fun readJsonFileAssignment() {
 
-        val file = File(this.filesDir, "fileAssignment")
+        viewModel.initTaskLists() // creates todoList and doneList
 
-        if (file.exists()) {
-
-            // deserialize and read json
-            val fileJson = file.readText() // read file
-
-            // convert fileJson into list
-            JsonReader(StringReader(fileJson)).use { reader ->
-                reader.beginArray {
-                    while (reader.hasNext()) {
-                        val t = Klaxon().parse<Task>(reader)
-
-                        if (!t!!.status) { // undone
-                            todoList.add(t)
-                        } else { // done
-                            doneList.add(t)
-                        }
-                    }
-                }
-            }
-        }
+        todoList = viewModel.getTodoList()
+        doneList = viewModel.getDoneList()
 
         passBundlesTaskLists()
     }

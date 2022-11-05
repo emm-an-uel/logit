@@ -46,7 +46,7 @@ class ViewModel(val app: Application): AndroidViewModel(app) {
         }
     }
 
-    // TODO: get() methods might cause crashes if lists are empty?
+    // TODO: test if crashes happen if lists are empty; get() methods might cause crashes if lists are empty?
 
     @JvmName("getTodoList1")
     fun getTodoList(): ArrayList<Task> {

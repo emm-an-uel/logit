@@ -9,6 +9,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
@@ -22,7 +23,9 @@ class FragmentTodo : Fragment() {
 
     lateinit var mapSubjectColor: HashMap<String, Int>
 
-    lateinit var listColors: ArrayList<CardColor>
+    lateinit var listCardColors: ArrayList<CardColor>
+
+    lateinit var viewModel: ViewModel
 
     // setup view binding
     private val binding get() = _binding!!
@@ -31,6 +34,9 @@ class FragmentTodo : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        // instantiate viewModel
+        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
 
         _binding = FragmentTodoBinding.inflate(inflater, container, false)
         return binding.root
@@ -43,8 +49,11 @@ class FragmentTodo : Fragment() {
         // initialize map
         mapSubjectColor = hashMapOf()
 
+        // get todoList
+        getLists()
+
         // retrieve bundle
-        getFromBundle()
+        //getFromBundle()
     }
 
     override fun onDestroyView() {
@@ -55,7 +64,8 @@ class FragmentTodo : Fragment() {
     // refresh recyclerView
     override fun onResume() {
         super.onResume()
-        getFromBundle()
+        getLists()
+        //getFromBundle()
     }
 
     private fun swipeFunctions() {
@@ -90,7 +100,7 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         RVTodo = binding.rvTodo
-        RVAdapter = MainLogRVAdapter(todoList, mapSubjectColor, listColors)
+        RVAdapter = MainLogRVAdapter(todoList, mapSubjectColor, listCardColors)
 
         // set adapter to recycler view
         RVTodo.adapter = RVAdapter
@@ -131,11 +141,25 @@ class FragmentTodo : Fragment() {
 
         // retrieve listColors
         setFragmentResultListener("rqListColorsTodo") { requestKey, bundle ->
-            listColors = bundle.getParcelableArrayList("listColors")!!
+            listCardColors = bundle.getParcelableArrayList("listColors")!!
         }
     }
 
     private fun taskCompleted(completedTask: Task) {
         setFragmentResult("rqCompletedTask", bundleOf("bundleCompletedTask" to completedTask))
+    }
+
+    private fun getLists() {
+        todoList = viewModel.getTodoList()
+
+        if (mapSubjectColor.size > 0) { // if mapSubjectColor already exists (ie not the first time loading up this fragment)
+            createRV() // createRV() is called here to reflect changes when user swipes
+
+        } else { // if mapSubjectColor is still empty (ie first time loading up this fragment)
+            mapSubjectColor = viewModel.getMapSubjectColor()
+            createRV()
+        }
+
+        listCardColors = viewModel.getListCardColors()
     }
 }
