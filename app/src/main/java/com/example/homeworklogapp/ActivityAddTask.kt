@@ -11,6 +11,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.EditText
+import android.widget.Spinner
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import com.beust.klaxon.JsonReader
@@ -27,22 +28,28 @@ class ActivityAddTask : AppCompatActivity() {
     lateinit var today: Calendar
     var dateInt = 0
 
+    lateinit var spinnerSubject: Spinner
     lateinit var etTask: EditText
-    lateinit var etSubject: EditText
     lateinit var btnConfirm: Button
     lateinit var etNotes: EditText
+
+    lateinit var etSubject: EditText
+
 
     var editedTask = false
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_task)
+        setContentView(R.layout.activity_add_task_2)
 
         // TODO: change etSubject to a spinner selection of existing subjects (in listSubjectColor) or an 'other' subject with no color code
 
-        etTask = findViewById(R.id.etTask)
         etSubject = findViewById(R.id.etSubject)
+
+        spinnerSubject = findViewById(R.id.spinnerSubject)
+        setupSpinnerSubject()
+        etTask = findViewById(R.id.etTask)
         btnConfirm = findViewById(R.id.btnConfirm)
         etNotes = findViewById(R.id.etNotes)
 
@@ -334,5 +341,11 @@ class ActivityAddTask : AppCompatActivity() {
                 it.write(updatedFile.toByteArray())
             }
         }
+    }
+
+    private fun setupSpinnerSubject() {
+        val listSubjects = arrayListOf<String>()
+
+        val listSubjectColor = 
     }
 }
