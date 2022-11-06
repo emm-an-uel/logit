@@ -69,8 +69,7 @@ class ActivityMainLog : AppCompatActivity() {
         fabTask = findViewById(R.id.fabTask)
 
         fabTask.setOnClickListener { // default onClickListener is addTask
-            val intent = Intent(this@ActivityMainLog, ActivityAddTask::class.java)
-            startActivity(intent)
+            startActivityAddTask()
         }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -82,8 +81,7 @@ class ActivityMainLog : AppCompatActivity() {
 
                     fabTask.setImageResource(android.R.drawable.ic_input_add)
                     fabTask.setOnClickListener {
-                        val intent = Intent(this@ActivityMainLog, ActivityAddTask::class.java)
-                        startActivity(intent)
+                        startActivityAddTask()
                     }
 
                 } else { // if in fragmentDone
@@ -225,5 +223,13 @@ class ActivityMainLog : AppCompatActivity() {
 
         viewModel.initListCardColors()
         listCardColors = viewModel.getListCardColors()
+    }
+
+    private fun startActivityAddTask() {
+        val intent = Intent(this@ActivityMainLog, ActivityAddTask::class.java)
+
+        val listSubjects: ArrayList<String> = viewModel.getListSubjects()
+        intent.putExtra("listSubjects", listSubjects)
+        startActivity(intent)
     }
 }

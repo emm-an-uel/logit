@@ -15,6 +15,7 @@ class ViewModel(val app: Application): AndroidViewModel(app) {
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
     lateinit var mapSubjectColor: HashMap<String, Int>
+    lateinit var listSubjects: ArrayList<String>
 
     lateinit var listCardColors: ArrayList<CardColor>
     lateinit var listColors: ArrayList<Int>
@@ -119,6 +120,7 @@ class ViewModel(val app: Application): AndroidViewModel(app) {
     fun initSubjectColor() {
         listSubjectColor = arrayListOf()
         mapSubjectColor = hashMapOf()
+        listSubjects = arrayListOf()
 
         val file = File(app.filesDir, "listSubjectColor")
 
@@ -138,6 +140,8 @@ class ViewModel(val app: Application): AndroidViewModel(app) {
                         val color = subjectColor.colorIndex
 
                         mapSubjectColor.put(subject, color)
+
+                        listSubjects.add(subject)
                     }
                 }
             }
@@ -152,6 +156,11 @@ class ViewModel(val app: Application): AndroidViewModel(app) {
     @JvmName("getMapSubjectColor1")
     fun getMapSubjectColor(): HashMap<String, Int> {
         return mapSubjectColor
+    }
+
+    @JvmName("getListSubjects1")
+    fun getListSubjects(): ArrayList<String> {
+        return listSubjects
     }
 
     fun initListCardColors() {
