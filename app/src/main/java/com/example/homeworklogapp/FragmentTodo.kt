@@ -110,6 +110,8 @@ class FragmentTodo : Fragment() {
                 // start ActivityAddTask
                 val intent = Intent(activity, ActivityAddTask::class.java)
                 intent.putExtra("taskId", selectedTask.id)
+                val listSubjects: ArrayList<String> = viewModel.getListSubjects()
+                intent.putExtra("listSubjects", listSubjects)
                 activity?.startActivity(intent)
             }
 

@@ -42,6 +42,7 @@ class ActivityAddTask : AppCompatActivity() {
 
         spinnerSubject = findViewById(R.id.spinnerSubject)
         setupSpinnerSubject()
+
         etTask = findViewById(R.id.etTask)
         btnConfirm = findViewById(R.id.btnConfirm)
         etNotes = findViewById(R.id.etNotes)
@@ -53,6 +54,8 @@ class ActivityAddTask : AppCompatActivity() {
             editedTask = true
 
             currentTask = findCurrentTask(editTaskId)
+
+            setChosenSpinnerOption(currentTask.subject)
 
             // datePicker stuff
             val dateList = currentTask.dueDate.split(" ").toList()
@@ -91,6 +94,9 @@ class ActivityAddTask : AppCompatActivity() {
             etNotes.text = currentTask.notes.toEditable()
 
         } else { // if there's no task to be edited
+
+            setChosenSpinnerOption("Other")
+
             today = Calendar.getInstance()
             val datePicker: DatePicker = findViewById(R.id.dpDueDate)
 
@@ -118,6 +124,7 @@ class ActivityAddTask : AppCompatActivity() {
         if (editedTask) {
             etTask.addTextChangedListener(textWatcherTask)
 
+            // check if subject has been changed
             spinnerSubject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     if (p2 == originalSpinnerIndex) { // note: p2 is current position
@@ -353,5 +360,7 @@ class ActivityAddTask : AppCompatActivity() {
             originalSpinnerIndex = listSubjectsSpinner.indexOf(subject) // spinnerIndex is the index of "subject" in listSubjects
             spinnerSubject.setSelection(originalSpinnerIndex) // sets starting selection to the same index as above
         }
+
+        spinnerSubject.setSelection(originalSpinnerIndex) // sets default selection to the index determined above
     }
 }
