@@ -29,20 +29,16 @@ class ActivityAddTask : AppCompatActivity() {
     lateinit var btnConfirm: Button
     lateinit var etNotes: EditText
 
-    lateinit var etSubject: EditText
-
     var editedTask = false
 
     lateinit var listSubjectsSpinner: ArrayList<String>
+
+    var originalSpinnerIndex = 0
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task_2)
-
-        // TODO: change etSubject to a spinner selection of existing subjects (in listSubjectColor) or an 'other' subject with no color code
-
-        etSubject = findViewById(R.id.etSubject)
 
         spinnerSubject = findViewById(R.id.spinnerSubject)
         setupSpinnerSubject()
@@ -92,8 +88,6 @@ class ActivityAddTask : AppCompatActivity() {
 
             // set EditTexts' content appropriately
             etTask.text = currentTask.task.toEditable()
-            val startingSpinnerOption = setChosenSpinnerOption(currentTask.subject)
-            etSubject.text = currentTask.subject.toEditable()
             etNotes.text = currentTask.notes.toEditable()
 
         } else { // if there's no task to be edited
@@ -126,8 +120,10 @@ class ActivityAddTask : AppCompatActivity() {
 
             spinnerSubject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                    if (spinnerSubject.selectedItemPosition == ) {
-                        // TODO: check if its the same position being selected
+                    if (p2 == originalSpinnerIndex) { // note: p2 is current position
+                        btnDisabled()
+                    } else {
+                        btnEnabled()
                     }
                 }
 
@@ -136,20 +132,17 @@ class ActivityAddTask : AppCompatActivity() {
 
             }
 
-            etSubject.addTextChangedListener(textWatcherSubject)
             etNotes.addTextChangedListener(textWatcherNotes)
         } else {
-            etTask.addTextChangedListener(SettingsRVAdapter.textWatcher)
+            etTask.addTextChangedListener(textWatcher)
         }
 
         // when button "confirm" is clicked
         btnConfirm.setOnClickListener() {
-            
-            val subject = if (etSubject.text.toString() == "") { // subject = "Other" if not filled by user
-                "Other"
-            } else {
-                etSubject.text.toString().trim()
-            }
+
+
+            val selectedSpinnerIndex = spinnerSubject.selectedItemPosition
+            val subject = listSubjectsSpinner[selectedSpinnerIndex]
 
             val task = etTask.text.toString().trim()
             val status = false // false = undone, true = done
@@ -199,20 +192,6 @@ class ActivityAddTask : AppCompatActivity() {
             if (etTask.text.toString().trim() == currentTask.task) { // if task is unchanged
                 btnDisabled()
             } else if (etTask.text.toString().trim() == "") { // if task is empty
-                btnDisabled()
-            } else {
-                btnEnabled()
-            }
-        }
-    }
-
-    private val textWatcherSubject = object : TextWatcher {
-        override fun afterTextChanged(s: Editable?) {
-        }
-        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-        }
-        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (etSubject.text.toString().trim() == currentTask.subject) { // if subject is unchanged
                 btnDisabled()
             } else {
                 btnEnabled()
@@ -358,8 +337,6 @@ class ActivityAddTask : AppCompatActivity() {
 
         listSubjectsSpinner = arrayListOf()
 
-        // TODO: finish setting up spinner; remove all etSubject stuff
-
         listSubjectsSpinner.addAll(intent.getStringArrayListExtra("listSubjects")!!) // listSubjects: ArrayList<String>
         listSubjectsSpinner.add("Other") // final option of "Other"
 
@@ -369,14 +346,12 @@ class ActivityAddTask : AppCompatActivity() {
         spinnerSubject.adapter = adapter
     }
 
-    private fun setChosenSpinnerOption(subject: String): Int {
-        var spinnerIndex = listSubjectsSpinner.size - 1 // by default: last item in list (ie "Other")
+    private fun setChosenSpinnerOption(subject: String) {
+        originalSpinnerIndex = listSubjectsSpinner.size - 1 // by default: last item in list (ie "Other")
 
         if (subject != "Other") {
-            spinnerIndex = listSubjectsSpinner.indexOf(subject) // spinnerIndex is the index of "subject" in listSubjects
-            spinnerSubject.setSelection(spinnerIndex) // sets starting selection to the same index as above
+            originalSpinnerIndex = listSubjectsSpinner.indexOf(subject) // spinnerIndex is the index of "subject" in listSubjects
+            spinnerSubject.setSelection(originalSpinnerIndex) // sets starting selection to the same index as above
         }
-
-        return spinnerIndex
     }
 }
