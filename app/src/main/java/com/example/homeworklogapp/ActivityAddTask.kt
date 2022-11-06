@@ -38,7 +38,7 @@ class ActivityAddTask : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_task_2)
+        setContentView(R.layout.activity_add_task)
 
         spinnerSubject = findViewById(R.id.spinnerSubject)
         setupSpinnerSubject()
