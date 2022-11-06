@@ -12,6 +12,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
@@ -27,7 +28,9 @@ class FragmentDone : Fragment() {
 
     lateinit var mapSubjectColor: HashMap<String, Int>
 
-    lateinit var listColors: ArrayList<CardColor>
+    lateinit var listCardColors: ArrayList<CardColor>
+
+    lateinit var viewModel: ViewModel
 
     // setup view binding
     private val binding get() = _binding!!
@@ -36,6 +39,8 @@ class FragmentDone : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
 
         _binding = FragmentDoneBinding.inflate(inflater, container, false)
         return binding.root
@@ -48,8 +53,11 @@ class FragmentDone : Fragment() {
         // initialize map
         mapSubjectColor = hashMapOf()
 
-        // retrieve bundle
-        getFromBundle()
+        // get doneList
+        getLists()
+
+        // watch for clearAll
+        checkClearAll()
     }
 
     override fun onDestroyView() {
@@ -60,7 +68,7 @@ class FragmentDone : Fragment() {
     // refresh recyclerView
     override fun onResume() {
         super.onResume()
-        getFromBundle()
+        getLists()
     }
 
     private fun swipeFunctions() {
@@ -119,7 +127,7 @@ class FragmentDone : Fragment() {
 
     private fun createRV() {
         RVDone = binding.rvDone
-        mainLogRVAdapter = MainLogRVAdapter(doneList, mapSubjectColor, listColors)
+        mainLogRVAdapter = MainLogRVAdapter(doneList, mapSubjectColor, listCardColors)
 
         // set adapter to recycler view
         RVDone.adapter = mainLogRVAdapter
@@ -135,10 +143,6 @@ class FragmentDone : Fragment() {
         })
 
         mainLogRVAdapter.notifyDataSetChanged()
-    }
-
-    private fun restoreTask(restoredTask: Task) {
-        setFragmentResult("rqRestoredTask", bundleOf("bundleRestoredTask" to restoredTask))
     }
 
     private fun confirmDelete(deletedTask: Task, position: Int) {
@@ -182,7 +186,20 @@ class FragmentDone : Fragment() {
     }
 
     private fun deleteTask(deletedTask: Task) {
-        setFragmentResult("rqDeletedTask", bundleOf("bundleDeletedTask" to deletedTask))
+        viewModel.deleteTask(deletedTask)
+
+        val bundle = Bundle()
+        bundle.putInt("fabClickability", 0)
+        setFragmentResult("rqCheckFabClickability", bundle)
+    }
+
+    private fun restoreTask(restoredTask: Task) {
+        viewModel.restoreTask(restoredTask)
+
+        // below code is just so ActivityMainLog calls checkFabClickability() when a task is restored
+        val bundle = Bundle()
+        bundle.putInt("fabClickability", 0)
+        setFragmentResult("rqCheckFabClickability", bundle)
     }
 
     private fun getColor(context: Context, colorResId: Int): Int {
@@ -194,23 +211,21 @@ class FragmentDone : Fragment() {
         return color
     }
 
-    private fun getFromBundle() {
-        setFragmentResultListener("rqDoneList") { requestKey, bundle ->
-            doneList = bundle.getParcelableArrayList("doneList")!!
+    private fun getLists() {
+        doneList = viewModel.getDoneList()
+        listCardColors = viewModel.getListCardColors()
 
-            if (mapSubjectColor.size > 0) {
-                createRV()
-            } else {
-                setFragmentResultListener("rqMapSubjectColorDone") { requestKey, bundle ->
-                    mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
-                    createRV()
-                }
-            }
+        if (mapSubjectColor.size > 0) {
+            createRV()
+        } else {
+            mapSubjectColor = viewModel.getMapSubjectColor()
+            createRV()
         }
+    }
 
-        // retrieve listColors
-        setFragmentResultListener("rqListColorsDone") { requestKey, bundle ->
-            listColors = bundle.getParcelableArrayList("listColors")!!
+    private fun checkClearAll() {
+        setFragmentResultListener("rqClearAll") { requestKey, bundle ->
+            getLists()
         }
     }
 }

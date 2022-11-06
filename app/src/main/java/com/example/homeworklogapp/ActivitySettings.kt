@@ -58,6 +58,7 @@ class ActivitySettings : AppCompatActivity() {
     }
 
     private fun initListSubjectColor() {
+
         listSubjectColor = arrayListOf()
         listSubject = arrayListOf()
 

@@ -11,14 +11,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import java.io.File
-import java.io.StringReader
 
 class ActivityMainLog : AppCompatActivity() {
 
@@ -33,7 +30,7 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var listSubjectColor: ArrayList<SubjectColor>
     lateinit var mapSubjectColor: HashMap<String, Int>
 
-    lateinit var listColors: ArrayList<CardColor>
+    lateinit var listCardColors: ArrayList<CardColor>
 
     lateinit var viewModel: ViewModel
 
@@ -51,11 +48,11 @@ class ActivityMainLog : AppCompatActivity() {
         // initialize listColors
         initListColors()
 
-        // read "fileAssignment"
-        readJsonFileAssignment()
+        // initialize todoList and doneList in ViewModel
+        initTaskLists()
 
-        // read "listSubjectColor"
-        readJsonListSubjectColor()
+        // initialize listSubjectColor and mapSubjectColor in ViewModel
+        initSubjectColor()
 
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
@@ -92,7 +89,7 @@ class ActivityMainLog : AppCompatActivity() {
                 } else { // if in fragmentDone
                     fabTask.setImageResource(R.drawable.icon_trash)
 
-                    fabClickability() // set clickability
+                    checkFabClickability() // set clickability
 
                     fabTask.setOnClickListener {
                         confirmClearAll()
@@ -108,101 +105,17 @@ class ActivityMainLog : AppCompatActivity() {
             }
         })
 
-        // the following functions handle the changing of task statuses upon swiping
-        completeTask()
-        restoreTask()
-        deleteTask()
+        remoteCheckFabClickability()
     }
 
-    private fun readJsonFileAssignment() {
+    private fun remoteCheckFabClickability() {
+        supportFragmentManager.setFragmentResultListener("rqCheckFabClickability", this) { requestKey, bundle ->
+            checkFabClickability()
+        }
+    }
 
+    private fun initTaskLists() {
         viewModel.initTaskLists() // creates todoList and doneList
-
-        todoList = viewModel.getTodoList()
-        doneList = viewModel.getDoneList()
-
-        passBundlesTaskLists()
-    }
-
-    private fun passBundlesTaskLists() {
-        // sort both lists by due date
-        todoList.sortBy { it.dateInt }
-        doneList.sortBy { it.dateInt }
-
-        bundleTodo = Bundle()
-        bundleTodo.putParcelableArrayList("todoList", todoList)
-        supportFragmentManager.setFragmentResult("rqTodoList", bundleTodo) // passes bundleTodo to FragmentManager
-
-        bundleDone = Bundle()
-        bundleDone.putParcelableArrayList("doneList", doneList)
-        supportFragmentManager.setFragmentResult("rqDoneList", bundleDone)
-    }
-
-    private fun completeTask() {
-        supportFragmentManager.setFragmentResultListener("rqCompletedTask", this) { requestKey, bundle ->
-            val completedTask = bundle.getParcelable<Task>("bundleCompletedTask")!!
-
-            for (task in todoList) { // remove completedTask from toDoList
-                if (task.id == completedTask.id) {
-                    todoList.remove(task)
-                    break
-                }
-            }
-
-            completedTask.status = true // set to done
-            doneList.add(completedTask) // add completedTask to doneList
-
-            passBundlesTaskLists() // update lists\
-            saveJson()
-        }
-    }
-
-    private fun restoreTask() {
-        supportFragmentManager.setFragmentResultListener("rqRestoredTask", this) { requestKey, bundle ->
-            val restoredTask = bundle.getParcelable<Task>("bundleRestoredTask")!!
-
-            for (task in doneList) { // remove restoredTask from doneList
-                if (task.id == restoredTask.id) {
-                    doneList.remove(task)
-                    break
-                }
-            }
-
-            restoredTask.status = false // set to undone
-            todoList.add(restoredTask) // add restoredTask to toDoList
-
-            passBundlesTaskLists() // update lists
-            saveJson()
-            fabClickability() // set fab clickability depending on if there's any remaining tasks in doneList 
-        }
-    }
-
-    private fun deleteTask() {
-        supportFragmentManager.setFragmentResultListener("rqDeletedTask", this) { requestKey, bundle ->
-            val deletedTask = bundle.getParcelable<Task>("bundleDeletedTask")!!
-
-            for (task in doneList) { // remove deletedTask from doneList
-                if (task.id == deletedTask.id) {
-                    doneList.remove(task)
-                    break
-                }
-            }
-        }
-
-        saveJson()
-    }
-
-    private fun saveJson() {
-        // combine todoList and doneList
-        val allList: ArrayList<Task> = ArrayList()
-        allList.addAll(todoList)
-        allList.addAll(doneList)
-
-        // save locally as json file
-        val updatedFile = Klaxon().toJsonString(allList)
-        this.openFileOutput("fileAssignment", Context.MODE_PRIVATE).use {
-            it.write(updatedFile.toByteArray())
-        }
     }
 
     private fun confirmClearAll() {
@@ -249,16 +162,22 @@ class ActivityMainLog : AppCompatActivity() {
     }
 
     private fun clearAll() { // delete all items in doneList
+        viewModel.clearDoneList()
+        doneList = viewModel.getDoneList()
 
-        doneList = ArrayList() // blank ArrayList
+        // update fragmentDone
+        val bundle = Bundle()
+        bundle.putInt("clearAll", 0)
+        supportFragmentManager.setFragmentResult("rqClearAll", bundle)
 
-        saveJson()
-        passBundlesTaskLists()
+        //passBundlesTaskLists()
         fabDisabled()
     }
 
-    private fun fabClickability() {
+    private fun checkFabClickability() {
         // faded fab and unclickable when doneList is empty
+        doneList = viewModel.getDoneList()
+
         if (doneList.size > 0) {
             fabEnabled()
         } else {
@@ -294,61 +213,17 @@ class ActivityMainLog : AppCompatActivity() {
         }
     }
 
-    private fun readJsonListSubjectColor() {
+    private fun initSubjectColor() {
         listSubjectColor = arrayListOf()
         mapSubjectColor = hashMapOf()
 
-        val file = File(this.filesDir, "listSubjectColor")
-
-        if (file.exists()) {
-
-            val fileJson = file.readText()
-
-            // convert into map
-            JsonReader(StringReader(fileJson)).use { reader ->
-                reader.beginArray {
-                    while (reader.hasNext()) {
-                        val subjectColor = Klaxon().parse<SubjectColor>(reader)
-
-                        listSubjectColor.add(subjectColor!!)
-                        
-                        val subject = subjectColor.subject
-                        val color = subjectColor.colorIndex
-                        
-                        mapSubjectColor.put(subject, color)
-                    }
-                }
-            }
-        }
-
-        passBundleSubjectColors()
-    }
-
-    private fun passBundleSubjectColors() {
-        val bundleMapSubjectColor = Bundle()
-
-        bundleMapSubjectColor.putSerializable("mapSubjectColor", mapSubjectColor)
-        supportFragmentManager.setFragmentResult("rqMapSubjectColorTodo", bundleMapSubjectColor) // passes bundleMapSubjectColor to FragmentManager
-        supportFragmentManager.setFragmentResult("rqMapSubjectColorDone", bundleMapSubjectColor)
+        viewModel.initSubjectColor()
+        listSubjectColor = viewModel.getListSubjectColor()
     }
 
     private fun initListColors() {
-        listColors = arrayListOf(
-            CardColor(R.color.cardview_blue, R.color.white),
-            CardColor(R.color.cardview_red, R.color.white),
-            CardColor(R.color.cardview_yellow, R.color.black),
-            CardColor(R.color.cardview_green, R.color.white),
-            CardColor(R.color.cardview_purple, R.color.white)
-        )
 
-        passBundleListColors()
-    }
-
-    private fun passBundleListColors() {
-        val bundleListColors = Bundle()
-
-        bundleListColors.putParcelableArrayList("listColors", listColors)
-        supportFragmentManager.setFragmentResult("rqListColorsTodo", bundleListColors)
-        supportFragmentManager.setFragmentResult("rqListColorsDone", bundleListColors)
+        viewModel.initListCardColors()
+        listCardColors = viewModel.getListCardColors()
     }
 }

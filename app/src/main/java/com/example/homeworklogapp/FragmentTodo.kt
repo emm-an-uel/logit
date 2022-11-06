@@ -7,8 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -36,7 +34,7 @@ class FragmentTodo : Fragment() {
     ): View {
 
         // instantiate viewModel
-        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
 
         _binding = FragmentTodoBinding.inflate(inflater, container, false)
         return binding.root
@@ -51,9 +49,6 @@ class FragmentTodo : Fragment() {
 
         // get todoList
         getLists()
-
-        // retrieve bundle
-        //getFromBundle()
     }
 
     override fun onDestroyView() {
@@ -65,7 +60,6 @@ class FragmentTodo : Fragment() {
     override fun onResume() {
         super.onResume()
         getLists()
-        //getFromBundle()
     }
 
     private fun swipeFunctions() {
@@ -124,33 +118,13 @@ class FragmentTodo : Fragment() {
         RVAdapter.notifyDataSetChanged()
     }
 
-    private fun getFromBundle() {
-        setFragmentResultListener("rqTodoList") { requestKey, bundle ->
-            todoList = bundle.getParcelableArrayList("todoList")!!
-
-            if (mapSubjectColor.size > 0) { // if mapSubjectColor already exists (ie not the first time loading up this fragment)
-                createRV() // createRV() is called here to reflect changes when user swipes
-
-            } else { // if it is the first time loading up this fragment
-                setFragmentResultListener("rqMapSubjectColorTodo") { requestKey, bundle ->
-                    mapSubjectColor = bundle.getSerializable("mapSubjectColor")!! as HashMap<String, Int>
-                    createRV() // createRV() is called here only after getting mapSubjectColor (if it's the first time loading up this fragment)
-                }
-            }
-        }
-
-        // retrieve listColors
-        setFragmentResultListener("rqListColorsTodo") { requestKey, bundle ->
-            listCardColors = bundle.getParcelableArrayList("listColors")!!
-        }
-    }
-
     private fun taskCompleted(completedTask: Task) {
-        setFragmentResult("rqCompletedTask", bundleOf("bundleCompletedTask" to completedTask))
+        viewModel.taskCompleted(completedTask)
     }
 
     private fun getLists() {
         todoList = viewModel.getTodoList()
+        listCardColors = viewModel.getListCardColors()
 
         if (mapSubjectColor.size > 0) { // if mapSubjectColor already exists (ie not the first time loading up this fragment)
             createRV() // createRV() is called here to reflect changes when user swipes
@@ -159,7 +133,5 @@ class FragmentTodo : Fragment() {
             mapSubjectColor = viewModel.getMapSubjectColor()
             createRV()
         }
-
-        listCardColors = viewModel.getListCardColors()
     }
 }
