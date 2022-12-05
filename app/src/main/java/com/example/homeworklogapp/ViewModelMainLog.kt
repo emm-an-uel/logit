@@ -22,7 +22,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     lateinit var listSettingsItems: ArrayList<SettingsItem>
 
-    lateinit var rvTodoList: ArrayList<ListItem>
+    lateinit var todoItemList: ArrayList<ListItem>
     lateinit var rvDoneList: ArrayList<ListItem>
 
     fun initTaskLists() {
@@ -60,18 +60,18 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         } // creates map of key: 'date' to a value: list of Tasks which have that due date
 
         // TODO: make groups wider - not by individual dates, but by this week, next week etc
-        rvTodoList = arrayListOf()
+        todoItemList = arrayListOf()
         for (date:Int in groupedMap.keys) {
-            rvTodoList.add(DateItem(date.toString())) // creates a DateItem class for each 'date' in groupedMap
+            todoItemList.add(DateItem(date.toString())) // creates a DateItem class for each 'date' in groupedMap
             val groupItems: List<Task>? = groupedMap[date] // list of Tasks which have the due date above
             groupItems?.forEach {
-                rvTodoList.add((TaskItem(it.subject, it.task, it.dueDate, it.notes))) // creates GeneralItem class for each Task which have this due date
+                todoItemList.add((TaskItem(it.subject, it.task, it.dueDate, it.notes))) // creates GeneralItem class for each Task which have this due date
             }
         }
     }
 
     fun getTodoItemList(): List<ListItem> {
-        return rvTodoList
+        return todoItemList
     }
 
     fun initDoneItemList() {
@@ -95,47 +95,19 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
     }
 
     fun taskCompleted(completedTask: Task) { // moves completedTask from todoList to doneList
-        for (task in todoList) {
-            if (completedTask.id == task.id) {
-                todoList.remove(task)
-                break
-            }
-        }
-
         completedTask.status = true // set to 'done'
         doneList.add(completedTask)
-
         saveJsonTaskLists()
     }
 
     fun restoreTask(restoredTask: Task) { // moves restoredTask from doneList to todoList
-        for (task in doneList) {
-            if (task.id == restoredTask.id) {
-                doneList.remove(task)
-                break
-            }
-        }
-
         restoredTask.status = false // set to 'undone'
         todoList.add(restoredTask)
-
-        saveJsonTaskLists()
-    }
-
-    fun deleteTask(deletedTask: Task) { // removes deletedTask from doneList
-        for (task in doneList) {
-            if (task.id == deletedTask.id) {
-                doneList.remove(task)
-                break
-            }
-        }
-
         saveJsonTaskLists()
     }
 
     fun clearDoneList() { // clears all items in doneList
         doneList = arrayListOf() // sets doneList to an empty list
-
         saveJsonTaskLists()
     }
 
@@ -263,11 +235,6 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
     @JvmName("getListCardColors1")
     fun getListCardColors(): ArrayList<CardColor> {
         return listCardColors
-    }
-
-    @JvmName("getListColors1")
-    fun getListColors(): ArrayList<Int> {
-        return listColors
     }
 
     fun initListSettings() {

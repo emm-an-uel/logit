@@ -179,7 +179,7 @@ class FragmentDone : Fragment() {
             builder.apply {
                 setPositiveButton("Confirm"
                 ) { dialog, id ->
-                    deleteTask(deletedTask)
+                    deleteTask()
                     touched = true
                 }
 
@@ -210,9 +210,7 @@ class FragmentDone : Fragment() {
         }
     }
 
-    private fun deleteTask(deletedTask: Task) {
-        viewModel.deleteTask(deletedTask)
-
+    private fun deleteTask() {
         val bundle = Bundle()
         bundle.putInt("fabClickability", 0)
         setFragmentResult("rqCheckFabClickability", bundle)
