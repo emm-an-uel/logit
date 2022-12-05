@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentTodo">
+
+    <fragment
+        android:id="@+id/fragmentTodo"
+        android:name="com.example.homeworklogapp.FragmentTodo"
+        android:label="fragmentTodo"
+        tools:layout="@layout/fragment_todo" />
+    <fragment
+        android:id="@+id/fragmentDone"
+        android:name="com.example.homeworklogapp.FragmentDone"
+        android:label="fragmentDone"
+        tools:layout="@layout/fragment_done" />
+</navigation>

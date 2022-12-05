@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.homeworklogapp">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@drawable/icon_books"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/icon_books"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.HomeworkLogApp"
+        tools:targetApi="31">
+        <activity
+            android:name=".ActivityAllSettings"
+            android:exported="false"
+            android:label="Settings"
+            android:parentActivityName=".ActivityMainLog" />
+        <activity
+            android:name=".ActivitySettingsColorCodes"
+            android:exported="false"
+            android:label="Subject Color Codes"
+            android:parentActivityName=".ActivityAllSettings" />
+        <activity
+            android:name=".ActivityAddTask"
+            android:exported="false"
+            android:parentActivityName=".ActivityMainLog" />
+        <activity
+            android:name=".ActivityMainLog"
+            android:exported="true"
+            android:label="Homework Log">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

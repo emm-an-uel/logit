@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2555" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2555" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/drawable/textview_rounded_background.xml" value="0.2545" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/activity_add_task.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/activity_add_task_2.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/activity_all_settings.xml" value="0.1" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/activity_main_log.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/activity_settings.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/activity_settings_color_codes.xml" value="0.1" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/add_task_rv_item.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/all_settings_rv_item.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/date_item.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/fragment_1.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/fragment_2.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/fragment_add_task.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/fragment_done.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/fragment_edit_task_dialog.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/fragment_todo.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/general_item.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/rv_item_task.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/settings_color_codes_rv_item.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/settings_rv_item.xml" value="0.20427350427350427" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/spinner_color_item.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/spinner_item.xml" value="0.1" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/task_rv_item.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/menu/main_log_menu.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/menu/settings_menu.xml" value="0.20512820512820512" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

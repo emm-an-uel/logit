@@ -1,0 +1,27 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.HomeworkLogApp" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryVariant">@color/light_blue</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/white</item>
+        <item name="colorSecondaryVariant">@color/cardview_purple</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorPrimaryInverse">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/darktheme_background</item>
+        <!-- Customize your theme here. -->
+        <item name="colorAccent">@color/light_blue</item>
+
+        <item name="colorSurface">@color/darktheme_background</item>
+
+        <item name="android:colorBackground">@color/darktheme_background</item>
+        <item name="colorContainer">?attr/colorPrimaryContainer</item>
+        <item name="colorPrimaryContainer">@color/cardview_black</item>
+
+        <item name="colorSecondaryContainer">@color/light_gray</item>
+
+    </style>
+</resources>
