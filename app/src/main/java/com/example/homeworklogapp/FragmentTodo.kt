@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -12,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
 
 class FragmentTodo : Fragment() {
+
+    lateinit var linearLayoutIndex: LinearLayout
 
     lateinit var rvTodo: RecyclerView
     lateinit var rvAdapter: RVAdapterMain
@@ -50,6 +54,8 @@ class FragmentTodo : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        linearLayoutIndex = view.findViewById(R.id.linearLayoutIndex)
+
         // get settings - user preferences
         getSettings()
 
@@ -87,6 +93,7 @@ class FragmentTodo : Fragment() {
                 index++
             }
         }
+        populateLinearLayoutIndex()
     }
 
     override fun onDestroyView() {
@@ -98,6 +105,7 @@ class FragmentTodo : Fragment() {
     override fun onResume() {
         super.onResume()
         getLists()
+        createMapOfIndex()
 
         (context as ActivityMainLog).showFabAddTask() // show fab by default
     }
@@ -128,7 +136,7 @@ class FragmentTodo : Fragment() {
                 todoList.removeAt(actualIndex) // removes this task from todoList
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
-                updateMap(pos, true)
+                updateMapOfIndex(pos, true)
                 checkForDoubleDate(pos)
             }
             // at last we are adding this
@@ -136,7 +144,7 @@ class FragmentTodo : Fragment() {
         }).attachToRecyclerView(rvTodo)
     }
 
-    private fun updateMap(pos: Int, indexChanged: Boolean) {
+    private fun updateMapOfIndex(pos: Int, indexChanged: Boolean) {
         mapOfIndex.remove(pos) // remove the key-value pair of the swiped item
 
         // adjust the following key-value pairs
@@ -157,6 +165,7 @@ class FragmentTodo : Fragment() {
                 }
             }
         }
+        populateLinearLayoutIndex()
     }
 
     private fun checkForDoubleDate(removedIndex: Int) {
@@ -166,14 +175,14 @@ class FragmentTodo : Fragment() {
                     // if both a) the item which has replaced the one just removed, and b) the previous item are DateItems
                     consolidatedList.removeAt(removedIndex-1) // remove the double date (ie the one that has no TaskItems below it)
                     rvAdapter.notifyItemRemoved(removedIndex-1)
-                    updateMap(removedIndex-1, false)
+                    updateMapOfIndex(removedIndex-1, false)
                 }
             }
         } else { // if item removed was the last item in list
             if (consolidatedList[removedIndex-1].type == ListItem.TYPE_DATE) {
                 consolidatedList.removeAt(removedIndex-1)
                 rvAdapter.notifyItemRemoved(removedIndex-1)
-                updateMap(removedIndex-1, false)
+                updateMapOfIndex(removedIndex-1, false)
             }
         }
     }
@@ -230,6 +239,16 @@ class FragmentTodo : Fragment() {
                 }
                 // implement future user preferences here //
             }
+        }
+    }
+
+    private fun populateLinearLayoutIndex() {
+        linearLayoutIndex.removeAllViews()
+        for (p in mapOfIndex.keys) {
+            val i = mapOfIndex[p]
+            val textView = TextView(context)
+            textView.text = "$p - $i"
+            linearLayoutIndex.addView(textView)
         }
     }
 }

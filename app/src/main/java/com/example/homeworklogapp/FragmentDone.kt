@@ -106,6 +106,7 @@ class FragmentDone : Fragment() {
     override fun onResume() {
         super.onResume()
         getLists()
+        createMapOfIndex()
 
         (context as ActivityMainLog).showFabAddTask() // show fab by default
     }
@@ -316,6 +317,7 @@ class FragmentDone : Fragment() {
     private fun checkClearAll() {
         setFragmentResultListener("rqClearAll") { requestKey, bundle ->
             getLists()
+            createMapOfIndex()
         }
     }
 
