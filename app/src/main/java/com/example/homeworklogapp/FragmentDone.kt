@@ -15,15 +15,15 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworklogapp.databinding.FragmentDoneBinding
-import kotlinx.android.synthetic.main.fragment_done.*
 
 
 class FragmentDone : Fragment() {
 
-    lateinit var RVDone: RecyclerView
-    lateinit var RVAdapter: RVAdapterMain
+    lateinit var rvDone: RecyclerView
+    lateinit var rvAdapter: RVAdapterMain
     lateinit var doneList: ArrayList<Task>
-    lateinit var doneItemList: List<ListItem>
+    lateinit var consolidatedList: ArrayList<ListItem>
+    lateinit var mapOfIndex: MutableMap<Int, Int>
 
     private var _binding: FragmentDoneBinding? = null
 
@@ -64,6 +64,9 @@ class FragmentDone : Fragment() {
         // get doneList
         getLists()
 
+        // create mapOfIndex <position, actualIndex>
+        createMapOfIndex()
+
         // watch for clearAll
         checkClearAll()
 
@@ -81,6 +84,17 @@ class FragmentDone : Fragment() {
         })
 
         (context as ActivityMainLog).showFabAddTask() // show by default
+    }
+
+    private fun createMapOfIndex() {
+        mapOfIndex = mutableMapOf()
+        var index = 0
+        for (n in 0 until consolidatedList.size) {
+            if (consolidatedList[n].type == ListItem.TYPE_TASK) { // only create key-value pairs for TaskItems
+                mapOfIndex[n] = index
+                index++
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -108,16 +122,24 @@ class FragmentDone : Fragment() {
                 return false
             }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val restoredTask = doneList[viewHolder.adapterPosition]
-                val position = viewHolder.adapterPosition
-
-                doneList.removeAt(position)
-                RVAdapter.notifyItemRemoved(position)
-
-                restoreTask(restoredTask)
+            override fun getSwipeDirs (recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                if (viewHolder is RVAdapterMain.DateViewHolder) return 0 // prevents DateViewHolders from getting swiped
+                return super.getSwipeDirs(recyclerView, viewHolder)
             }
-        }).attachToRecyclerView(RVDone)
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val pos = viewHolder.adapterPosition
+                consolidatedList.removeAt(pos) // removes this item from consolidatedList
+                val actualIndex = mapOfIndex[pos]!!
+                val restoredTask: Task = doneList[actualIndex]
+                restoreTask(restoredTask)
+                doneList.removeAt(actualIndex) // removes this task from doneList
+                rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+
+                updateMap(pos, true)
+                checkForDoubleDate(pos)
+            }
+        }).attachToRecyclerView(rvDone)
 
         // delete permanently
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -131,46 +153,89 @@ class FragmentDone : Fragment() {
                 return false
             }
 
+            override fun getSwipeDirs (recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                if (viewHolder is RVAdapterMain.DateViewHolder) return 0 // prevents DateViewHolders from getting swiped
+                return super.getSwipeDirs(recyclerView, viewHolder)
+            }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                // change task status
-                val deletedTask: Task = doneList[viewHolder.adapterPosition]
-                val position = viewHolder.adapterPosition
+                val pos = viewHolder.adapterPosition
+                val actualIndex = mapOfIndex[pos]!!
+                val deletedTaskItem = consolidatedList[pos] as TaskItem
+                consolidatedList.removeAt(pos)
 
-                // this method is called when item is swiped.
-                // below line is to remove item from our array list.
-                doneList.removeAt(viewHolder.adapterPosition)
+                rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
-                // below line is to notify our item is removed from adapter.
-                RVAdapter.notifyItemRemoved(viewHolder.adapterPosition)
-
-                confirmDelete(deletedTask, position)
+                confirmDelete(deletedTaskItem, pos, actualIndex)
             }
             // at last we are adding this
             // to our recycler view.
-        }).attachToRecyclerView(RVDone)
+        }).attachToRecyclerView(rvDone)
+    }
+
+    private fun updateMap(pos: Int, indexChanged: Boolean) {
+        mapOfIndex.remove(pos) // remove the key-value pair of the swiped item
+
+        // adjust the following key-value pairs
+        if (indexChanged) { // TaskItem got removed
+            for (p in pos+1 until consolidatedList.size+1) {
+                if (mapOfIndex.containsKey(p)) { // if it doesn't contain p, that means there is a DateItem in that position (not a TaskItem)
+                    val oldValue = mapOfIndex[p]!!
+                    mapOfIndex.remove(p)
+                    mapOfIndex[p-1] = oldValue-1
+                }
+            }
+        } else { // DateItem got removed
+            for (p in pos+1 until consolidatedList.size+1) {
+                if (mapOfIndex.containsKey(p)) {
+                    val actualIndex = mapOfIndex[p]!!
+                    mapOfIndex.remove(p)
+                    mapOfIndex[p-1] = actualIndex // actualIndex of TaskItems remains unchanged
+                }
+            }
+        }
+    }
+
+    private fun checkForDoubleDate(removedIndex: Int) {
+        if (removedIndex < consolidatedList.size) {
+            if (consolidatedList[removedIndex].type == ListItem.TYPE_DATE) {
+                if (consolidatedList[removedIndex-1].type == ListItem.TYPE_DATE) {
+                    // if both a) the item which has replaced the one just removed, and b) the previous item are DateItems
+                    consolidatedList.removeAt(removedIndex-1) // remove the double date (ie the one that has no TaskItems below it)
+                    rvAdapter.notifyItemRemoved(removedIndex-1)
+                    updateMap(removedIndex-1, false)
+                }
+            }
+        } else { // if item removed was the last item in list
+            if (consolidatedList[removedIndex-1].type == ListItem.TYPE_DATE) {
+                consolidatedList.removeAt(removedIndex-1)
+                rvAdapter.notifyItemRemoved(removedIndex-1)
+                updateMap(removedIndex-1, false)
+            }
+        }
     }
 
     private fun createRV() {
-        RVDone = binding.rvDone
-        RVAdapter = RVAdapterMain(doneItemList, mapSubjectColor, listCardColors, glow)
+        rvDone = binding.rvDone
+        rvAdapter = RVAdapterMain(consolidatedList, mapSubjectColor, listCardColors, glow)
 
         // set adapter to recycler view
-        RVDone.adapter = RVAdapter
+        rvDone.adapter = rvAdapter
 
         swipeFunctions()
 
         // item click listener
-        RVAdapter.setOnItemClickListener(object: RVAdapterMain.OnItemClickListener {
+        rvAdapter.setOnItemClickListener(object: RVAdapterMain.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 // do nothing
             }
 
         })
 
-        RVAdapter.notifyDataSetChanged()
+        rvAdapter.notifyDataSetChanged()
     }
 
-    private fun confirmDelete(deletedTask: Task, position: Int) {
+    private fun confirmDelete(deletedTaskItem: TaskItem, position: Int, actualIndex: Int) {
         var touched = false
 
         // alert dialog
@@ -179,14 +244,14 @@ class FragmentDone : Fragment() {
             builder.apply {
                 setPositiveButton("Confirm"
                 ) { dialog, id ->
-                    deleteTask()
+                    deleteTask(actualIndex)
                     touched = true
                 }
 
                 setNegativeButton("Cancel"
                 ) { dialog, id ->
-                    doneList.add(position, deletedTask)
-                    RVAdapter.notifyItemInserted(position)
+                    consolidatedList.add(position, deletedTaskItem)
+                    rvAdapter.notifyItemInserted(position)
                     touched = true
                 }
             }
@@ -204,13 +269,14 @@ class FragmentDone : Fragment() {
 
         alertDialog.setOnDismissListener {
             if (!touched) { // if touched == false (ie user touched outside dialog box)
-                doneList.add(position, deletedTask)
-                RVAdapter.notifyItemInserted(position)
+                consolidatedList.add(position, deletedTaskItem)
+                rvAdapter.notifyItemInserted(position)
             }
         }
     }
 
-    private fun deleteTask() {
+    private fun deleteTask(actualIndex: Int) {
+        doneList.removeAt(actualIndex)
         val bundle = Bundle()
         bundle.putInt("fabClickability", 0)
         setFragmentResult("rqCheckFabClickability", bundle)
@@ -236,7 +302,7 @@ class FragmentDone : Fragment() {
 
     private fun getLists() {
         doneList = viewModel.getDoneList()
-        doneItemList = viewModel.getDoneItemList()
+        consolidatedList = viewModel.getConsolidatedListDone()
         listCardColors = viewModel.getListCardColors()
 
         if (mapSubjectColor.size > 0) {

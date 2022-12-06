@@ -49,8 +49,8 @@ class ActivityMainLog : AppCompatActivity() {
         initTaskLists()
 
         // initialize todoItemList and doneItemList in viewModel
-        viewModel.initTodoItemList()
-        viewModel.initDoneItemList()
+        viewModel.createConsolidatedListTodo()
+        viewModel.createConsolidatedListDone()
 
         // initialize listSubjectColor and mapSubjectColor in ViewModel
         initSubjectColor()

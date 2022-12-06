@@ -10,14 +10,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.homeworklogapp.databinding.FragmentTodoBinding
-import kotlinx.android.synthetic.main.fragment_todo.*
 
 class FragmentTodo : Fragment() {
 
-    lateinit var RVTodo: RecyclerView
-    lateinit var RVAdapter: RVAdapterMain
+    lateinit var rvTodo: RecyclerView
+    lateinit var rvAdapter: RVAdapterMain
     lateinit var todoList: ArrayList<Task>
-    lateinit var todoItemList: List<ListItem>
+    lateinit var consolidatedList: ArrayList<ListItem>
+    lateinit var mapOfIndex: MutableMap<Int, Int>
 
     private var _binding: FragmentTodoBinding? = null
 
@@ -59,6 +59,9 @@ class FragmentTodo : Fragment() {
         // get todoList
         getLists()
 
+        // create mapOfIndex <position, actualIndex>
+        createMapOfIndex()
+
         // fabAddTask visibility
         rvTodo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -73,6 +76,17 @@ class FragmentTodo : Fragment() {
         })
 
         (context as ActivityMainLog).showFabAddTask() // show by default
+    }
+
+    private fun createMapOfIndex() {
+        mapOfIndex = mutableMapOf()
+        var index = 0
+        for (n in 0 until consolidatedList.size) {
+            if (consolidatedList[n].type == ListItem.TYPE_TASK) { // only create key-value pairs for TaskItems
+                mapOfIndex[n] = index
+                index++
+            }
+        }
     }
 
     override fun onDestroyView() {
@@ -100,38 +114,85 @@ class FragmentTodo : Fragment() {
                 return false
             }
 
+            override fun getSwipeDirs (recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                if (viewHolder is RVAdapterMain.DateViewHolder) return 0 // prevents DateViewHolders from getting swiped
+                return super.getSwipeDirs(recyclerView, viewHolder)
+            }
+
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                // change task status
-                val completedTask: Task = todoList[viewHolder.adapterPosition]
+                val pos = viewHolder.adapterPosition
+                consolidatedList.removeAt(pos) // removes this item from consolidatedList
+                val actualIndex = mapOfIndex[pos]!!
+                val completedTask: Task = todoList[actualIndex]
+                viewModel.taskCompleted(completedTask) // adds this task to doneList
+                todoList.removeAt(actualIndex) // removes this task from todoList
+                rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
-                // this method is called when item is swiped.
-                // below line is to remove item from our array list.
-                todoList.removeAt(viewHolder.adapterPosition)
-
-                // below line is to notify our item is removed from adapter.
-                RVAdapter.notifyItemRemoved(viewHolder.adapterPosition)
-
-                taskCompleted(completedTask)
+                updateMap(pos, true)
+                checkForDoubleDate(pos)
             }
             // at last we are adding this
             // to our recycler view.
-        }).attachToRecyclerView(RVTodo)
+        }).attachToRecyclerView(rvTodo)
+    }
+
+    private fun updateMap(pos: Int, indexChanged: Boolean) {
+        mapOfIndex.remove(pos) // remove the key-value pair of the swiped item
+
+        // adjust the following key-value pairs
+        if (indexChanged) { // TaskItem got removed
+            for (p in pos+1 until consolidatedList.size+1) {
+                if (mapOfIndex.containsKey(p)) { // if it doesn't contain p, that means there is a DateItem in that position (not a TaskItem)
+                    val oldValue = mapOfIndex[p]!!
+                    mapOfIndex.remove(p)
+                    mapOfIndex[p-1] = oldValue-1
+                }
+            }
+        } else { // DateItem got removed
+            for (p in pos+1 until consolidatedList.size+1) {
+                if (mapOfIndex.containsKey(p)) {
+                    val actualIndex = mapOfIndex[p]!!
+                    mapOfIndex.remove(p)
+                    mapOfIndex[p-1] = actualIndex // actualIndex of TaskItems remains unchanged
+                }
+            }
+        }
+    }
+
+    private fun checkForDoubleDate(removedIndex: Int) {
+        if (removedIndex < consolidatedList.size) {
+            if (consolidatedList[removedIndex].type == ListItem.TYPE_DATE) {
+                if (consolidatedList[removedIndex-1].type == ListItem.TYPE_DATE) {
+                    // if both a) the item which has replaced the one just removed, and b) the previous item are DateItems
+                    consolidatedList.removeAt(removedIndex-1) // remove the double date (ie the one that has no TaskItems below it)
+                    rvAdapter.notifyItemRemoved(removedIndex-1)
+                    updateMap(removedIndex-1, false)
+                }
+            }
+        } else { // if item removed was the last item in list
+            if (consolidatedList[removedIndex-1].type == ListItem.TYPE_DATE) {
+                consolidatedList.removeAt(removedIndex-1)
+                rvAdapter.notifyItemRemoved(removedIndex-1)
+                updateMap(removedIndex-1, false)
+            }
+        }
     }
 
     private fun createRV() {
-        RVTodo = binding.rvTodo
-        RVAdapter = RVAdapterMain(todoItemList, mapSubjectColor, listCardColors, glow) // pass future user preferences here //
+        rvTodo = binding.rvTodo
+        rvAdapter = RVAdapterMain(consolidatedList, mapSubjectColor, listCardColors, glow) // pass future user preferences here //
 
         // set adapter to recycler view
-        RVTodo.adapter = RVAdapter
+        rvTodo.adapter = rvAdapter
 
         swipeFunctions()
 
         // item click listener
-        RVAdapter.setOnItemClickListener(object: RVAdapterMain.OnItemClickListener {
+        rvAdapter.setOnItemClickListener(object: RVAdapterMain.OnItemClickListener {
             override fun onItemClick(position: Int) {
 
-                val selectedTask = todoList[position]
+                val actualIndex = mapOfIndex[position]!!
+                val selectedTask = todoList[actualIndex]
 
                 // start ActivityAddTask
                 val intent = Intent(activity, ActivityAddTask::class.java)
@@ -143,16 +204,12 @@ class FragmentTodo : Fragment() {
 
         })
 
-        RVAdapter.notifyDataSetChanged()
-    }
-
-    private fun taskCompleted(completedTask: Task) {
-        viewModel.taskCompleted(completedTask)
+        rvAdapter.notifyDataSetChanged()
     }
 
     private fun getLists() {
         todoList = viewModel.getTodoList()
-        todoItemList = viewModel.getTodoItemList()
+        consolidatedList = viewModel.getConsolidatedListTodo()
         listCardColors = viewModel.getListCardColors()
 
         if (mapSubjectColor.size > 0) { // if mapSubjectColor already exists (ie not the first time loading up this fragment)

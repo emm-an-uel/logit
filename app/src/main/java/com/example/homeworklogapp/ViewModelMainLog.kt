@@ -22,8 +22,8 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     lateinit var listSettingsItems: ArrayList<SettingsItem>
 
-    lateinit var todoItemList: ArrayList<ListItem>
-    lateinit var rvDoneList: ArrayList<ListItem>
+    lateinit var consolidatedListTodo: ArrayList<ListItem>
+    lateinit var consolidatedListDone: ArrayList<ListItem>
 
     fun initTaskLists() {
         todoList = arrayListOf()
@@ -53,57 +53,61 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         }
     }
 
-    fun initTodoItemList() {
+    fun createConsolidatedListTodo() {
         todoList.sortBy { it.dateInt }
         val groupedMap: Map<Int, List<Task>> = todoList.groupBy {
             it.dateInt
         } // creates map of key: 'date' to a value: list of Tasks which have that due date
 
         // TODO: make groups wider - not by individual dates, but by this week, next week etc
-        todoItemList = arrayListOf()
+        consolidatedListTodo = arrayListOf()
         for (date:Int in groupedMap.keys) {
-            todoItemList.add(DateItem(date.toString())) // creates a DateItem class for each 'date' in groupedMap
+            consolidatedListTodo.add(DateItem(date.toString())) // creates a DateItem class for each 'date' in groupedMap
             val groupItems: List<Task>? = groupedMap[date] // list of Tasks which have the due date above
             groupItems?.forEach {
-                todoItemList.add((TaskItem(it.subject, it.task, it.dueDate, it.notes))) // creates GeneralItem class for each Task which have this due date
+                consolidatedListTodo.add((TaskItem(it.subject, it.task, it.dueDate, it.notes))) // creates GeneralItem class for each Task which have this due date
             }
         }
     }
 
-    fun getTodoItemList(): List<ListItem> {
-        return todoItemList
+    @JvmName("getConsolidatedListTodo1")
+    fun getConsolidatedListTodo(): ArrayList<ListItem> {
+        return consolidatedListTodo
     }
 
-    fun initDoneItemList() {
+    fun createConsolidatedListDone() {
         doneList.sortBy { it.dateInt }
         val groupedMap: Map<Int, List<Task>> = doneList.groupBy {
             it.dateInt
         } // creates map of key: 'date' to a value: list of Tasks which have that due date
 
-        rvDoneList = arrayListOf()
+        consolidatedListDone = arrayListOf()
         for (date:Int in groupedMap.keys) {
-            rvDoneList.add(DateItem(date.toString())) // creates a DateItem class for each 'date' in groupedMap
+            consolidatedListDone.add(DateItem(date.toString())) // creates a DateItem class for each 'date' in groupedMap
             val groupItems: List<Task>? = groupedMap[date] // list of Tasks which have the due date above
             groupItems?.forEach {
-                rvDoneList.add((TaskItem(it.subject, it.task, it.dueDate, it.notes))) // creates GeneralItem class for each Task which have this due date
+                consolidatedListDone.add((TaskItem(it.subject, it.task, it.dueDate, it.notes))) // creates GeneralItem class for each Task which have this due date
             }
         }
     }
 
-    fun getDoneItemList(): List<ListItem> {
-        return rvDoneList
+    @JvmName("getConsolidatedListDone1")
+    fun getConsolidatedListDone(): ArrayList<ListItem> {
+        return consolidatedListDone
     }
 
     fun taskCompleted(completedTask: Task) { // moves completedTask from todoList to doneList
         completedTask.status = true // set to 'done'
         doneList.add(completedTask)
         saveJsonTaskLists()
+        createConsolidatedListDone()
     }
 
     fun restoreTask(restoredTask: Task) { // moves restoredTask from doneList to todoList
         restoredTask.status = false // set to 'undone'
         todoList.add(restoredTask)
         saveJsonTaskLists()
+        createConsolidatedListTodo()
     }
 
     fun clearDoneList() { // clears all items in doneList

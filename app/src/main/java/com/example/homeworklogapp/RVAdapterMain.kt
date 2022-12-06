@@ -19,8 +19,6 @@ class RVAdapterMain (
     private val glow: Boolean
         ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    var taskItemCounter = 0
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
@@ -42,7 +40,6 @@ class RVAdapterMain (
                 (holder as GeneralViewHolder).bind(
                     item = listOfItems[position] as TaskItem
                 )
-                taskItemCounter++
             }
         }
     }
@@ -70,7 +67,6 @@ class RVAdapterMain (
 
     inner class GeneralViewHolder(val binding: GeneralItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TaskItem) {
-            val actualPosition = taskItemCounter
             val context = binding.cardView.context
 
             // setup background color
@@ -125,7 +121,7 @@ class RVAdapterMain (
 
             // click listener
             itemView.setOnClickListener {
-                mListener.onItemClick(actualPosition)
+                mListener.onItemClick(adapterPosition)
             }
         }
     }
