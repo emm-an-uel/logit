@@ -132,8 +132,7 @@ class FragmentTodo : Fragment() {
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val actualIndex = mapOfIndex[pos]!!
                 val completedTask: Task = todoList[actualIndex]
-                viewModel.taskCompleted(completedTask) // adds this task to doneList
-                todoList.removeAt(actualIndex) // removes this task from todoList
+                viewModel.taskCompleted(completedTask, actualIndex) // removes this task from todoList and adds to doneList
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
                 updateMapOfIndex(pos, true)

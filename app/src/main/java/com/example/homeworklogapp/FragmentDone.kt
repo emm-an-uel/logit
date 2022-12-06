@@ -133,8 +133,7 @@ class FragmentDone : Fragment() {
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val actualIndex = mapOfIndex[pos]!!
                 val restoredTask: Task = doneList[actualIndex]
-                restoreTask(restoredTask)
-                doneList.removeAt(actualIndex) // removes this task from doneList
+                restoreTask(restoredTask, actualIndex)
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
                 updateMap(pos, true)
@@ -283,8 +282,8 @@ class FragmentDone : Fragment() {
         setFragmentResult("rqCheckFabClickability", bundle)
     }
 
-    private fun restoreTask(restoredTask: Task) {
-        viewModel.restoreTask(restoredTask)
+    private fun restoreTask(restoredTask: Task, actualIndex: Int) {
+        viewModel.restoreTask(restoredTask, actualIndex)
 
         // below code is just so ActivityMainLog calls checkFabClickability() when a task is restored
         val bundle = Bundle()

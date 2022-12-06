@@ -96,17 +96,18 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         return consolidatedListDone
     }
 
-    fun taskCompleted(completedTask: Task) { // moves completedTask from todoList to doneList
-        // TODO: when moving tasks over, a duplicate is created upon restarting the app - some error with storing Tasks in allList?
+    fun taskCompleted(completedTask: Task, actualIndex: Int) { // moves completedTask from todoList to doneList
         completedTask.status = true // set to 'done'
         doneList.add(completedTask)
+        todoList.removeAt(actualIndex)
         saveJsonTaskLists()
         createConsolidatedListDone()
     }
 
-    fun restoreTask(restoredTask: Task) { // moves restoredTask from doneList to todoList
+    fun restoreTask(restoredTask: Task, actualIndex: Int) { // moves restoredTask from doneList to todoList
         restoredTask.status = false // set to 'undone'
         todoList.add(restoredTask)
+        doneList.removeAt(actualIndex)
         saveJsonTaskLists()
         createConsolidatedListTodo()
     }
