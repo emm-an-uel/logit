@@ -7,6 +7,9 @@ import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import java.io.File
 import java.io.StringReader
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
@@ -54,18 +57,81 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
     }
 
     fun createConsolidatedListTodo() {
-        todoList.sortBy { it.dateInt }
-        val groupedMap: Map<Int, List<Task>> = todoList.groupBy {
-            it.dateInt
-        } // creates map of key: 'date' to a value: list of Tasks which have that due date
+        val today = Calendar.getInstance()
+        val todayInt = dateToInt(today)
 
-        // TODO: make groups wider - not by individual dates, but by this week, next week etc
+        val tomorrow = Calendar.getInstance()
+        tomorrow.add(Calendar.DATE, 1) // adds a day to today's date
+        val tomorrowInt = dateToInt(tomorrow)
+
+        val nextWeek = Calendar.getInstance()
+        nextWeek.add(Calendar.DATE, 7) // adds 7 days to today's date
+        val nextWeekInt = dateToInt(nextWeek)
+
+        todoList.sortBy { it.dateInt }
+
+        // headings will be - Overdue, Today, Tomorrow, Next Week, Upcoming
+        var overdueHeader = false
+        var todayHeader = false
+        var tomorrowHeader = false
+        var nextWeekHeader = false
+        var upcomingHeader = false // these will be set to true as headers are added into consolidatedLists
+
+        // create sectioned list to be passed into respective rv's
+        val groupedMap1: Map<Int, List<Task>> = todoList.groupBy {
+            it.dateInt
+        } // creates a map of 'date' to a 'list of Tasks' - eg: key '20160605', value is a list containing 'name 2', 'name 3'
         consolidatedListTodo = arrayListOf()
-        for (date:Int in groupedMap.keys) {
-            consolidatedListTodo.add(DateItem(date.toString())) // creates a DateItem class for each 'date' in groupedMap
-            val groupItems: List<Task>? = groupedMap[date] // list of Tasks which have the due date above
-            groupItems?.forEach {
-                consolidatedListTodo.add((TaskItem(it.subject, it.task, it.dueDate, it.notes))) // creates GeneralItem class for each Task which have this due date
+        for (dateInt: Int in groupedMap1.keys) {
+            if (dateInt < todayInt) {
+                if (!overdueHeader) {
+                    consolidatedListTodo.add(DateItem("Overdue")) // adds a header if one doesn't already exist
+                    overdueHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+
+            } else if (dateInt == todayInt) {
+                if (!todayHeader) {
+                    consolidatedListTodo.add(DateItem("Due Today")) // adds a header if one doesn't already exist
+                    todayHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+
+            } else if (dateInt == tomorrowInt) {
+                if (!tomorrowHeader) {
+                    consolidatedListTodo.add(DateItem("Due Tomorrow")) // adds a header if one doesn't already exist
+                    tomorrowHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+
+            } else if (dateInt < nextWeekInt) {
+                if (!nextWeekHeader) {
+                    consolidatedListTodo.add(DateItem("Due Next Week")) // adds a header if one doesn't already exist
+                    nextWeekHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+
+            } else {
+                if (!upcomingHeader) {
+                    consolidatedListTodo.add(DateItem("Upcoming")) // adds a header if one doesn't already exist
+                    upcomingHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
             }
         }
     }
@@ -76,18 +142,11 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
     }
 
     fun createConsolidatedListDone() {
+        // consolidatedListDone will not have DateItems
         doneList.sortBy { it.dateInt }
-        val groupedMap: Map<Int, List<Task>> = doneList.groupBy {
-            it.dateInt
-        } // creates map of key: 'date' to a value: list of Tasks which have that due date
-
         consolidatedListDone = arrayListOf()
-        for (date:Int in groupedMap.keys) {
-            consolidatedListDone.add(DateItem(date.toString())) // creates a DateItem class for each 'date' in groupedMap
-            val groupItems: List<Task>? = groupedMap[date] // list of Tasks which have the due date above
-            groupItems?.forEach {
-                consolidatedListDone.add((TaskItem(it.subject, it.task, it.dueDate, it.notes))) // creates GeneralItem class for each Task which have this due date
-            }
+        for (t in doneList) {
+            consolidatedListDone.add(TaskItem(t.subject, t.task, t.dueDate, t.notes))
         }
     }
 
@@ -265,5 +324,28 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     fun getListSettings(): ArrayList<SettingsItem> {
         return listSettingsItems
+    }
+
+    private fun dateToInt(date: Calendar): Int {
+        val year = date.get(Calendar.YEAR)
+        val month = date.get(Calendar.MONTH)+1
+        val day = date.get(Calendar.DAY_OF_MONTH)
+
+        var monthString = month.toString()
+        var dayString = day.toString()
+
+        // ensure proper MM format
+        if (month < 10) {
+            monthString = "0$month" // eg convert "8" to "08"
+        }
+
+        // ensure proper DD format
+        if (day < 10) {
+            dayString = "0$day"
+        }
+
+        // convert to YYYYMMDD format
+        val dateString = "$year$monthString$dayString"
+        return (dateString.toInt())
     }
 }
