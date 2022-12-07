@@ -8,8 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.homeworklogapp.databinding.DateItemBinding
 import com.example.homeworklogapp.databinding.GeneralItemBinding
+import com.example.homeworklogapp.databinding.HeaderItemBinding
 import java.util.*
 
 class RVAdapterMain (
@@ -22,8 +22,8 @@ class RVAdapterMain (
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            ListItem.TYPE_DATE ->
-                DateViewHolder(DateItemBinding.inflate(layoutInflater, parent, false))
+            ListItem.TYPE_HEADER ->
+                DateViewHolder(HeaderItemBinding.inflate(layoutInflater, parent, false))
             else ->
                 GeneralViewHolder(GeneralItemBinding.inflate(layoutInflater, parent, false))
         }
@@ -31,9 +31,9 @@ class RVAdapterMain (
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
-            ListItem.TYPE_DATE -> {
+            ListItem.TYPE_HEADER -> {
                 (holder as DateViewHolder).bind(
-                    item = listOfItems[position] as DateItem
+                    item = listOfItems[position] as HeaderItem
                 )
             }
             ListItem.TYPE_TASK -> {
@@ -52,9 +52,14 @@ class RVAdapterMain (
         return listOfItems.size
     }
 
-    inner class DateViewHolder(val binding: DateItemBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(item: DateItem) {
-            binding.tvDate.text = item.date
+    inner class DateViewHolder(val binding: HeaderItemBinding): RecyclerView.ViewHolder(binding.root) {
+        fun bind(item: HeaderItem) {
+            binding.tvHeader.text = item.header
+            if (item.header == "Overdue") {
+
+            } else if (item.header == "Due Today") {
+
+            }
         }
     }
 

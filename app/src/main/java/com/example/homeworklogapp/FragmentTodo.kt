@@ -5,8 +5,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -163,8 +161,8 @@ class FragmentTodo : Fragment() {
 
     private fun checkForDoubleDate(removedIndex: Int) {
         if (removedIndex < consolidatedList.size) {
-            if (consolidatedList[removedIndex].type == ListItem.TYPE_DATE) {
-                if (consolidatedList[removedIndex-1].type == ListItem.TYPE_DATE) {
+            if (consolidatedList[removedIndex].type == ListItem.TYPE_HEADER) {
+                if (consolidatedList[removedIndex-1].type == ListItem.TYPE_HEADER) {
                     // if both a) the item which has replaced the one just removed, and b) the previous item are DateItems
                     consolidatedList.removeAt(removedIndex-1) // remove the double date (ie the one that has no TaskItems below it)
                     rvAdapter.notifyItemRemoved(removedIndex-1)
@@ -172,7 +170,7 @@ class FragmentTodo : Fragment() {
                 }
             }
         } else { // if item removed was the last item in list
-            if (consolidatedList[removedIndex-1].type == ListItem.TYPE_DATE) {
+            if (consolidatedList[removedIndex-1].type == ListItem.TYPE_HEADER) {
                 consolidatedList.removeAt(removedIndex-1)
                 rvAdapter.notifyItemRemoved(removedIndex-1)
                 updateMapOfIndex(removedIndex-1, false)
