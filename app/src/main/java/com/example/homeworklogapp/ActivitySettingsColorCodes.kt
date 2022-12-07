@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.android.material.snackbar.Snackbar
 import java.io.File
 import java.io.StringReader
 
@@ -251,7 +252,7 @@ class ActivitySettingsColorCodes : AppCompatActivity() {
             finish()
 
         } else {
-            Toast.makeText(this, "Please remove duplicate subjects", Toast.LENGTH_SHORT).show()
+            Snackbar.make(rvColorCodes, "Please remove duplicate subjects", Snackbar.LENGTH_SHORT).show()
         }
     }
 

@@ -17,20 +17,24 @@
             android:name=".ActivityAllSettings"
             android:exported="false"
             android:label="Settings"
-            android:parentActivityName=".ActivityMainLog" />
+            android:parentActivityName=".ActivityMainLog"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ActivitySettingsColorCodes"
             android:exported="false"
             android:label="Subject Color Codes"
-            android:parentActivityName=".ActivityAllSettings" />
+            android:parentActivityName=".ActivityAllSettings"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ActivityAddTask"
             android:exported="false"
-            android:parentActivityName=".ActivityMainLog" />
+            android:parentActivityName=".ActivityMainLog"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ActivityMainLog"
             android:exported="true"
-            android:label="Homework Log">
+            android:label="Homework Log"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
