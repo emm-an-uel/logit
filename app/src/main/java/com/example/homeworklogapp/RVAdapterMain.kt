@@ -1,6 +1,8 @@
 package com.example.homeworklogapp
 
 import android.content.Context
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.os.Build
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -55,10 +57,26 @@ class RVAdapterMain (
     inner class DateViewHolder(val binding: HeaderItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HeaderItem) {
             binding.tvHeader.text = item.header
-            if (item.header == "Overdue") {
 
-            } else if (item.header == "Due Today") {
+            // bar color for emphasis on overdue and due today
+            val context = binding.ivBar.context
+            when (item.header) {
+                "Overdue" -> {
+                    val barColor = ContextCompat.getColor(context, R.color.red)
+                    binding.ivBar.imageTintList = ColorStateList.valueOf(barColor)
+                    binding.tvHeader.setTextColor(barColor)
 
+                }
+                "Due Today" -> {
+                    val barColor = ContextCompat.getColor(context, R.color.orange)
+                    binding.ivBar.imageTintList = ColorStateList.valueOf(barColor)
+                    binding.tvHeader.setTextColor(barColor)
+
+                }
+                else -> {
+                    val barColor = binding.tvHeader.currentTextColor
+                    binding.ivBar.imageTintList = ColorStateList.valueOf(barColor)
+                }
             }
         }
     }
