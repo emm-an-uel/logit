@@ -16,6 +16,7 @@ import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
+import com.shashank.sony.fancytoastlib.FancyToast
 import java.io.File
 import java.io.StringReader
 
@@ -245,7 +246,7 @@ class ActivitySettingsColorCodes : AppCompatActivity() {
                 it.write(file.toByteArray())
             }
 
-            Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show()
+            FancyToast.makeText(this, "Saved", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
 
             val intent = Intent(this, ActivityAllSettings::class.java)
             startActivity(intent)

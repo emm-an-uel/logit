@@ -41,7 +41,10 @@ android {
 
 dependencies {
 
-    // viewmodel
+    // FancyToast
+    implementation "io.github.shashank02051997:FancyToast:2.0.2"
+
+    // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1"
 
     // klaxon
