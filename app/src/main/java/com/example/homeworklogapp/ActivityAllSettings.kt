@@ -45,6 +45,7 @@ class ActivityAllSettings : AppCompatActivity() {
         } else { // if file doesn't exist, populate with default settings
             listSettingsItems.apply {
                 add(SettingsItem("Background glow", false))
+                add(SettingsItem("Header bars", false))
                 add(SettingsItem("Edit subject color codes", false))
             }
         }

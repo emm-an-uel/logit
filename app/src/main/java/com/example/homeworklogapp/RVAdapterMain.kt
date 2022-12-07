@@ -18,7 +18,9 @@ class RVAdapterMain (
     private val listOfItems: List<ListItem>,
     private val mapSubjectColor: HashMap<String, Int>,
     private val listColors: ArrayList<CardColor>,
-    private val glow: Boolean
+    private val glow: Boolean,
+    private val bars: Boolean
+    // TODO: include future user preferences here //
         ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -63,19 +65,32 @@ class RVAdapterMain (
             when (item.header) {
                 "Overdue" -> {
                     val barColor = ContextCompat.getColor(context, R.color.red)
-                    binding.ivBar.imageTintList = ColorStateList.valueOf(barColor)
                     binding.tvHeader.setTextColor(barColor)
-
+                    if (bars) { // only run the following code if user wants header bars
+                        binding.ivBar.apply {
+                            visibility = View.VISIBLE
+                            imageTintList = ColorStateList.valueOf(barColor)
+                        }
+                    }
                 }
                 "Due Today" -> {
                     val barColor = ContextCompat.getColor(context, R.color.orange)
-                    binding.ivBar.imageTintList = ColorStateList.valueOf(barColor)
                     binding.tvHeader.setTextColor(barColor)
-
+                    if (bars) {
+                        binding.ivBar.apply {
+                            visibility = View.VISIBLE
+                            imageTintList = ColorStateList.valueOf(barColor)
+                        }
+                    }
                 }
                 else -> {
-                    val barColor = binding.tvHeader.currentTextColor
-                    binding.ivBar.imageTintList = ColorStateList.valueOf(barColor)
+                    if (bars) {
+                        val barColor = binding.tvHeader.currentTextColor
+                        binding.ivBar.apply {
+                            visibility = View.VISIBLE
+                            imageTintList = ColorStateList.valueOf(barColor)
+                        }
+                    }
                 }
             }
         }

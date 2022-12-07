@@ -15,6 +15,7 @@
             android:layout_marginTop="3dp"
             android:scaleType="centerCrop"
             android:scaleY=".15"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@+id/tvHeader"
             app:layout_constraintRight_toRightOf="parent"

@@ -34,7 +34,8 @@ class FragmentDone : Fragment() {
 
     lateinit var listSettingsItems: ArrayList<SettingsItem>
     private var glow = false
-    // instantiate future user preferences here //
+    private var bars = false
+    // TODO: define future user preferences here //
 
     // setup view binding
     private val binding get() = _binding!!
@@ -149,7 +150,7 @@ class FragmentDone : Fragment() {
 
     private fun createRV() {
         rvDone = binding.rvDone
-        rvAdapter = RVAdapterMain(consolidatedList, mapSubjectColor, listCardColors, glow)
+        rvAdapter = RVAdapterMain(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
 
         // set adapter to recycler view
         rvDone.adapter = rvAdapter
@@ -258,7 +259,10 @@ class FragmentDone : Fragment() {
                 0 -> { // glow
                     glow = listSettingsItems[i].status
                 }
-                // implement future user preferences here //
+                1 -> {
+                    bars = listSettingsItems[i].status
+                }
+                // TODO: implement future user preferences here //
             }
         }
     }

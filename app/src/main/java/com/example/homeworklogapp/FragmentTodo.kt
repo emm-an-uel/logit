@@ -29,7 +29,8 @@ class FragmentTodo : Fragment() {
 
     lateinit var listSettingsItems: ArrayList<SettingsItem>
     private var glow = false
-    // instantiate future user preferences here //
+    private var bars = false
+    // TODO: define future user preferences here //
 
     // setup view binding
     private val binding get() = _binding!!
@@ -180,7 +181,7 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         rvTodo = binding.rvTodo
-        rvAdapter = RVAdapterMain(consolidatedList, mapSubjectColor, listCardColors, glow) // pass future user preferences here //
+        rvAdapter = RVAdapterMain(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
 
         // set adapter to recycler view
         rvTodo.adapter = rvAdapter
@@ -228,7 +229,10 @@ class FragmentTodo : Fragment() {
                 0 -> { // glow
                     glow = listSettingsItems[i].status
                 }
-                // implement future user preferences here //
+                1 -> {
+                    bars = listSettingsItems[i].status
+                }
+                // TODO: implement future user preferences here //
             }
         }
     }

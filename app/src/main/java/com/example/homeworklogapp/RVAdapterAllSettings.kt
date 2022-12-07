@@ -50,7 +50,18 @@ class RVAdapterAllSettings(
                 }
             }
 
-            1 -> { // subject color codes
+            1 -> { // header bars
+                holder.switchSettings.apply {
+                    visibility = View.VISIBLE
+                    isChecked = listSettingsItems[position].status // set switch status based on saved preferences
+                    // implement listener
+                    setOnCheckedChangeListener { _, isChecked ->
+                        (context as ActivityAllSettings).updateSettings(position, isChecked) // changes settings item status to match switch checked / unchecked
+                    }
+                }
+            }
+
+            2 -> { // subject color codes
                 holder.linearLayout.setOnClickListener {
                     val context = holder.linearLayout.context
                     val intent = Intent(context, ActivitySettingsColorCodes::class.java)
