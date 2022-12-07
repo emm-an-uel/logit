@@ -15,8 +15,6 @@ import com.example.homeworklogapp.databinding.FragmentTodoBinding
 
 class FragmentTodo : Fragment() {
 
-    lateinit var linearLayoutIndex: LinearLayout
-
     lateinit var rvTodo: RecyclerView
     lateinit var rvAdapter: RVAdapterMain
     lateinit var todoList: ArrayList<Task>
@@ -53,8 +51,6 @@ class FragmentTodo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        linearLayoutIndex = view.findViewById(R.id.linearLayoutIndex)
 
         // get settings - user preferences
         getSettings()
@@ -93,7 +89,6 @@ class FragmentTodo : Fragment() {
                 index++
             }
         }
-        populateLinearLayoutIndex()
     }
 
     override fun onDestroyView() {
@@ -164,7 +159,6 @@ class FragmentTodo : Fragment() {
                 }
             }
         }
-        populateLinearLayoutIndex()
     }
 
     private fun checkForDoubleDate(removedIndex: Int) {
@@ -238,16 +232,6 @@ class FragmentTodo : Fragment() {
                 }
                 // implement future user preferences here //
             }
-        }
-    }
-
-    private fun populateLinearLayoutIndex() {
-        linearLayoutIndex.removeAllViews()
-        for (p in mapOfIndex.keys) {
-            val i = mapOfIndex[p]
-            val textView = TextView(context)
-            textView.text = "$p - $i"
-            linearLayoutIndex.addView(textView)
         }
     }
 }
