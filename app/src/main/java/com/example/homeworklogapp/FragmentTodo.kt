@@ -98,6 +98,7 @@ class FragmentTodo : Fragment() {
     // refresh recyclerView
     override fun onResume() {
         super.onResume()
+        getSettings()
         getLists()
         createMapOfIndex()
 

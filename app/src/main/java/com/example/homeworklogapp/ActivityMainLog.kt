@@ -56,7 +56,7 @@ class ActivityMainLog : AppCompatActivity() {
         initSubjectColor()
 
         // initialize listSettingsItems - user preferences
-        initListSettingsItems()
+        viewModel.initListSettings()
 
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
@@ -108,6 +108,11 @@ class ActivityMainLog : AppCompatActivity() {
         })
 
         remoteCheckFabClickability()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.initListSettings()
     }
 
     private fun remoteCheckFabClickability() {
@@ -243,9 +248,5 @@ class ActivityMainLog : AppCompatActivity() {
 
     fun hideFabAddTask() { // called when user scrolls down
         fabTask.hide()
-    }
-
-    private fun initListSettingsItems() {
-        viewModel.initListSettings() // listSettingsItems is not used in this activity - it is only instantiated here for its child fragments to use
     }
 }

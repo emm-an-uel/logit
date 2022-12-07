@@ -91,6 +91,7 @@ class FragmentDone : Fragment() {
     // refresh recyclerView
     override fun onResume() {
         super.onResume()
+        getSettings()
         getLists()
 
         (context as ActivityMainLog).showFabAddTask() // show fab by default
