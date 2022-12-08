@@ -35,6 +35,8 @@ class ActivityMainLog : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main_log)
 
+        title = ""
+
         // instantiate viewModel
         viewModel = ViewModelProvider(this).get(ViewModelMainLog::class.java)
 
