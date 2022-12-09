@@ -6,14 +6,32 @@
     android:layout_height="match_parent"
     tools:context=".ActivityMainLog">
 
+    <ImageView
+        android:id="@+id/imgCustomTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/custom_title_icon_foreground"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imgSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="12dp"
+        android:src="@drawable/ic_settings"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabSelectedTextColor="?attr/colorPrimaryVariant"
-        app:tabIndicatorColor="?attr/colorPrimaryVariant"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/imgCustomTitle"
+        app:tabIndicatorColor="?attr/colorPrimaryVariant"
+        app:tabSelectedTextColor="?attr/colorPrimaryVariant">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem"
@@ -35,7 +53,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="70dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/imgCustomTitle" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
@@ -44,7 +62,7 @@
         android:layout_height="0dp"
         app:defaultNavHost="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgCustomTitle"
         app:navGraph="@navigation/nav_graph" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
