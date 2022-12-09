@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -24,6 +25,7 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var fabTask: FloatingActionButton
     lateinit var todoList: ArrayList<Task>
     lateinit var doneList: ArrayList<Task>
+    lateinit var imgSettings: ImageView
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
     lateinit var mapSubjectColor: HashMap<String, Int>
@@ -38,6 +40,7 @@ class ActivityMainLog : AppCompatActivity() {
         setContentView(R.layout.activity_main_log)
 
         title = ""
+        supportActionBar!!.hide() // hides action bar - this was used so an ImageView of the app logo could be shown on the top right
 
         // instantiate viewModel
         viewModel = ViewModelProvider(this).get(ViewModelMainLog::class.java)
@@ -112,6 +115,15 @@ class ActivityMainLog : AppCompatActivity() {
         })
 
         remoteCheckFabClickability()
+
+        // imgSettings functionality
+        imgSettings = findViewById(R.id.imgSettings)
+        imgSettings.setOnClickListener {
+            // start Settings activity
+            val intent = Intent(this, ActivityAllSettings::class.java)
+            intent.putExtras(bundleOf("bundleListSubjectColor" to listSubjectColor))
+            startActivity(intent)
+        }
     }
 
     override fun onResume() {
@@ -204,24 +216,6 @@ class ActivityMainLog : AppCompatActivity() {
     private fun fabEnabled() {
         fabTask.isEnabled = true
         fabTask.background.alpha = 255
-    }
-
-    // action bar stuff
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_log_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.settings -> {
-                val intent = Intent(this, ActivityAllSettings::class.java)
-                intent.putExtras(bundleOf("bundleListSubjectColor" to listSubjectColor))
-                startActivity(intent)
-
-                return true
-            } else -> super.onOptionsItemSelected(item)
-        }
     }
 
     private fun initSubjectColor() {
