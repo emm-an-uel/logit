@@ -177,7 +177,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         createConsolidatedListDone()
     }
 
-    private fun saveJsonTaskLists() {
+    fun saveJsonTaskLists() {
         val listAllTasks = arrayListOf<Task>()
         listAllTasks.addAll(todoList)
         listAllTasks.addAll(doneList)

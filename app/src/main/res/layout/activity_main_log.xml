@@ -19,6 +19,7 @@
             android:id="@+id/imgCustomTitle"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
+            android:layout_marginLeft="-15dp"
             android:scaleType="centerCrop"
             android:src="@mipmap/custom_title_icon_foreground"
             app:layout_constraintLeft_toLeftOf="parent"

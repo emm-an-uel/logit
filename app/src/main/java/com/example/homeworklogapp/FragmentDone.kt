@@ -130,11 +130,6 @@ class FragmentDone : Fragment() {
                 return false
             }
 
-            override fun getSwipeDirs (recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                if (viewHolder is RVAdapterMain.DateViewHolder) return 0 // prevents DateViewHolders from getting swiped
-                return super.getSwipeDirs(recyclerView, viewHolder)
-            }
-
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val pos = viewHolder.adapterPosition
                 val deletedTaskItem = consolidatedList[pos] as TaskItem
@@ -211,6 +206,7 @@ class FragmentDone : Fragment() {
 
     private fun deleteTask(pos: Int) {
         doneList.removeAt(pos)
+        viewModel.saveJsonTaskLists()
         val bundle = Bundle()
         bundle.putInt("fabClickability", 0)
         setFragmentResult("rqCheckFabClickability", bundle)
