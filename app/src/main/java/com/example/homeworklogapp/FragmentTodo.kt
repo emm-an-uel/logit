@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -13,6 +14,7 @@ import com.example.homeworklogapp.databinding.FragmentTodoBinding
 
 class FragmentTodo : Fragment() {
 
+    lateinit var tvEmptyList: TextView
     lateinit var rvTodo: RecyclerView
     lateinit var rvAdapter: RVAdapterMain
     lateinit var todoList: ArrayList<Task>
@@ -57,8 +59,12 @@ class FragmentTodo : Fragment() {
         // initialize map
         mapSubjectColor = hashMapOf()
 
-        // get todoList
+        // get todoList and create rvTodo
         getLists()
+
+        // display "no upcoming assignments" if todoList is empty
+        tvEmptyList = view.findViewById(R.id.tvEmptyList)
+        checkForEmptyList()
 
         // create mapOfIndex <position, actualIndex>
         createMapOfIndex()
@@ -77,6 +83,15 @@ class FragmentTodo : Fragment() {
         })
 
         (context as ActivityMainLog).showFabAddTask() // show by default
+    }
+
+    private fun checkForEmptyList() {
+        // displays message if there's nothing being displayed in rv
+        if (consolidatedList.size == 0) {
+            tvEmptyList.visibility = View.VISIBLE
+        } else {
+            tvEmptyList.visibility = View.GONE
+        }
     }
 
     private fun createMapOfIndex() {
@@ -100,6 +115,7 @@ class FragmentTodo : Fragment() {
         super.onResume()
         getSettings()
         getLists()
+        checkForEmptyList()
         createMapOfIndex()
 
         (context as ActivityMainLog).showFabAddTask() // show fab by default
