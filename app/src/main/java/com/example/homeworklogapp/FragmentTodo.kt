@@ -59,15 +59,15 @@ class FragmentTodo : Fragment() {
         // initialize map
         mapSubjectColor = hashMapOf()
 
-        // get todoList and create rvTodo
+        // get todoList
         getLists()
-
-        // display "no upcoming assignments" if todoList is empty
-        tvEmptyList = view.findViewById(R.id.tvEmptyList)
-        checkForEmptyList()
 
         // create mapOfIndex <position, actualIndex>
         createMapOfIndex()
+
+        // display "no upcoming assignments" message if consolidatedList is empty
+        tvEmptyList = view.findViewById(R.id.tvEmptyList)
+        checkForEmptyList()
 
         // fabAddTask visibility
         rvTodo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -86,7 +86,6 @@ class FragmentTodo : Fragment() {
     }
 
     private fun checkForEmptyList() {
-        // displays message if there's nothing being displayed in rv
         if (consolidatedList.size == 0) {
             tvEmptyList.visibility = View.VISIBLE
         } else {
@@ -115,8 +114,8 @@ class FragmentTodo : Fragment() {
         super.onResume()
         getSettings()
         getLists()
-        checkForEmptyList()
         createMapOfIndex()
+        checkForEmptyList()
 
         (context as ActivityMainLog).showFabAddTask() // show fab by default
     }
@@ -148,6 +147,7 @@ class FragmentTodo : Fragment() {
 
                 updateMapOfIndex(pos, true)
                 checkForDoubleDate(pos)
+                checkForEmptyList()
             }
             // at last we are adding this
             // to our recycler view.
