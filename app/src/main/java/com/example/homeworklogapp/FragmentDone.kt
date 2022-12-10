@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -19,6 +20,7 @@ import com.example.homeworklogapp.databinding.FragmentDoneBinding
 
 class FragmentDone : Fragment() {
 
+    lateinit var tvEmptyList: TextView
     lateinit var rvDone: RecyclerView
     lateinit var rvAdapter: RVAdapterMain
     lateinit var doneList: ArrayList<Task>
@@ -64,6 +66,10 @@ class FragmentDone : Fragment() {
         // get doneList
         getLists()
 
+        // display "no completed assignments" message if consolidatedList is empty
+        tvEmptyList = binding.tvEmptyList
+        checkForEmptyList()
+
         // watch for clearAll
         checkClearAll()
 
@@ -83,6 +89,14 @@ class FragmentDone : Fragment() {
         (context as ActivityMainLog).showFabAddTask() // show by default
     }
 
+    private fun checkForEmptyList() {
+        if (consolidatedList.size == 0) {
+            tvEmptyList.visibility = View.VISIBLE
+        } else {
+            tvEmptyList.visibility = View.GONE
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -93,6 +107,7 @@ class FragmentDone : Fragment() {
         super.onResume()
         getSettings()
         getLists()
+        checkForEmptyList()
 
         (context as ActivityMainLog).showFabAddTask() // show fab by default
     }
@@ -115,6 +130,7 @@ class FragmentDone : Fragment() {
                 val restoredTask: Task = doneList[pos]
                 restoreTask(restoredTask, pos)
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
+                checkForEmptyList()
             }
         }).attachToRecyclerView(rvDone)
 
@@ -175,6 +191,7 @@ class FragmentDone : Fragment() {
                 ) { dialog, id ->
                     deleteTask(position)
                     touched = true
+                    checkForEmptyList()
                 }
 
                 setNegativeButton("Cancel"
@@ -200,6 +217,7 @@ class FragmentDone : Fragment() {
             if (!touched) { // if touched == false (ie user touched outside dialog box)
                 consolidatedList.add(position, deletedTaskItem)
                 rvAdapter.notifyItemInserted(position)
+                checkForEmptyList()
             }
         }
     }
