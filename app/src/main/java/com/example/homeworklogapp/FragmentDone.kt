@@ -264,6 +264,7 @@ class FragmentDone : Fragment() {
     private fun checkClearAll() {
         setFragmentResultListener("rqClearAll") { requestKey, bundle ->
             getLists()
+            checkForEmptyList()
         }
     }
 
