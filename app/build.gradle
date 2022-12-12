@@ -15,7 +15,7 @@ android {
     compileSdk 32
 
     defaultConfig {
-        applicationId "com.example.homeworklogapp"
+        applicationId "com.example.logit"
         minSdk 24
         targetSdk 32
         versionCode 1
