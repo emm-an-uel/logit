@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.homeworklogapp">
+    package="com.example.logit">
 
     <application
         android:allowBackup="true"
@@ -14,27 +14,27 @@
         android:theme="@style/Theme.AppSplash"
         tools:targetApi="31">
         <activity
-            android:name=".ActivityAllSettings"
+            android:name="com.example.logit.ActivityAllSettings"
             android:exported="false"
             android:label="Settings"
-            android:parentActivityName=".ActivityMainLog"
+            android:parentActivityName="com.example.logit.ActivityMainLog"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.HomeworkLogApp" />
+            android:theme="@style/Theme.LogIt" />
         <activity
-            android:name=".ActivitySettingsColorCodes"
+            android:name="com.example.logit.ActivitySettingsColorCodes"
             android:exported="false"
             android:label="Subject Color Codes"
-            android:parentActivityName=".ActivityAllSettings"
+            android:parentActivityName="com.example.logit.ActivityAllSettings"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.HomeworkLogApp" />
+            android:theme="@style/Theme.LogIt" />
         <activity
-            android:name=".ActivityAddTask"
+            android:name="com.example.logit.ActivityAddTask"
             android:exported="false"
-            android:parentActivityName=".ActivityMainLog"
+            android:parentActivityName="com.example.logit.ActivityMainLog"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.HomeworkLogApp" />
+            android:theme="@style/Theme.LogIt" />
         <activity
-            android:name=".ActivityMainLog"
+            android:name="com.example.logit.ActivityMainLog"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

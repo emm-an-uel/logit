@@ -1,4 +1,4 @@
-package com.example.homeworklogapp
+package com.example.logit
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity

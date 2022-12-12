@@ -1,4 +1,4 @@
-package com.example.homeworklogapp
+package com.example.logit
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.homeworklogapp.databinding.FragmentTodoBinding
+import com.example.logit.databinding.FragmentTodoBinding
 
 class FragmentTodo : Fragment() {
 

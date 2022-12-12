@@ -1,8 +1,7 @@
-package com.example.homeworklogapp
+package com.example.logit
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.Color
 import android.os.Build
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -10,8 +9,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.homeworklogapp.databinding.GeneralItemBinding
-import com.example.homeworklogapp.databinding.HeaderItemBinding
+import com.example.logit.databinding.GeneralItemBinding
+import com.example.logit.databinding.HeaderItemBinding
 import java.util.*
 
 class RVAdapterMain (

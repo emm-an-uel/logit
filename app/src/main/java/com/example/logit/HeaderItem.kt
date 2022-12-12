@@ -1,4 +1,4 @@
-package com.example.homeworklogapp
+package com.example.logit
 
 class HeaderItem (
     val header: String

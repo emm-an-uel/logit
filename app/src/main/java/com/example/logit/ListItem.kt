@@ -1,4 +1,4 @@
-package com.example.homeworklogapp
+package com.example.logit
 
 open class ListItem (
     val type: Int
