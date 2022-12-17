@@ -41,7 +41,7 @@ class ActivityMainLog : AppCompatActivity() {
         supportActionBar!!.hide() // hides action bar - this was used so an ImageView of the app logo could be shown on the top right
 
         // instantiate viewModel
-        viewModel = ViewModelProvider(this).get(ViewModelMainLog::class.java)
+        viewModel = ViewModelProvider(this)[ViewModelMainLog::class.java]
 
         // initialize lists
         todoList = ArrayList()

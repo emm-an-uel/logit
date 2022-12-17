@@ -81,6 +81,7 @@ class RVAdapterAllSettings(
                 holder.spinner.apply {
                     visibility = View.VISIBLE
                     setSelection(selectedOption) // sets selection to what was saved
+                    // TODO: set on item selected listener, updateSettings(position, option)
                 }
             }
 
