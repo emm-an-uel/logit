@@ -48,13 +48,43 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
                         if (!task!!.status) { // undone
                             todoList.add(task)
                         } else { // done
-                            doneList.add(task)
+                            if (!autoDelete(task)) { // if this task should not be auto deleted, add to doneList
+                                doneList.add(task)
+                            }
                         }
                     }
                 }
             }
+            saveJsonTaskLists() // note that in above code, auto deleted tasks were not added to doneList, but are still part of the json file.
+        // this line saves the new todoList and doneList so tasks which were not added into doneList are actually removed - newly saved json file doesn't contain them
         }
     }
+
+    private fun autoDelete(task: Task): Boolean {
+        if (task.completedDate != null) {
+            var autoDeleteDays = 0
+            when (listSettingsItems[2].option) { // sets the number of days before auto deleted according to pre-saved user preference
+                0 -> autoDeleteDays = 1
+                1 -> autoDeleteDays = 7
+                2 -> autoDeleteDays = 10
+                3 -> autoDeleteDays = 30
+                // else remain at 0 (this represents 'never')
+            }
+            val expiryDate: Calendar = task.completedDate!!
+            expiryDate.add(Calendar.DATE, autoDeleteDays)
+            val today = Calendar.getInstance()
+
+            val todayInt = dateToInt(today)
+            val expiryDateInt = dateToInt(expiryDate)
+
+            return todayInt >= expiryDateInt // return true if today >= expiryDate, false otherwise
+
+        } else { // if 'completedDate' == null (note that this would mean the completedDate hasn't been saved properly - something's not working right)
+            return false
+        }
+    }
+
+
 
     fun createConsolidatedListTodo() {
         val today = Calendar.getInstance()
@@ -68,7 +98,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         nextWeek.add(Calendar.DATE, 7) // adds 7 days to today's date
         val nextWeekInt = dateToInt(nextWeek)
 
-        todoList.sortBy { it.dateInt }
+        todoList.sortBy { it.dueDateInt }
 
         // headings will be - Overdue, Today, Tomorrow, Next Week, Upcoming
         var overdueHeader = false
@@ -79,7 +109,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
         // create sectioned list to be passed into respective rv's
         val groupedMap1: Map<Int, List<Task>> = todoList.groupBy {
-            it.dateInt
+            it.dueDateInt
         } // creates a map of 'date' to a 'list of Tasks' - eg: key '20160605', value is a list containing 'name 2', 'name 3'
         consolidatedListTodo = arrayListOf()
         for (dateInt: Int in groupedMap1.keys) {
@@ -143,7 +173,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     fun createConsolidatedListDone() {
         // consolidatedListDone will not have DateItems
-        doneList.sortBy { it.dateInt }
+        doneList.sortBy { it.dueDateInt }
         consolidatedListDone = arrayListOf()
         for (t in doneList) {
             consolidatedListDone.add(TaskItem(t.subject, t.task, t.dueDate, t.notes))
@@ -157,6 +187,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     fun taskCompleted(completedTask: Task, actualIndex: Int) { // moves completedTask from todoList to doneList
         completedTask.status = true // set to 'done'
+        completedTask.completedDate = Calendar.getInstance() // sets completedDate to today's date
         doneList.add(completedTask)
         todoList.removeAt(actualIndex)
         saveJsonTaskLists()
@@ -165,6 +196,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     fun restoreTask(restoredTask: Task, actualIndex: Int) { // moves restoredTask from doneList to todoList
         restoredTask.status = false // set to 'undone'
+        restoredTask.completedDate = null // removes completedDate
         todoList.add(restoredTask)
         doneList.removeAt(actualIndex)
         saveJsonTaskLists()
@@ -191,13 +223,13 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     @JvmName("getTodoList1")
     fun getTodoList(): ArrayList<Task> {
-        todoList.sortBy { it.dateInt }
+        todoList.sortBy { it.dueDateInt }
         return todoList
     }
 
     @JvmName("getDoneList1")
     fun getDoneList(): ArrayList<Task> {
-        doneList.sortBy { it.dateInt }
+        doneList.sortBy { it.dueDateInt }
         return doneList
     }
 

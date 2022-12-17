@@ -50,6 +50,9 @@ class ActivityMainLog : AppCompatActivity() {
         // initialize listColors
         initListColors()
 
+        // initialize listSettingsItems - user preferences
+        viewModel.initListSettings()
+
         // initialize todoList and doneList in ViewModel
         initTaskLists()
 
@@ -59,9 +62,6 @@ class ActivityMainLog : AppCompatActivity() {
 
         // initialize listSubjectColor and mapSubjectColor in ViewModel
         initSubjectColor()
-
-        // initialize listSettingsItems - user preferences
-        viewModel.initListSettings()
 
         // tab layout
         tabLayout = findViewById(R.id.tabLayout)
