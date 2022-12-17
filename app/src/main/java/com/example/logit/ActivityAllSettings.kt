@@ -44,9 +44,11 @@ class ActivityAllSettings : AppCompatActivity() {
             }
         } else { // if file doesn't exist, populate with default settings
             listSettingsItems.apply {
-                add(SettingsItem("Background glow", false))
-                add(SettingsItem("Header bars", false))
-                add(SettingsItem("Edit subject color codes", false))
+                add(SettingsItem("Background glow", 0))
+                add(SettingsItem("Header bars", 0))
+                add(SettingsItem("Automatically delete completed tasks", 0))
+                add(SettingsItem("Edit subject color codes", 3)) // '30 days' by default
+                // TODO: add additional settings items here //
             }
         }
     }
@@ -59,8 +61,8 @@ class ActivityAllSettings : AppCompatActivity() {
         rvSettings.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
     }
 
-    fun updateSettings(position: Int, status: Boolean) {
-        listSettingsItems[position].status = status
+    fun updateSettings(position: Int, option: Int) {
+        listSettingsItems[position].option = option
         saveSettings()
     }
 

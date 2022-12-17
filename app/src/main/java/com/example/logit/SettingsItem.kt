@@ -6,5 +6,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 class SettingsItem (
     val item: String,
-    var status: Boolean
+    var option: Int
         ) : Parcelable

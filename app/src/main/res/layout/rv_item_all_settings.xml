@@ -22,4 +22,10 @@
         android:padding="15dp"
         android:visibility="gone" />
 
+    <Spinner
+        android:id="@+id/spinnerSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
 </LinearLayout>

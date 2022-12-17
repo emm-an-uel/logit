@@ -244,13 +244,17 @@ class FragmentTodo : Fragment() {
         for (i in 0 until listSettingsItems.size) {
             when (i) {
                 0 -> { // glow
-                    glow = listSettingsItems[i].status
+                    glow = intToBoolean(listSettingsItems[i].option)
                 }
-                1 -> {
-                    bars = listSettingsItems[i].status
+                1 -> { // header bars
+                    bars = intToBoolean(listSettingsItems[i].option)
                 }
                 // TODO: implement future user preferences here //
             }
         }
+    }
+
+    private fun intToBoolean(option: Int): Boolean {
+        return option != 0
     }
 }
