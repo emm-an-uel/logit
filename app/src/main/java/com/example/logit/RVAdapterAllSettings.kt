@@ -4,10 +4,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
 
@@ -81,7 +78,20 @@ class RVAdapterAllSettings(
                 holder.spinner.apply {
                     visibility = View.VISIBLE
                     setSelection(selectedOption) // sets selection to what was saved
-                    // TODO: set on item selected listener, updateSettings(position, option)
+                    onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(
+                            p0: AdapterView<*>?,
+                            p1: View?,
+                            p2: Int,
+                            p3: Long
+                        ) {
+                            (context as ActivityAllSettings).updateSettings(position, p2)
+                        }
+
+                        override fun onNothingSelected(p0: AdapterView<*>?) {
+                            // do nothing
+                        }
+                    }
                 }
             }
 
