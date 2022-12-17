@@ -27,8 +27,6 @@ class RVAdapterAddTask(
     lateinit var context: Context
 
     lateinit var dueDate: String
-    lateinit var today: Calendar
-    var dateInt = 0
 
     lateinit var currentTask: Task
 
