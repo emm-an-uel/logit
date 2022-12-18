@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.mainlog
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.*
 import com.example.logit.databinding.GeneralItemBinding
 import com.example.logit.databinding.HeaderItemBinding
 import java.util.*

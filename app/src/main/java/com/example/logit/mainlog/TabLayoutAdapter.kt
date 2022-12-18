@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.mainlog
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager

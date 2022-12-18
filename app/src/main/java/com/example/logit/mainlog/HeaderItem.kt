@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.mainlog
 
 class HeaderItem (
     val header: String

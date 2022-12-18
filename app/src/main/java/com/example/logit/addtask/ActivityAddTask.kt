@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.addtask
 
 import android.content.Context
 import android.content.Intent
@@ -10,6 +10,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
+import com.example.logit.R
+import com.example.logit.mainlog.Task
+import com.example.logit.mainlog.ActivityMainLog
 import java.io.File
 import java.io.StringReader
 import java.util.*

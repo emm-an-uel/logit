@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.settings
 
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
+import com.example.logit.R
 import java.io.File
 import java.io.StringReader
 

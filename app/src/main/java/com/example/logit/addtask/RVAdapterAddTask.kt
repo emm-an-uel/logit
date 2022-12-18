@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.addtask
 
 import android.content.Context
 import android.content.res.ColorStateList
@@ -10,6 +10,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.R
+import com.example.logit.mainlog.Task
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -77,7 +79,8 @@ class RVAdapterAddTask(
 
     private fun createViews(
         position: Int,
-        holder: NewViewHolder) {
+        holder: NewViewHolder
+    ) {
 
         // note: there's a bug with CalendarView that prevents it from being VISIBLE if initially set to GONE
         // workaround: set cvDueDate to VISIBLE in xml, but set to GONE by default here

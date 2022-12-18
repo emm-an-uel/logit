@@ -14,27 +14,27 @@
         android:theme="@style/Theme.AppSplash"
         tools:targetApi="31">
         <activity
-            android:name="com.example.logit.ActivityAllSettings"
+            android:name="com.example.logit.settings.ActivityAllSettings"
             android:exported="false"
             android:label="Settings"
-            android:parentActivityName="com.example.logit.ActivityMainLog"
+            android:parentActivityName="com.example.logit.mainlog.ActivityMainLog"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt" />
         <activity
-            android:name="com.example.logit.ActivitySettingsColorCodes"
+            android:name="com.example.logit.settings.ActivitySettingsColorCodes"
             android:exported="false"
             android:label="Subject Color Codes"
-            android:parentActivityName="com.example.logit.ActivityAllSettings"
+            android:parentActivityName="com.example.logit.settings.ActivityAllSettings"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt" />
         <activity
-            android:name="com.example.logit.ActivityAddTask"
+            android:name="com.example.logit.addtask.ActivityAddTask"
             android:exported="false"
-            android:parentActivityName="com.example.logit.ActivityMainLog"
+            android:parentActivityName="com.example.logit.mainlog.ActivityMainLog"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt" />
         <activity
-            android:name="com.example.logit.ActivityMainLog"
+            android:name="com.example.logit.mainlog.ActivityMainLog"
             android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>

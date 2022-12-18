@@ -1,4 +1,6 @@
-package com.example.logit
+package com.example.logit.mainlog
+
+import com.example.logit.mainlog.ListItem
 
 class TaskItem (
     val subject: String,

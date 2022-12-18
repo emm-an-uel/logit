@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.mainlog
 
 import android.content.Context
 import android.content.Intent
@@ -11,6 +11,9 @@ import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
+import com.example.logit.*
+import com.example.logit.addtask.ActivityAddTask
+import com.example.logit.settings.ActivityAllSettings
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout

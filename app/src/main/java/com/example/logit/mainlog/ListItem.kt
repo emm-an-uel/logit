@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.mainlog
 
 open class ListItem (
     val type: Int

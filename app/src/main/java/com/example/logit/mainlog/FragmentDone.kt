@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.mainlog
 
 import android.R
 import android.content.Context
@@ -16,6 +16,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.databinding.FragmentDoneBinding
+import com.example.logit.settings.SettingsItem
 
 
 class FragmentDone : Fragment() {

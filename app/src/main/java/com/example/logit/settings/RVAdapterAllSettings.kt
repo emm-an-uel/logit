@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.settings
 
 import android.content.Intent
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.R
 
 class RVAdapterAllSettings(
     private val listSettingsItems: ArrayList<SettingsItem>

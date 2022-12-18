@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.settings
 
 import android.content.Context
 import android.text.Editable
@@ -14,6 +14,8 @@ import android.widget.Spinner
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.R
+import com.example.logit.mainlog.SubjectColor
 
 class RVAdapterSettingsColorCodes(
     private val listSubjectColor: ArrayList<SubjectColor>, // list of items to populate rv with

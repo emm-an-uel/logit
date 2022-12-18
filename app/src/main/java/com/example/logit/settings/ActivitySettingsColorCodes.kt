@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.settings
 
 import android.content.Context
 import android.content.Intent
@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
+import com.example.logit.R
+import com.example.logit.mainlog.SubjectColor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.shashank.sony.fancytoastlib.FancyToast

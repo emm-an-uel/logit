@@ -1,4 +1,4 @@
-package com.example.logit
+package com.example.logit.settings
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
+import com.example.logit.R
 
 class SpinnerAdapterSettings (
     context: Context,
