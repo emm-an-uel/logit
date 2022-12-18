@@ -74,7 +74,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
         return if (autoDeleteDays != 0) { // if == 0, that represents 'never'
             val expiryDate: Calendar = intToCalendar(task.completedDate)
-            expiryDate.add(Calendar.DATE, autoDeleteDays)
+            expiryDate.add(Calendar.DATE, 1)
             val today = Calendar.getInstance()
 
             val todayInt = calendarToInt(today)
@@ -387,7 +387,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         val string = int.toString()
         val year = string.take(4).toInt()
         val monthDay = string.takeLast(4)
-        val month = monthDay.take(2).toInt()
+        val month = (monthDay.take(2).toInt() - 1) // Calendar months go from 0 to 11
         val day = monthDay.takeLast(2).toInt()
 
         val calendar = Calendar.getInstance()
