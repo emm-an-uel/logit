@@ -13,5 +13,5 @@ class Task(
         val dueDateInt: Int,
         var status: Boolean,
         val notes: String,
-        var completedDate: Calendar?
+        var completedDate: Int
         ) : Parcelable

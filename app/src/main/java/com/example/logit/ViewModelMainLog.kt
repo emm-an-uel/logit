@@ -61,26 +61,26 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
     }
 
     private fun autoDelete(task: Task): Boolean {
-        if (task.completedDate != null) {
-            var autoDeleteDays = 0
-            when (listSettingsItems[2].option) { // sets the number of days before auto deleted according to pre-saved user preference
-                0 -> autoDeleteDays = 1
-                1 -> autoDeleteDays = 7
-                2 -> autoDeleteDays = 10
-                3 -> autoDeleteDays = 30
-                // else remain at 0 (this represents 'never')
-            }
-            val expiryDate: Calendar = task.completedDate!!
+        var autoDeleteDays = 0
+        when (listSettingsItems[2].option) { // sets the number of days before auto deleted according to pre-saved user preference
+            0 -> autoDeleteDays = 1
+            1 -> autoDeleteDays = 7
+            2 -> autoDeleteDays = 10
+            3 -> autoDeleteDays = 30
+            // else remain at 0 (this represents 'never')
+        }
+
+        return if (autoDeleteDays != 0) { // if == 0, that represents 'never'
+            val expiryDate: Calendar = intToCalendar(task.completedDate)
             expiryDate.add(Calendar.DATE, autoDeleteDays)
             val today = Calendar.getInstance()
 
-            val todayInt = dateToInt(today)
-            val expiryDateInt = dateToInt(expiryDate)
+            val todayInt = calendarToInt(today)
+            val expiryDateInt = calendarToInt(expiryDate)
 
-            return todayInt >= expiryDateInt // return true if today >= expiryDate, false otherwise
-
-        } else { // if 'completedDate' == null (note that this would mean the completedDate hasn't been saved properly - something's not working right)
-            return false
+            todayInt >= expiryDateInt // return true if today >= expiryDate, false otherwise
+        } else {
+            false
         }
     }
 
@@ -88,15 +88,15 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     fun createConsolidatedListTodo() {
         val today = Calendar.getInstance()
-        val todayInt = dateToInt(today)
+        val todayInt = calendarToInt(today)
 
         val tomorrow = Calendar.getInstance()
         tomorrow.add(Calendar.DATE, 1) // adds a day to today's date
-        val tomorrowInt = dateToInt(tomorrow)
+        val tomorrowInt = calendarToInt(tomorrow)
 
         val nextWeek = Calendar.getInstance()
         nextWeek.add(Calendar.DATE, 7) // adds 7 days to today's date
-        val nextWeekInt = dateToInt(nextWeek)
+        val nextWeekInt = calendarToInt(nextWeek)
 
         todoList.sortBy { it.dueDateInt }
 
@@ -187,7 +187,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     fun taskCompleted(completedTask: Task, actualIndex: Int) { // moves completedTask from todoList to doneList
         completedTask.status = true // set to 'done'
-        completedTask.completedDate = Calendar.getInstance() // sets completedDate to today's date
+        completedTask.completedDate = calendarToInt(Calendar.getInstance()) // sets completedDate to today's date
         doneList.add(completedTask)
         todoList.removeAt(actualIndex)
         saveJsonTaskLists()
@@ -196,7 +196,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
     fun restoreTask(restoredTask: Task, actualIndex: Int) { // moves restoredTask from doneList to todoList
         restoredTask.status = false // set to 'undone'
-        restoredTask.completedDate = null // removes completedDate
+        restoredTask.completedDate = 0 // removes completedDate
         todoList.add(restoredTask)
         doneList.removeAt(actualIndex)
         saveJsonTaskLists()
@@ -358,7 +358,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         return listSettingsItems
     }
 
-    private fun dateToInt(date: Calendar): Int {
+    private fun calendarToInt(date: Calendar): Int {
         val year = date.get(Calendar.YEAR)
         val month = date.get(Calendar.MONTH)+1
         val day = date.get(Calendar.DAY_OF_MONTH)
@@ -379,5 +379,17 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         // convert to YYYYMMDD format
         val dateString = "$year$monthString$dayString"
         return (dateString.toInt())
+    }
+
+    private fun intToCalendar(int: Int): Calendar {
+        val string = int.toString()
+        val year = string.take(4).toInt()
+        val monthDay = string.takeLast(4)
+        val month = monthDay.take(2).toInt()
+        val day = monthDay.takeLast(2).toInt()
+
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+        return calendar
     }
 }

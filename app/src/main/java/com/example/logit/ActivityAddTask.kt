@@ -202,7 +202,7 @@ class ActivityAddTask : AppCompatActivity() {
         val id = UUID.randomUUID().toString()
 
         // create val "assignment" using Class "Task" parameters
-        val newAssignment = Task(id, subject, task, dueDate, dateInt, status, notes, null)
+        val newAssignment = Task(id, subject, task, dueDate, dateInt, status, notes, 0)
 
         // check if there's existing "fileAssignments"
         val file = File(this.filesDir, "fileAssignment")
