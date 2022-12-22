@@ -117,7 +117,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
         for (dateInt: Int in groupedMap1.keys) {
             if (dateInt < todayInt) {
                 if (!overdueHeader) {
-                    consolidatedListTodo.add(HeaderItem("Overdue")) // adds a header if one doesn't already exist
+                    consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.overdue))) // adds a header if one doesn't already exist
                     overdueHeader = true
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
@@ -127,7 +127,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
             } else if (dateInt == todayInt) {
                 if (!todayHeader) {
-                    consolidatedListTodo.add(HeaderItem("Due Today")) // adds a header if one doesn't already exist
+                    consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.due_today))) // adds a header if one doesn't already exist
                     todayHeader = true
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
@@ -137,7 +137,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
             } else if (dateInt == tomorrowInt) {
                 if (!tomorrowHeader) {
-                    consolidatedListTodo.add(HeaderItem("Due Tomorrow")) // adds a header if one doesn't already exist
+                    consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.due_tomorrow))) // adds a header if one doesn't already exist
                     tomorrowHeader = true
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
@@ -147,7 +147,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
             } else if (dateInt < nextWeekInt) {
                 if (!nextWeekHeader) {
-                    consolidatedListTodo.add(HeaderItem("Due Next Week")) // adds a header if one doesn't already exist
+                    consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.due_soon))) // adds a header if one doesn't already exist
                     nextWeekHeader = true
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
@@ -157,7 +157,7 @@ class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
 
             } else {
                 if (!upcomingHeader) {
-                    consolidatedListTodo.add(HeaderItem("Upcoming")) // adds a header if one doesn't already exist
+                    consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.upcoming))) // adds a header if one doesn't already exist
                     upcomingHeader = true
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
