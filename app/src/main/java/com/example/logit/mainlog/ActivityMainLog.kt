@@ -2,16 +2,17 @@ package com.example.logit.mainlog
 
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
-import android.widget.ImageView
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.example.logit.*
+import com.example.logit.R
 import com.example.logit.addtask.ActivityAddTask
 import com.example.logit.settings.ActivityAllSettings
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -26,7 +27,6 @@ class ActivityMainLog : AppCompatActivity() {
     lateinit var fabTask: FloatingActionButton
     lateinit var todoList: ArrayList<Task>
     lateinit var doneList: ArrayList<Task>
-    lateinit var imgSettings: ImageView
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
     lateinit var mapSubjectColor: HashMap<String, Int>
@@ -41,7 +41,6 @@ class ActivityMainLog : AppCompatActivity() {
         setContentView(R.layout.activity_main_log)
 
         title = ""
-        supportActionBar!!.hide() // hides action bar - this was used so an ImageView of the app logo could be shown on the top right
 
         // instantiate viewModel
         viewModel = ViewModelProvider(this)[ViewModelMainLog::class.java]
@@ -116,14 +115,22 @@ class ActivityMainLog : AppCompatActivity() {
         })
 
         remoteCheckFabClickability()
+    }
 
-        // imgSettings functionality
-        imgSettings = findViewById(R.id.imgSettings)
-        imgSettings.setOnClickListener {
-            // start Settings activity
-            val intent = Intent(this, ActivityAllSettings::class.java)
-            intent.putExtras(bundleOf("bundleListSubjectColor" to listSubjectColor))
-            startActivity(intent)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_log_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.settings -> {
+                // start Settings activity
+                val intent = Intent(this, ActivityAllSettings::class.java)
+                intent.putExtras(bundleOf("bundleListSubjectColor" to listSubjectColor))
+                startActivity(intent)
+                return true
+            } else -> super.onOptionsItemSelected(item)
         }
     }
 
