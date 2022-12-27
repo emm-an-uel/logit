@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.logit">
+    package="com.example.logit" >
 
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -14,35 +14,40 @@
         android:roundIcon="@mipmap/logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppSplash"
-        tools:targetApi="31">
+        tools:targetApi="31" >
         <activity
-            android:name="com.example.logit.settings.ActivityAllSettings"
+            android:name=".ParentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".settings.ActivityAllSettings"
             android:exported="false"
             android:label="Settings"
-            android:parentActivityName="com.example.logit.mainlog.ActivityMainLog"
+            android:parentActivityName=".mainlog.ActivityMainLog"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt" />
         <activity
-            android:name="com.example.logit.settings.ActivitySettingsColorCodes"
+            android:name=".settings.ActivitySettingsColorCodes"
             android:exported="false"
             android:label="Subject Color Codes"
-            android:parentActivityName="com.example.logit.settings.ActivityAllSettings"
+            android:parentActivityName=".settings.ActivityAllSettings"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt" />
         <activity
-            android:name="com.example.logit.addtask.ActivityAddTask"
+            android:name=".addtask.ActivityAddTask"
             android:exported="false"
-            android:parentActivityName="com.example.logit.mainlog.ActivityMainLog"
+            android:parentActivityName=".mainlog.ActivityMainLog"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt" />
         <activity
-            android:name="com.example.logit.mainlog.ActivityMainLog"
+            android:name=".mainlog.ActivityMainLog"
             android:exported="true"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>
