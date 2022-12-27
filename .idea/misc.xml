@@ -30,6 +30,8 @@
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/layout/task_rv_item.xml" value="0.20512820512820512" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/menu/main_log_menu.xml" value="0.20512820512820512" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/HomeworkLogApp/app/src/main/res/menu/settings_menu.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/drawer_item_bg.xml" value="0.1" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/drawer_item_selector.xml" value="0.1" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/activity_add_task.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/activity_all_settings.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/activity_main_log.xml" value="0.25" />
@@ -38,17 +40,22 @@
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/activity_settings_color_codes.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/activity_settings_custom_messages.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/app_bar_main.xml" value="0.17346014492753623" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/app_bar_parent.xml" value="0.1" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/content_main.xml" value="0.25" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/content_parent.xml" value="0.20521590423257802" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_calendar.xml" value="0.20521590423257802" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_done.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_log.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_todo.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/general_item.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/header_item.xml" value="0.25" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/nav_header_parent.xml" value="0.1" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/rv_item_add_task.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/rv_item_all_settings.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/rv_item_settings_empty_list_messages.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/settings_empty_list_messages.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/menu/main_log_menu.xml" value="0.25" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/menu/parent_activity_drawer.xml" value="0.20521590423257802" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/menu/settings_menu.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/logIt/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.2555" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/logIt/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2555" />

@@ -22,5 +22,11 @@
         <item name="colorPrimaryContainer">@color/cardview_black</item>
 
         <item name="colorSecondaryContainer">@color/light_gray</item>
+
+        <!-- Navigation drawer -->
+        <item name="drawerItemColorNormal">@color/white</item>
+        <item name="drawerItemColorChecked">@color/cardview_black</item>
+        <item name="drawerItemBackground">@color/light_blue</item>
+        <item name="drawerBackground">@color/cardview_black</item>
     </style>
 </resources>

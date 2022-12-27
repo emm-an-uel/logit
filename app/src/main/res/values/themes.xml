@@ -28,5 +28,20 @@
 
         <!-- Action bar -->
         <item name="titleTextColor">@color/black</item>
+
+        <!-- Navigation drawer -->
+        <item name="drawerItemColorNormal">@color/black</item>
+        <item name="drawerItemColorChecked">@color/white</item>
+        <item name="drawerItemBackground">@color/cardview_black</item>
+        <item name="drawerBackground">@color/white</item>
     </style>
+
+    <style name="Theme.LogIt.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.LogIt.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.LogIt.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
