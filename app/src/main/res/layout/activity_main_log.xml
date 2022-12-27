@@ -6,43 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".mainlog.ActivityMainLog">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintLayoutMenu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/imgCustomTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="25dp"
-            android:layout_marginLeft="-15dp"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/custom_title_icon_foreground"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnSecondary" />
-
-        <ImageView
-            android:id="@+id/imgSettings"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
-            android:src="@drawable/ic_settings"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:tint="?attr/colorOnSecondary" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintLayoutMenu"
+        app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="?attr/colorPrimaryVariant"
         app:tabSelectedTextColor="?attr/colorPrimaryVariant">
 
@@ -66,7 +35,7 @@
         android:layout_height="0dp"
         android:layout_marginTop="70dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintLayoutMenu" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_fragment"
@@ -75,7 +44,7 @@
         android:layout_height="0dp"
         app:defaultNavHost="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/constraintLayoutMenu"
+        app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
