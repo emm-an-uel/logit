@@ -2,6 +2,7 @@ package com.example.logit.mainlog
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.example.logit.*
+import com.example.logit.R
 import com.example.logit.addtask.ActivityAddTask
 import com.example.logit.databinding.FragmentTodoBinding
 import com.example.logit.settings.SettingsItem
@@ -151,6 +152,9 @@ class FragmentTodo : Fragment() {
                 updateMapOfIndex(pos, true)
                 checkForDoubleDate(pos)
                 checkForEmptyList()
+
+                // haptic feedback
+                requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
             // at last we are adding this
             // to our recycler view.

@@ -4,6 +4,7 @@ import android.R
 import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -132,6 +133,9 @@ class FragmentDone : Fragment() {
                 restoreTask(restoredTask, pos)
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
                 checkForEmptyList()
+
+                // haptic feedback
+                requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
         }).attachToRecyclerView(rvDone)
 
@@ -155,6 +159,9 @@ class FragmentDone : Fragment() {
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
                 confirmDelete(deletedTaskItem, pos)
+
+                // haptic feedback
+                requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
             // at last we are adding this
             // to our recycler view.
