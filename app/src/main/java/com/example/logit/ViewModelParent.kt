@@ -1,11 +1,11 @@
-package com.example.logit.mainlog
+package com.example.logit
 
 import android.app.Application
 import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
-import com.example.logit.R
+import com.example.logit.mainlog.*
 import com.example.logit.settings.SettingsItem
 import java.io.File
 import java.io.StringReader

@@ -9,9 +9,11 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
+import com.example.logit.ViewModelParent
 import com.example.logit.addtask.ActivityAddTask
 import com.example.logit.databinding.FragmentTodoBinding
 import com.example.logit.settings.SettingsItem
@@ -41,13 +43,17 @@ class FragmentTodo : Fragment() {
     // setup view binding
     private val binding get() = _binding!!
 
+    // define parent fragment
+    lateinit var navHostFragment: NavHostFragment
+    lateinit var parentFragment: FragmentLog
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
         // instantiate viewModel
-        viewModel = ViewModelProvider(requireActivity()).get(ViewModelParent::class.java)
+        viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
 
         _binding = FragmentTodoBinding.inflate(inflater, container, false)
         return binding.root
@@ -56,6 +62,10 @@ class FragmentTodo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // initialize parent fragment
+        navHostFragment = this@FragmentTodo.getParentFragment() as NavHostFragment
+        parentFragment = navHostFragment.parentFragmentManager.fragments[0] as FragmentLog
 
         // get settings - user preferences
         getSettings()
@@ -79,14 +89,14 @@ class FragmentTodo : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
 
                 if (dy > 0) { // scrolling down and fab is shown
-                    (context as ActivityMainLog).hideFabAddTask()
+                    parentFragment.hideFabAddTask()
                 } else { // scrolling up and fab is not shown
-                    (context as ActivityMainLog).showFabAddTask()
+                    parentFragment.showFabAddTask()
                 }
             }
         })
 
-        (context as ActivityMainLog).showFabAddTask() // show by default
+        parentFragment.showFabAddTask() // show by default
     }
 
     private fun checkForEmptyList() {
@@ -121,7 +131,7 @@ class FragmentTodo : Fragment() {
         createMapOfIndex()
         checkForEmptyList()
 
-        (context as ActivityMainLog).showFabAddTask() // show fab by default
+        parentFragment.showFabAddTask() // show fab by default
     }
 
     private fun swipeFunctions() {

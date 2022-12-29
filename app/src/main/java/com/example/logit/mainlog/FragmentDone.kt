@@ -16,6 +16,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.ViewModelParent
 import com.example.logit.databinding.FragmentDoneBinding
 import com.example.logit.settings.SettingsItem
 
@@ -43,6 +44,9 @@ class FragmentDone : Fragment() {
 
     // setup view binding
     private val binding get() = _binding!!
+
+    // define parent fragment
+    private val parentFragment: FragmentLog = this@FragmentDone.getParentFragment() as FragmentLog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,14 +85,14 @@ class FragmentDone : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
 
                 if (dy > 0) { // scrolling down and fab is shown
-                    (context as ActivityMainLog).hideFabAddTask()
+                    parentFragment.hideFabAddTask()
                 } else { // scrolling up and fab is not shown
-                    (context as ActivityMainLog).showFabAddTask()
+                    parentFragment.showFabAddTask()
                 }
             }
         })
 
-        (context as ActivityMainLog).showFabAddTask() // show by default
+        parentFragment.showFabAddTask() // show by default
     }
 
     private fun checkForEmptyList() {
@@ -111,7 +115,7 @@ class FragmentDone : Fragment() {
         getLists()
         checkForEmptyList()
 
-        (context as ActivityMainLog).showFabAddTask() // show fab by default
+        parentFragment.showFabAddTask() // show fab by default
     }
 
     private fun swipeFunctions() {

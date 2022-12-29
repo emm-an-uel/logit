@@ -11,7 +11,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.logit.databinding.ActivityParentBinding
-import com.example.logit.mainlog.ViewModelParent
+import com.example.logit.ViewModelParent
 
 private lateinit var appBarConfiguration: AppBarConfiguration
 private lateinit var binding: ActivityParentBinding
@@ -24,11 +24,8 @@ class ParentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
-        binding = ActivityParentBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setSupportActionBar(binding.appBarParent.toolbar)
-
-        // initialize viewModel
+        // initialize viewModel - note that initialization of ViewModel must happen before initializing binding
+        // since binding will initialize FragmentLog (which relies on ViewModel already being initialized by this activity)
         viewModel = ViewModelProvider(this)[ViewModelParent::class.java]
 
         // initialize data
@@ -40,6 +37,10 @@ class ParentActivity : AppCompatActivity() {
             createConsolidatedListDone()
             initSubjectColor()
         }
+
+        binding = ActivityParentBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.appBarParent.toolbar)
 
         // nav drawer
         val drawerLayout = binding.drawerLayout

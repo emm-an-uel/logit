@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.logit.R
+import com.example.logit.ViewModelParent
 import com.example.logit.addtask.ActivityAddTask
 import com.example.logit.databinding.FragmentLogBinding
 import com.example.logit.settings.ActivityAllSettings
