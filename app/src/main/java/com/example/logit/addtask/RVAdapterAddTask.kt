@@ -9,11 +9,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
 import com.example.logit.mainlog.Task
 import java.util.*
-import kotlin.collections.ArrayList
 
 class RVAdapterAddTask(
     private val listSubjectsSpinner: ArrayList<String>,
@@ -134,16 +134,18 @@ class RVAdapterAddTask(
 
                 tvDueDate.setOnClickListener {
 
-                    if (!showCvDueDate) {
+                    if (!showCvDueDate) { // currently not shown -> shown
                         cvDueDate.visibility = View.VISIBLE
+                        tvDueDate.setTextColor(ContextCompat.getColor(context, R.color.cardview_black))
 
                         // set tvDueDate bg color
                         val bgColor = getColor(context, com.google.android.material.R.attr.colorSecondaryContainer)
                         tvDueDate.backgroundTintList = ColorStateList.valueOf(bgColor)
                         showCvDueDate = true
 
-                    } else {
+                    } else { // currently shown -> not shown
                         cvDueDate.visibility = View.GONE
+                        tvDueDate.setTextColor(textColor)
 
                         val bgColor = getColor(context, com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
                         tvDueDate.backgroundTintList = ColorStateList.valueOf(bgColor)
