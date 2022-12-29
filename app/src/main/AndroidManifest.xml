@@ -31,20 +31,20 @@
             android:label="Settings"
             android:parentActivityName=".ParentActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.LogIt.NoActionBar" />
+            android:theme="@style/Theme.LogIt" />
         <activity
             android:name=".settings.ActivitySettingsColorCodes"
             android:exported="false"
             android:label="Subject Color Codes"
             android:parentActivityName=".settings.ActivityAllSettings"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.LogIt.NoActionBar" />
+            android:theme="@style/Theme.LogIt" />
         <activity
             android:name=".addtask.ActivityAddTask"
             android:exported="false"
             android:parentActivityName=".ParentActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.LogIt.NoActionBar" />
+            android:theme="@style/Theme.LogIt" />
     </application>
 
 </manifest>

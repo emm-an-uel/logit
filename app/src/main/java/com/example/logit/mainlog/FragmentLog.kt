@@ -10,6 +10,7 @@ import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.logit.R
@@ -77,7 +78,7 @@ class FragmentLog : Fragment() {
         tabLayout = binding.tabLayout
         viewPager = binding.viewPager
         val tabTitles = listOf("to do", "done")
-        val adapter = TabLayoutAdapter(parentFragmentManager, lifecycle)
+        val adapter = TabLayoutAdapter(childFragmentManager, lifecycle)
         viewPager.adapter = adapter
 
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -121,7 +122,6 @@ class FragmentLog : Fragment() {
                 return when (menuItem.itemId) {
                     R.id.settings -> {
                         // start settings activity
-                        // TODO: remove this once i've shifted settings to nav drawer
                         val intent = Intent(requireContext(), ActivityAllSettings::class.java)
                         intent.putExtras(bundleOf("bundleListSubjectColor" to listSubjectColor))
                         startActivity(intent)
@@ -130,7 +130,7 @@ class FragmentLog : Fragment() {
                 }
             }
 
-        })
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED) // without this line, there will be duplicates of settings icon when i return to this fragment
     }
 
     override fun onResume() {
