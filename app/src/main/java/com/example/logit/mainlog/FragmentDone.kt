@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
@@ -45,15 +46,12 @@ class FragmentDone : Fragment() {
     // setup view binding
     private val binding get() = _binding!!
 
-    // define parent fragment
-    private val parentFragment: FragmentLog = this@FragmentDone.getParentFragment() as FragmentLog
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
 
-        viewModel = ViewModelProvider(requireActivity()).get(ViewModelParent::class.java)
+        viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
 
         _binding = FragmentDoneBinding.inflate(inflater, container, false)
         return binding.root
@@ -85,14 +83,13 @@ class FragmentDone : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
 
                 if (dy > 0) { // scrolling down and fab is shown
-                    parentFragment.hideFabAddTask()
+                    setFragmentResult("hideFab", bundleOf())
                 } else { // scrolling up and fab is not shown
-                    parentFragment.showFabAddTask()
+                    setFragmentResult("showFab", bundleOf())
                 }
             }
         })
-
-        parentFragment.showFabAddTask() // show by default
+        setFragmentResult("showFab", bundleOf()) // show by default
     }
 
     private fun checkForEmptyList() {
@@ -115,7 +112,7 @@ class FragmentDone : Fragment() {
         getLists()
         checkForEmptyList()
 
-        parentFragment.showFabAddTask() // show fab by default
+        setFragmentResult("showFab", bundleOf())
     }
 
     private fun swipeFunctions() {

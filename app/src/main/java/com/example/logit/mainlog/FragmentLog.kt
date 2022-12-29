@@ -30,7 +30,6 @@ class FragmentLog : Fragment() {
     lateinit var doneList: ArrayList<Task>
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
-    lateinit var mapSubjectColor: HashMap<String, Int>
 
     lateinit var listCardColors: ArrayList<CardColor>
 
@@ -136,7 +135,12 @@ class FragmentLog : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.initListSettings()
+        viewModel.apply {
+            initListSettings()
+            initTaskLists()
+            createConsolidatedListTodo()
+            createConsolidatedListDone()
+        }
     }
 
     private fun remoteCheckFabClickability() {

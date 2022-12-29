@@ -88,8 +88,7 @@ class FragmentTodo : Fragment() {
                 }
             }
         })
-
-        setFragmentResult("showFab", bundleOf())
+        setFragmentResult("showFab", bundleOf()) // show by default
     }
 
     private fun checkForEmptyList() {
