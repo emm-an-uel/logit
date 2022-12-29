@@ -45,12 +45,6 @@
             android:parentActivityName=".ParentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt.NoActionBar" />
-        <activity
-            android:name=".mainlog.ActivityMainLog"
-            android:exported="false"
-            android:parentActivityName=".ParentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/Theme.LogIt.NoActionBar" />
     </application>
 
 </manifest>

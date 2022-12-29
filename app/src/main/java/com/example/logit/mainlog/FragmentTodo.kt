@@ -7,9 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.NavHostFragment
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
@@ -43,10 +44,6 @@ class FragmentTodo : Fragment() {
     // setup view binding
     private val binding get() = _binding!!
 
-    // define parent fragment
-    lateinit var navHostFragment: NavHostFragment
-    lateinit var parentFragment: FragmentLog
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -62,10 +59,6 @@ class FragmentTodo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // initialize parent fragment
-        navHostFragment = this@FragmentTodo.getParentFragment() as NavHostFragment
-        parentFragment = navHostFragment.parentFragmentManager.fragments[0] as FragmentLog
 
         // get settings - user preferences
         getSettings()
@@ -89,14 +82,14 @@ class FragmentTodo : Fragment() {
                 super.onScrolled(recyclerView, dx, dy)
 
                 if (dy > 0) { // scrolling down and fab is shown
-                    parentFragment.hideFabAddTask()
+                    setFragmentResult("hideFab", bundleOf())
                 } else { // scrolling up and fab is not shown
-                    parentFragment.showFabAddTask()
+                    setFragmentResult("showFab", bundleOf())
                 }
             }
         })
 
-        parentFragment.showFabAddTask() // show by default
+        setFragmentResult("showFab", bundleOf())
     }
 
     private fun checkForEmptyList() {
@@ -131,7 +124,7 @@ class FragmentTodo : Fragment() {
         createMapOfIndex()
         checkForEmptyList()
 
-        parentFragment.showFabAddTask() // show fab by default
+        setFragmentResult("showFab", bundleOf())
     }
 
     private fun swipeFunctions() {

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.logit.R
@@ -63,6 +64,14 @@ class FragmentLog : Fragment() {
         fabTask = binding.fabTask
         fabTask.setOnClickListener {
             startActivityAddTask()
+        }
+
+        // show/hide fab on user scroll
+        setFragmentResultListener("showFab") { _, _ ->
+            showFabAddTask()
+        }
+        setFragmentResultListener("hideFab") { _, _ ->
+            hideFabAddTask()
         }
 
         // tab layout

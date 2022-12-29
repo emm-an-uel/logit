@@ -11,7 +11,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.logit.databinding.ActivityParentBinding
-import com.example.logit.ViewModelParent
 
 private lateinit var appBarConfiguration: AppBarConfiguration
 private lateinit var binding: ActivityParentBinding

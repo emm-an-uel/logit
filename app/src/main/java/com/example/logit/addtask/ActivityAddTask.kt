@@ -1,10 +1,12 @@
 package com.example.logit.addtask
 
 import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import android.widget.*
+import android.widget.CalendarView
+import android.widget.EditText
+import android.widget.Spinner
+import android.widget.TextView
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -12,7 +14,6 @@ import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.example.logit.R
 import com.example.logit.mainlog.Task
-import com.example.logit.mainlog.ActivityMainLog
 import java.io.File
 import java.io.StringReader
 import java.util.*
@@ -78,9 +79,6 @@ class ActivityAddTask : AppCompatActivity() {
                 // stores subject, task, notes in local file
                 storeLocally(subject, task, status, notes)
 
-                // start ActivityMainLog
-                val intent = Intent(this, ActivityMainLog::class.java)
-                startActivity(intent)
                 finish()
             }
         }
