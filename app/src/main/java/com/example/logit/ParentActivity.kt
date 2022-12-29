@@ -11,14 +11,14 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.logit.databinding.ActivityParentBinding
-import com.example.logit.mainlog.ViewModelMainLog
+import com.example.logit.mainlog.ViewModelParent
 
 private lateinit var appBarConfiguration: AppBarConfiguration
 private lateinit var binding: ActivityParentBinding
 
 class ParentActivity : AppCompatActivity() {
 
-    lateinit var viewModel: ViewModelMainLog
+    lateinit var viewModel: ViewModelParent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,7 +29,7 @@ class ParentActivity : AppCompatActivity() {
         setSupportActionBar(binding.appBarParent.toolbar)
 
         // initialize viewModel
-        viewModel = ViewModelProvider(this)[ViewModelMainLog::class.java]
+        viewModel = ViewModelProvider(this)[ViewModelParent::class.java]
 
         // initialize data
         viewModel.apply {

@@ -31,7 +31,7 @@ class FragmentTodo : Fragment() {
 
     lateinit var listCardColors: ArrayList<CardColor>
 
-    lateinit var viewModel: ViewModelMainLog
+    lateinit var viewModel: ViewModelParent
 
     lateinit var listSettingsItems: ArrayList<SettingsItem>
     private var glow = false
@@ -47,7 +47,7 @@ class FragmentTodo : Fragment() {
     ): View {
 
         // instantiate viewModel
-        viewModel = ViewModelProvider(requireActivity()).get(ViewModelMainLog::class.java)
+        viewModel = ViewModelProvider(requireActivity()).get(ViewModelParent::class.java)
 
         _binding = FragmentTodoBinding.inflate(inflater, container, false)
         return binding.root

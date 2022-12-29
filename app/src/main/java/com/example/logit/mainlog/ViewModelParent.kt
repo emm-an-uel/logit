@@ -11,7 +11,7 @@ import java.io.File
 import java.io.StringReader
 import java.util.*
 
-class ViewModelMainLog(val app: Application): AndroidViewModel(app) {
+class ViewModelParent(val app: Application): AndroidViewModel(app) {
 
     lateinit var todoList: ArrayList<Task>
     lateinit var doneList: ArrayList<Task>

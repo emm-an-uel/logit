@@ -33,7 +33,7 @@ class ActivityMainLog : AppCompatActivity() {
 
     lateinit var listCardColors: ArrayList<CardColor>
 
-    lateinit var viewModel: ViewModelMainLog
+    lateinit var viewModel: ViewModelParent
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,7 +43,7 @@ class ActivityMainLog : AppCompatActivity() {
         title = ""
 
         // instantiate viewModel
-        viewModel = ViewModelProvider(this)[ViewModelMainLog::class.java]
+        viewModel = ViewModelProvider(this)[ViewModelParent::class.java]
 
         // initialize lists
         todoList = ArrayList()
