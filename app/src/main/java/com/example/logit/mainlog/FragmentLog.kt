@@ -9,7 +9,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
@@ -67,10 +66,10 @@ class FragmentLog : Fragment() {
         }
 
         // show/hide fab on user scroll
-        setFragmentResultListener("showFab") { _, _ ->
+        childFragmentManager.setFragmentResultListener("showFab", this) { _, _ ->
             showFabAddTask()
         }
-        setFragmentResultListener("hideFab") { _, _ ->
+        childFragmentManager.setFragmentResultListener("hideFab", this) { _, _ ->
             hideFabAddTask()
         }
 
