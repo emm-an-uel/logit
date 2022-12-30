@@ -2,20 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:backgroundTint="?attr/drawerBackground"
+    android:background="?attr/drawerBackground"
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:layout_marginTop="24dp"
         android:contentDescription="Navigation Header"
         android:paddingTop="10dp"
         android:scaleX="2"
         android:scaleY="2"
-        android:src="@mipmap/logo_foreground" />
+        android:src="@mipmap/custom_title_icon_foreground" />
 
 </LinearLayout>
