@@ -392,4 +392,12 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         calendar.set(year, month, day)
         return calendar
     }
+
+    fun updateSettings(pos: Int, option: Int) {
+        listSettingsItems[pos].option = option
+        val file = Klaxon().toJsonString(listSettingsItems)
+        app.openFileOutput("fileSettingsItems", Context.MODE_PRIVATE).use {
+            it.write(file.toByteArray())
+        }
+    }
 }

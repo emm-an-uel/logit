@@ -23,7 +23,7 @@ class FragmentTodo : Fragment() {
 
     lateinit var tvEmptyList: TextView
     lateinit var rvTodo: RecyclerView
-    lateinit var rvAdapter: RVAdapterMain
+    lateinit var rvAdapter: RVAdapterLog
     lateinit var todoList: ArrayList<Task>
     lateinit var consolidatedList: ArrayList<ListItem>
     lateinit var mapOfIndex: MutableMap<Int, Int>
@@ -139,7 +139,7 @@ class FragmentTodo : Fragment() {
             }
 
             override fun getSwipeDirs (recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                if (viewHolder is RVAdapterMain.DateViewHolder) return 0 // prevents DateViewHolders from getting swiped
+                if (viewHolder is RVAdapterLog.DateViewHolder) return 0 // prevents DateViewHolders from getting swiped
                 return super.getSwipeDirs(recyclerView, viewHolder)
             }
 
@@ -207,7 +207,7 @@ class FragmentTodo : Fragment() {
 
     private fun createRV() {
         rvTodo = binding.rvTodo
-        rvAdapter = RVAdapterMain(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
+        rvAdapter = RVAdapterLog(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
 
         // set adapter to recycler view
         rvTodo.adapter = rvAdapter
@@ -215,7 +215,7 @@ class FragmentTodo : Fragment() {
         swipeFunctions()
 
         // item click listener
-        rvAdapter.setOnItemClickListener(object: RVAdapterMain.OnItemClickListener {
+        rvAdapter.setOnItemClickListener(object: RVAdapterLog.OnItemClickListener {
             override fun onItemClick(position: Int) {
 
                 val actualIndex = mapOfIndex[position]!!

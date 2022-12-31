@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.ParentActivity
 import com.example.logit.R
 
 class RVAdapterAllSettings(
@@ -40,6 +41,8 @@ class RVAdapterAllSettings(
         holder.tvSettingsItem.text = listSettingsItems[position].item
         val context = holder.tvSettingsItem.context
 
+        val pos = holder.adapterPosition
+
         when (position) {
             0 -> { // task items colored shadow
                 val status = intToBoolean(listSettingsItems[position].option) // convert int to boolean
@@ -50,13 +53,13 @@ class RVAdapterAllSettings(
                     // implement listener
                     setOnCheckedChangeListener { _, isChecked ->
                         val option = booleanToInt(isChecked) // convert boolean to int
-                        (context as ActivityAllSettings).updateSettings(position, option) // changes settings item status to match switch checked / unchecked
+                        (context as ParentActivity).updateSettings(pos, option) // changes settings item status to match switch checked / unchecked
                     }
                 }
             }
 
             1 -> { // header bars
-                val status = intToBoolean(listSettingsItems[position].option) // convert int to boolean
+                val status = intToBoolean(listSettingsItems[pos].option) // convert int to boolean
 
                 holder.switch.apply {
                     visibility = View.VISIBLE
@@ -64,7 +67,7 @@ class RVAdapterAllSettings(
                     // implement listener
                     setOnCheckedChangeListener { _, isChecked ->
                         val option = booleanToInt(isChecked) // convert boolean to int
-                        (context as ActivityAllSettings).updateSettings(position, option) // changes settings item status to match switch checked / unchecked
+                        (context as ParentActivity).updateSettings(position, option) // changes settings item status to match switch checked / unchecked
                     }
                 }
             }
@@ -75,7 +78,7 @@ class RVAdapterAllSettings(
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 holder.spinner.adapter = adapter
 
-                val selectedOption: Int = listSettingsItems[position].option
+                val selectedOption: Int = listSettingsItems[pos].option
                 holder.spinner.apply {
                     visibility = View.VISIBLE
                     setSelection(selectedOption) // sets selection to what was saved
@@ -86,7 +89,7 @@ class RVAdapterAllSettings(
                             p2: Int,
                             p3: Long
                         ) {
-                            (context as ActivityAllSettings).updateSettings(position, p2)
+                            (context as ParentActivity).updateSettings(pos, p2)
                         }
 
                         override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -99,8 +102,7 @@ class RVAdapterAllSettings(
             3 -> { // subject color codes
                 holder.linearLayout.setOnClickListener {
                     val intent = Intent(context, ActivitySettingsColorCodes::class.java)
-
-                    (context as ActivityAllSettings).startActivity(intent)
+                    (context as ParentActivity).startActivity(intent)
                 }
             }
         }

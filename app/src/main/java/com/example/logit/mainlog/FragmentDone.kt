@@ -26,7 +26,7 @@ class FragmentDone : Fragment() {
 
     lateinit var tvEmptyList: TextView
     lateinit var rvDone: RecyclerView
-    lateinit var rvAdapter: RVAdapterMain
+    lateinit var rvAdapter: RVAdapterLog
     lateinit var doneList: ArrayList<Task>
     lateinit var consolidatedList: ArrayList<ListItem>
 
@@ -171,7 +171,7 @@ class FragmentDone : Fragment() {
 
     private fun createRV() {
         rvDone = binding.rvDone
-        rvAdapter = RVAdapterMain(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
+        rvAdapter = RVAdapterLog(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
 
         // set adapter to recycler view
         rvDone.adapter = rvAdapter
@@ -179,7 +179,7 @@ class FragmentDone : Fragment() {
         swipeFunctions()
 
         // item click listener
-        rvAdapter.setOnItemClickListener(object: RVAdapterMain.OnItemClickListener {
+        rvAdapter.setOnItemClickListener(object: RVAdapterLog.OnItemClickListener {
             override fun onItemClick(position: Int) {
                 // do nothing
             }

@@ -9,12 +9,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.example.logit.*
+import com.example.logit.R
 import com.example.logit.databinding.GeneralItemBinding
 import com.example.logit.databinding.HeaderItemBinding
 import java.util.*
 
-class RVAdapterMain (
+class RVAdapterLog (
     private val listOfItems: List<ListItem>,
     private val mapSubjectColor: HashMap<String, Int>,
     private val listColors: ArrayList<CardColor>,

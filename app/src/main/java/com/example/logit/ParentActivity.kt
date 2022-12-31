@@ -44,11 +44,12 @@ class ParentActivity : AppCompatActivity() {
         // nav drawer
         val drawerLayout = binding.drawerLayout
         val navView = binding.navView
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)!!
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main)!!
         val navController = navHostFragment.findNavController()
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_log, R.id.nav_calendar
+                R.id.nav_log, R.id.nav_calendar, R.id.nav_settings
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -58,5 +59,9 @@ class ParentActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    fun updateSettings(position: Int, option: Int) { // this method is here just for the rvAdapter to call it. the actual work is done in ViewModel
+        viewModel.updateSettings(position, option)
     }
 }
