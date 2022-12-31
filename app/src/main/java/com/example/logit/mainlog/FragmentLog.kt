@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -16,7 +16,6 @@ import com.example.logit.R
 import com.example.logit.ViewModelParent
 import com.example.logit.addtask.ActivityAddTask
 import com.example.logit.databinding.FragmentLogBinding
-import com.example.logit.settings.ActivityAllSettings
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
@@ -119,11 +118,9 @@ class FragmentLog : Fragment() {
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.settings -> {
-                        // start settings activity
-                        val intent = Intent(requireContext(), ActivityAllSettings::class.java)
-                        intent.putExtras(bundleOf("bundleListSubjectColor" to listSubjectColor))
-                        startActivity(intent)
+                    R.id.search -> {
+                        // TODO: search function
+                        Toast.makeText(requireContext(), "Search", Toast.LENGTH_SHORT).show()
                         return true
                     } else -> false
                 }
@@ -227,11 +224,11 @@ class FragmentLog : Fragment() {
         startActivity(intent)
     }
 
-    fun showFabAddTask() { // called when user scrolls up
+    private fun showFabAddTask() { // called when user scrolls up
         fabTask.show()
     }
 
-    fun hideFabAddTask() { // called when user scrolls down
+    private fun hideFabAddTask() { // called when user scrolls down
         fabTask.hide()
     }
 }
