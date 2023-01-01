@@ -137,9 +137,18 @@ class FragmentLog : Fragment() {
                     }
 
                     override fun onQueryTextChange(p0: String?): Boolean {
+                        // update lists before calling 'filter' - in case user swipes and lists have been updated
+                        childFragmentManager.setFragmentResultListener("todoListChanged", requireActivity()) { _, _ ->
+                            todoList = viewModel.getTodoList()
+                        }
+                        childFragmentManager.setFragmentResultListener("doneListChanged", requireActivity()) { _, _ ->
+                            doneList = viewModel.getDoneList()
+                        }
+
                         filter(p0)
                         return false
                     }
+
                     private fun filter(p0: String?) {
                         val filteredList: ArrayList<Task> = arrayListOf()
                         if (p0 != null) {
@@ -179,7 +188,7 @@ class FragmentLog : Fragment() {
                 }
             }
 
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED) // without this line, there will be duplicates of settings icon when i return to this fragment
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED) // without this line, there will be duplicates of search icon when i leave and return to this fragment
     }
 
     override fun onResume() {
@@ -207,13 +216,13 @@ class FragmentLog : Fragment() {
                 builder.apply {
                     setPositiveButton(
                         "Confirm"
-                    ) { dialog, id ->
+                    ) { _, _ ->
                         clearAll()
                     }
 
                     setNegativeButton(
                         "Cancel"
-                    ) { dialog, id ->
+                    ) { _, _ ->
                         // do nothing
                     }
                 }

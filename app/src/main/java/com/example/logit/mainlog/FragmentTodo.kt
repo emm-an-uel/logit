@@ -71,7 +71,7 @@ class FragmentTodo : Fragment() {
         getLists()
 
         // create mapOfIndex <position, actualIndex>
-        createMapOfIndex()
+        createMapOfIndex(consolidatedList)
 
         // display "no upcoming assignments" message if consolidatedList is empty
         tvEmptyList = view.findViewById(R.id.tvEmptyList)
@@ -100,7 +100,7 @@ class FragmentTodo : Fragment() {
         }
     }
 
-    private fun createMapOfIndex() {
+    private fun createMapOfIndex(consolidatedList: ArrayList<ListItem>) {
         mapOfIndex = mutableMapOf()
         var index = 0
         for (n in 0 until consolidatedList.size) {
@@ -121,7 +121,7 @@ class FragmentTodo : Fragment() {
         super.onResume()
         getSettings()
         getLists()
-        createMapOfIndex()
+        createMapOfIndex(consolidatedList)
         checkForEmptyList()
 
         setFragmentResult("showFab", bundleOf())
@@ -134,13 +134,11 @@ class FragmentTodo : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                // this method is called
-                // when the item is moved.
                 return false
             }
 
             override fun getSwipeDirs (recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
-                if (viewHolder is RVAdapterLog.DateViewHolder) return 0 // prevents DateViewHolders from getting swiped
+                if (viewHolder is RVAdapterLog.HeaderViewHolder) return 0 // prevents HeaderViewHolders from getting swiped
                 return super.getSwipeDirs(recyclerView, viewHolder)
             }
 
@@ -236,7 +234,9 @@ class FragmentTodo : Fragment() {
         setFragmentResultListener("filterList") { _, bundle ->
             val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
             viewModel.createConsolidatedListTodo(filteredList) // calls on method in ViewModel to create consolidated list
-            rvAdapter.filterList(viewModel.getConsolidatedListTodo()) // passes newly made consolidated list to adapter
+            val newConsolidatedList = viewModel.getConsolidatedListTodo()
+            createMapOfIndex(newConsolidatedList) // updates mapOfIndex - in case user decides to swipe after filtering results
+            rvAdapter.filterList(newConsolidatedList) // passes newly made consolidated list to adapter
         }
     }
 
