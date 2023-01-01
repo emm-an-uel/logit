@@ -15,7 +15,7 @@ import com.example.logit.databinding.HeaderItemBinding
 import java.util.*
 
 class RVAdapterLog (
-    private val listOfItems: List<ListItem>,
+    private var listOfItems: List<ListItem>,
     private val mapSubjectColor: HashMap<String, Int>,
     private val listColors: ArrayList<CardColor>,
     private val glow: Boolean,
@@ -46,6 +46,12 @@ class RVAdapterLog (
                 )
             }
         }
+    }
+
+    // filtering results
+    fun filterList(filteredList: ArrayList<ListItem>) {
+        listOfItems = filteredList
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -201,8 +207,7 @@ class RVAdapterLog (
             6 -> return "Fri"
             7 -> return "Sat"
         }
-
-        return "Error"
+        return "Unknown Day"
     }
 
     private fun getActualMonth(month: Int): String {
@@ -220,7 +225,6 @@ class RVAdapterLog (
             11 -> return "Nov"
             12 -> return "Dec"
         }
-
-        return "Error"
+        return "Unknown Month"
     }
 }

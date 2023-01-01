@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -230,8 +231,13 @@ class FragmentTodo : Fragment() {
             }
 
         })
-
         rvAdapter.notifyDataSetChanged()
+
+        // filter list (search function) 
+        setFragmentResultListener("filterList") { _, bundle ->
+            val filteredList: ArrayList<ListItem> = bundle.getParcelableArrayList<ListItem>("filteredList") as ArrayList<ListItem>
+            rvAdapter.filterList(filteredList)
+        }
     }
 
     private fun getLists() {

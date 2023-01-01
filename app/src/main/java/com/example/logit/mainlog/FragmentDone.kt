@@ -185,8 +185,13 @@ class FragmentDone : Fragment() {
             }
 
         })
-
         rvAdapter.notifyDataSetChanged()
+
+        // filter list (search function)
+        setFragmentResultListener("filterList") { _, bundle ->
+            val filteredList: ArrayList<ListItem> = bundle.getParcelableArrayList<ListItem>("filteredList") as ArrayList<ListItem>
+            rvAdapter.filterList(filteredList)
+        }
     }
 
     private fun confirmDelete(deletedTaskItem: TaskItem, position: Int) {

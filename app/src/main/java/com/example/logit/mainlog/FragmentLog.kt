@@ -5,8 +5,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
-import android.widget.Toast
+import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -114,14 +115,29 @@ class FragmentLog : Fragment() {
         menuHost.addMenuProvider(object: MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_log_menu, menu)
+                val searchItem: MenuItem = menu.findItem(R.id.actionSearch)
+                val searchView: SearchView = searchItem.actionView as SearchView
+                searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+                    override fun onQueryTextSubmit(p0: String?): Boolean {
+                        return false
+                    }
+
+                    override fun onQueryTextChange(p0: String?): Boolean {
+                        filter(p0)
+                        return false
+                    }
+                    private fun filter(p0: String?) {
+                        val filteredList: ArrayList<ListItem> = arrayListOf()
+                        // TODO: filter logic
+                        childFragmentManager.setFragmentResult("filterList", bundleOf("filteredList" to filteredList))
+                    }
+                })
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
-                    R.id.search -> {
-                        // TODO: search function
-                        Toast.makeText(requireContext(), "Search", Toast.LENGTH_SHORT).show()
-                        return true
+                    R.id.actionSearch -> {
+                        true
                     } else -> false
                 }
             }
