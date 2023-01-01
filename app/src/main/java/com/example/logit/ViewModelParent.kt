@@ -84,9 +84,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         }
     }
 
-
-
-    fun createConsolidatedListTodo() {
+    fun createConsolidatedListTodo(todoList: ArrayList<Task>) {
         val today = Calendar.getInstance()
         val todayInt = calendarToInt(today)
 
@@ -171,7 +169,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         return consolidatedListTodo
     }
 
-    fun createConsolidatedListDone() {
+    fun createConsolidatedListDone(doneList: ArrayList<Task>) {
         // consolidatedListDone will not have DateItems
         doneList.sortBy { it.dueDateInt }
         consolidatedListDone = arrayListOf()
@@ -191,7 +189,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         doneList.add(completedTask)
         todoList.removeAt(actualIndex)
         saveJsonTaskLists()
-        createConsolidatedListDone()
+        createConsolidatedListDone(doneList)
     }
 
     fun restoreTask(restoredTask: Task, actualIndex: Int) { // moves restoredTask from doneList to todoList
@@ -200,13 +198,13 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         todoList.add(restoredTask)
         doneList.removeAt(actualIndex)
         saveJsonTaskLists()
-        createConsolidatedListTodo()
+        createConsolidatedListTodo(todoList)
     }
 
     fun clearDoneList() { // clears all items in doneList
         doneList = arrayListOf() // sets doneList to an empty list
         saveJsonTaskLists()
-        createConsolidatedListDone()
+        createConsolidatedListDone(doneList)
     }
 
     fun saveJsonTaskLists() {

@@ -145,6 +145,7 @@ class FragmentTodo : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                setFragmentResult("todoListChanged", bundleOf()) // update FragmentLog
                 val pos = viewHolder.adapterPosition
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val actualIndex = mapOfIndex[pos]!!
@@ -159,8 +160,6 @@ class FragmentTodo : Fragment() {
                 // haptic feedback
                 requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
-            // at last we are adding this
-            // to our recycler view.
         }).attachToRecyclerView(rvTodo)
     }
 
@@ -235,8 +234,9 @@ class FragmentTodo : Fragment() {
 
         // filter list (search function) 
         setFragmentResultListener("filterList") { _, bundle ->
-            val filteredList: ArrayList<ListItem> = bundle.getParcelableArrayList<ListItem>("filteredList") as ArrayList<ListItem>
-            rvAdapter.filterList(filteredList)
+            val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
+            viewModel.createConsolidatedListTodo(filteredList) // calls on method in ViewModel to create consolidated list
+            rvAdapter.filterList(viewModel.getConsolidatedListTodo()) // passes newly made consolidated list to adapter
         }
     }
 

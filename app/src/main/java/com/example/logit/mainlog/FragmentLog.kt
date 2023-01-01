@@ -27,7 +27,9 @@ class FragmentLog : Fragment() {
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
     lateinit var fabTask: FloatingActionButton
+    lateinit var todoList: ArrayList<Task>
     lateinit var doneList: ArrayList<Task>
+    var currentFrag = 0 // 0 = FragmentTodo, 1 = FragmentDone
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
 
@@ -46,6 +48,16 @@ class FragmentLog : Fragment() {
         // initialize lists
         listCardColors = viewModel.getListCardColors()
         listSubjectColor = viewModel.getListSubjectColor()
+        todoList = viewModel.getTodoList()
+        doneList = viewModel.getDoneList()
+
+        // updates lists when user swipes in FragmentTodo and FragmentDone
+        childFragmentManager.setFragmentResultListener("todoListChanged", this) { _, _ ->
+            todoList = viewModel.getTodoList()
+        }
+        childFragmentManager.setFragmentResultListener("doneListChanged", this) { _, _ ->
+            doneList = viewModel.getDoneList()
+        }
     }
 
     override fun onCreateView(
@@ -87,12 +99,14 @@ class FragmentLog : Fragment() {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 val position = tab?.position
                 if (position == 0) { // in fragmentTodo
+                    currentFrag = 0
                     fabEnabled()
                     fabTask.setImageResource(android.R.drawable.ic_input_add)
                     fabTask.setOnClickListener {
                         startActivityAddTask()
                     }
-                } else {
+                } else { // in fragmentDone
+                    currentFrag = 1
                     fabTask.setImageResource(R.drawable.icon_trash)
                     checkFabClickability() // set clickability
                     fabTask.setOnClickListener {
@@ -127,8 +141,31 @@ class FragmentLog : Fragment() {
                         return false
                     }
                     private fun filter(p0: String?) {
-                        val filteredList: ArrayList<ListItem> = arrayListOf()
-                        // TODO: filter logic
+                        val filteredList: ArrayList<Task> = arrayListOf()
+                        if (p0 != null) {
+                            if (currentFrag == 0) { // fragmentTodo
+                                if (todoList.isNotEmpty()) {
+                                    for (task in todoList) {
+                                        if (task.subject.contains(p0, true)) {
+                                            filteredList.add(task)
+                                        } else if (task.task.contains(p0, true)) {
+                                            filteredList.add(task)
+                                        }
+                                    }
+                                }
+
+                            } else { // fragmentDone
+                                if (doneList.isNotEmpty()) {
+                                    for (task in doneList) {
+                                        if (task.subject.contains(p0, true)) {
+                                            filteredList.add(task)
+                                        } else if (task.task.contains(p0, true)) {
+                                            filteredList.add(task)
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         childFragmentManager.setFragmentResult("filterList", bundleOf("filteredList" to filteredList))
                     }
                 })
@@ -150,8 +187,8 @@ class FragmentLog : Fragment() {
         viewModel.apply {
             initListSettings()
             initTaskLists()
-            createConsolidatedListTodo()
-            createConsolidatedListDone()
+            createConsolidatedListTodo(todoList)
+            createConsolidatedListDone(doneList)
             initSubjectColor()
         }
     }

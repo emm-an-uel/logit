@@ -128,6 +128,7 @@ class FragmentDone : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                setFragmentResult("doneListChanged", bundleOf()) // update FragmentLog
                 val pos = viewHolder.adapterPosition
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val restoredTask: Task = doneList[pos]
@@ -164,8 +165,6 @@ class FragmentDone : Fragment() {
                 // haptic feedback
                 requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
-            // at last we are adding this
-            // to our recycler view.
         }).attachToRecyclerView(rvDone)
     }
 
@@ -189,8 +188,9 @@ class FragmentDone : Fragment() {
 
         // filter list (search function)
         setFragmentResultListener("filterList") { _, bundle ->
-            val filteredList: ArrayList<ListItem> = bundle.getParcelableArrayList<ListItem>("filteredList") as ArrayList<ListItem>
-            rvAdapter.filterList(filteredList)
+            val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
+            viewModel.createConsolidatedListDone(filteredList) // calls on method in ViewModel to create consolidated list
+            rvAdapter.filterList(viewModel.getConsolidatedListDone()) // passes newly made consolidated list to adapter
         }
     }
 
@@ -203,6 +203,7 @@ class FragmentDone : Fragment() {
             builder.apply {
                 setPositiveButton("Confirm"
                 ) { dialog, id ->
+                    setFragmentResult("doneListChanged", bundleOf()) // update FragmentLog
                     deleteTask(position)
                     touched = true
                     checkForEmptyList()
