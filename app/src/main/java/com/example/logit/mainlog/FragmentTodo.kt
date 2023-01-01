@@ -153,7 +153,6 @@ class FragmentTodo : Fragment() {
                 viewModel.taskCompleted(completedTask, actualIndex) // removes this task from todoList and adds to doneList
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
-                consolidatedList = viewModel.getConsolidatedListTodo()
                 updateMapOfIndex(pos, true)
                 checkForDoubleDate(pos)
                 checkForEmptyList()
