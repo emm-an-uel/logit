@@ -175,7 +175,7 @@ class FragmentTodo : Fragment() {
                     mapOfIndex[p-1] = oldValue-1
                 }
             }
-        } else { // DateItem got removed
+        } else { // HeaderItem got removed
             for (p in pos+1 until consolidatedList.size+1) {
                 if (mapOfIndex.containsKey(p)) {
                     val actualIndex = mapOfIndex[p]!!
