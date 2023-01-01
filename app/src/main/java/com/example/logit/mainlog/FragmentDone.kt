@@ -261,17 +261,12 @@ class FragmentDone : Fragment() {
         doneList = viewModel.getDoneList()
         consolidatedList = viewModel.getConsolidatedListDone()
         listCardColors = viewModel.getListCardColors()
-
-        if (mapSubjectColor.size > 0) {
-            createRV()
-        } else {
-            mapSubjectColor = viewModel.getMapSubjectColor()
-            createRV()
-        }
+        mapSubjectColor = viewModel.getMapSubjectColor()
+        createRV()
     }
 
     private fun checkClearAll() {
-        setFragmentResultListener("rqClearAll") { requestKey, bundle ->
+        setFragmentResultListener("rqClearAll") { _, _ ->
             getLists()
             checkForEmptyList()
         }

@@ -1,14 +1,14 @@
 package com.example.logit.settings
 
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.*
+import android.widget.EditText
+import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -249,9 +249,6 @@ class ActivitySettingsColorCodes : AppCompatActivity() {
             }
 
             FancyToast.makeText(this, "Saved", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
-
-            val intent = Intent(this, ActivityAllSettings::class.java)
-            startActivity(intent)
             finish()
 
         } else {

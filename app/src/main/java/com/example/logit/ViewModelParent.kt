@@ -255,8 +255,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                         val subject = subjectColor.subject
                         val color = subjectColor.colorIndex
 
-                        mapSubjectColor.put(subject, color)
-
+                        mapSubjectColor[subject] = color
                         listSubjects.add(subject)
                     }
                 }

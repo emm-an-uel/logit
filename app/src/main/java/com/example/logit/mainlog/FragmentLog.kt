@@ -136,6 +136,7 @@ class FragmentLog : Fragment() {
             initTaskLists()
             createConsolidatedListTodo()
             createConsolidatedListDone()
+            initSubjectColor()
         }
     }
 

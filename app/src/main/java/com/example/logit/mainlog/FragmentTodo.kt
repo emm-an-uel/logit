@@ -238,14 +238,8 @@ class FragmentTodo : Fragment() {
         todoList = viewModel.getTodoList()
         consolidatedList = viewModel.getConsolidatedListTodo()
         listCardColors = viewModel.getListCardColors()
-
-        if (mapSubjectColor.size > 0) { // if mapSubjectColor already exists (ie not the first time loading up this fragment)
-            createRV() // createRV() is called here to reflect changes when user swipes
-
-        } else { // if mapSubjectColor is still empty (ie first time loading up this fragment)
-            mapSubjectColor = viewModel.getMapSubjectColor()
-            createRV()
-        }
+        mapSubjectColor = viewModel.getMapSubjectColor()
+        createRV()
     }
 
     private fun getSettings() {
