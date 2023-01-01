@@ -84,7 +84,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         }
     }
 
-    fun createConsolidatedListTodo(todoList: ArrayList<Task>) {
+    fun createConsolidatedListTodo() {
         val today = Calendar.getInstance()
         val todayInt = calendarToInt(today)
 
@@ -169,7 +169,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         return consolidatedListTodo
     }
 
-    fun createConsolidatedListDone(doneList: ArrayList<Task>) {
+    fun createConsolidatedListDone() {
         // consolidatedListDone will not have DateItems
         doneList.sortBy { it.dueDateInt }
         consolidatedListDone = arrayListOf()
@@ -189,7 +189,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         doneList.add(completedTask)
         todoList.removeAt(actualIndex)
         saveJsonTaskLists()
-        createConsolidatedListDone(doneList)
+        createConsolidatedListDone()
     }
 
     fun restoreTask(restoredTask: Task, actualIndex: Int) { // moves restoredTask from doneList to todoList
@@ -198,13 +198,13 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         todoList.add(restoredTask)
         doneList.removeAt(actualIndex)
         saveJsonTaskLists()
-        createConsolidatedListTodo(todoList)
+        createConsolidatedListTodo()
     }
 
     fun clearDoneList() { // clears all items in doneList
         doneList = arrayListOf() // sets doneList to an empty list
         saveJsonTaskLists()
-        createConsolidatedListDone(doneList)
+        createConsolidatedListDone()
     }
 
     fun saveJsonTaskLists() {
@@ -396,5 +396,97 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         app.openFileOutput("fileSettingsItems", Context.MODE_PRIVATE).use {
             it.write(file.toByteArray())
         }
+    }
+
+    // these methods are called when user filters results in FragmentTodo / FragmentDone
+    // the above 'createConsolidatedLists' methods were not reused for this purpose so the original lists don't get changed
+    fun createFilteredConsolidatedTodoList(tasks: ArrayList<Task>): ArrayList<ListItem> {
+        val today = Calendar.getInstance()
+        val todayInt = calendarToInt(today)
+
+        val tomorrow = Calendar.getInstance()
+        tomorrow.add(Calendar.DATE, 1) // adds a day to today's date
+        val tomorrowInt = calendarToInt(tomorrow)
+
+        val nextWeek = Calendar.getInstance()
+        nextWeek.add(Calendar.DATE, 7) // adds 7 days to today's date
+        val nextWeekInt = calendarToInt(nextWeek)
+
+        tasks.sortBy { it.dueDateInt }
+
+        // headings will be - Overdue, Today, Tomorrow, Next Week, Upcoming
+        var overdueHeader = false
+        var todayHeader = false
+        var tomorrowHeader = false
+        var nextWeekHeader = false
+        var upcomingHeader = false // these will be set to true as headers are added into consolidatedLists
+
+        // create sectioned list to be passed into respective rv's
+        val groupedMap1: Map<Int, List<Task>> = tasks.groupBy {
+            it.dueDateInt
+        } // creates a map of 'date' to a 'list of Tasks' - eg: key '20160605', value is a list containing 'name 2', 'name 3'
+        val consolidatedList = arrayListOf<ListItem>()
+        for (dateInt: Int in groupedMap1.keys) {
+            if (dateInt < todayInt) {
+                if (!overdueHeader) {
+                    consolidatedList.add(HeaderItem(app.resources.getString(R.string.overdue))) // adds a header if one doesn't already exist
+                    overdueHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+
+            } else if (dateInt == todayInt) {
+                if (!todayHeader) {
+                    consolidatedList.add(HeaderItem(app.resources.getString(R.string.due_today))) // adds a header if one doesn't already exist
+                    todayHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+
+            } else if (dateInt == tomorrowInt) {
+                if (!tomorrowHeader) {
+                    consolidatedList.add(HeaderItem(app.resources.getString(R.string.due_tomorrow))) // adds a header if one doesn't already exist
+                    tomorrowHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+
+            } else if (dateInt < nextWeekInt) {
+                if (!nextWeekHeader) {
+                    consolidatedList.add(HeaderItem(app.resources.getString(R.string.due_soon))) // adds a header if one doesn't already exist
+                    nextWeekHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+
+            } else {
+                if (!upcomingHeader) {
+                    consolidatedList.add(HeaderItem(app.resources.getString(R.string.upcoming))) // adds a header if one doesn't already exist
+                    upcomingHeader = true
+                }
+                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                groupItems?.forEach {
+                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                }
+            }
+        }
+        return consolidatedList
+    }
+
+    fun createFilteredConsolidatedDoneList(tasks: ArrayList<Task>): ArrayList<ListItem> {
+        tasks.sortBy { it.dueDateInt }
+        val consolidatedList = arrayListOf<ListItem>()
+        for (t in tasks) {
+            consolidatedList.add(TaskItem(t.subject, t.task, t.dueDate, t.notes))
+        }
+        return consolidatedList
     }
 }

@@ -32,8 +32,8 @@ class ParentActivity : AppCompatActivity() {
             initListCardColors()
             initListSettings()
             initTaskLists()
-            createConsolidatedListTodo(viewModel.getTodoList())
-            createConsolidatedListDone(viewModel.getDoneList())
+            createConsolidatedListTodo()
+            createConsolidatedListDone()
             initSubjectColor()
         }
 

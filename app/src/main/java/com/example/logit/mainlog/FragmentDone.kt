@@ -189,8 +189,8 @@ class FragmentDone : Fragment() {
         // filter list (search function)
         setFragmentResultListener("filterList") { _, bundle ->
             val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
-            viewModel.createConsolidatedListDone(filteredList) // calls on method in ViewModel to create consolidated list
-            rvAdapter.filterList(viewModel.getConsolidatedListDone()) // passes newly made consolidated list to adapter
+            val newConsolidatedList = viewModel.createFilteredConsolidatedDoneList(filteredList)
+            rvAdapter.filterList(newConsolidatedList)
         }
     }
 

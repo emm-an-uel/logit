@@ -187,8 +187,8 @@ class FragmentLog : Fragment() {
         viewModel.apply {
             initListSettings()
             initTaskLists()
-            createConsolidatedListTodo(todoList)
-            createConsolidatedListDone(doneList)
+            createConsolidatedListTodo()
+            createConsolidatedListDone()
             initSubjectColor()
         }
     }
