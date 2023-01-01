@@ -52,10 +52,8 @@ class FragmentLog : Fragment() {
         doneList = viewModel.getDoneList()
 
         // updates lists when user swipes in FragmentTodo and FragmentDone
-        childFragmentManager.setFragmentResultListener("todoListChanged", this) { _, _ ->
+        childFragmentManager.setFragmentResultListener("listsChanged", this) { _, _ ->
             todoList = viewModel.getTodoList()
-        }
-        childFragmentManager.setFragmentResultListener("doneListChanged", this) { _, _ ->
             doneList = viewModel.getDoneList()
         }
     }
@@ -138,10 +136,8 @@ class FragmentLog : Fragment() {
 
                     override fun onQueryTextChange(p0: String?): Boolean {
                         // updates lists before filtering
-                        childFragmentManager.setFragmentResultListener("todoListChanged", this@FragmentLog) { _, _ ->
+                        childFragmentManager.setFragmentResultListener("listsChanged", this@FragmentLog) { _, _ ->
                             todoList = viewModel.getTodoList()
-                        }
-                        childFragmentManager.setFragmentResultListener("doneListChanged", this@FragmentLog) { _, _ ->
                             doneList = viewModel.getDoneList()
                         }
 

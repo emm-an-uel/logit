@@ -145,7 +145,7 @@ class FragmentTodo : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                setFragmentResult("todoListChanged", bundleOf()) // update FragmentLog
+                setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
                 val pos = viewHolder.adapterPosition
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val actualIndex = mapOfIndex[pos]!!
@@ -153,6 +153,7 @@ class FragmentTodo : Fragment() {
                 viewModel.taskCompleted(completedTask, actualIndex) // removes this task from todoList and adds to doneList
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
+                consolidatedList = viewModel.getConsolidatedListTodo()
                 updateMapOfIndex(pos, true)
                 checkForDoubleDate(pos)
                 checkForEmptyList()

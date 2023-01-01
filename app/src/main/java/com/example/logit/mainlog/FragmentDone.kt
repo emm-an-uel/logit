@@ -128,7 +128,7 @@ class FragmentDone : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                setFragmentResult("doneListChanged", bundleOf()) // update FragmentLog
+                setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
                 val pos = viewHolder.adapterPosition
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val restoredTask: Task = doneList[pos]
@@ -203,7 +203,7 @@ class FragmentDone : Fragment() {
             builder.apply {
                 setPositiveButton("Confirm"
                 ) { dialog, id ->
-                    setFragmentResult("doneListChanged", bundleOf()) // update FragmentLog
+                    setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
                     deleteTask(position)
                     touched = true
                     checkForEmptyList()
