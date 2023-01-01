@@ -137,6 +137,14 @@ class FragmentLog : Fragment() {
                     }
 
                     override fun onQueryTextChange(p0: String?): Boolean {
+                        // updates lists before filtering
+                        childFragmentManager.setFragmentResultListener("todoListChanged", this@FragmentLog) { _, _ ->
+                            todoList = viewModel.getTodoList()
+                        }
+                        childFragmentManager.setFragmentResultListener("doneListChanged", this@FragmentLog) { _, _ ->
+                            doneList = viewModel.getDoneList()
+                        }
+
                         filter(p0)
                         return false
                     }
