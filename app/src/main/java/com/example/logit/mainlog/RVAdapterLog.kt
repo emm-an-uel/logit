@@ -20,7 +20,7 @@ class RVAdapterLog (
     private val listColors: ArrayList<CardColor>,
     private val glow: Boolean,
     private val bars: Boolean
-    // TODO: include future user preferences here //
+    // TODO: future user preferences here //
         ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

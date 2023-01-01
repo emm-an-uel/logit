@@ -41,7 +41,7 @@ class FragmentDone : Fragment() {
     lateinit var listSettingsItems: ArrayList<SettingsItem>
     private var glow = false
     private var bars = false
-    // TODO: define future user preferences here //
+    // TODO: future user preferences here //
 
     // setup view binding
     private val binding get() = _binding!!
@@ -282,7 +282,7 @@ class FragmentDone : Fragment() {
                 1 -> { // header bars
                     bars = intToBoolean(listSettingsItems[i].option)
                 }
-                // TODO: implement future user preferences here //
+                // TODO: future user preferences here //
             }
         }
     }
