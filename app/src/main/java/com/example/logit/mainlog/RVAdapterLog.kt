@@ -27,7 +27,7 @@ class RVAdapterLog (
         val layoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
             ListItem.TYPE_HEADER ->
-                HeaderViewHolder(HeaderItemBinding.inflate(layoutInflater, parent, false))
+                DateViewHolder(HeaderItemBinding.inflate(layoutInflater, parent, false))
             else ->
                 GeneralViewHolder(GeneralItemBinding.inflate(layoutInflater, parent, false))
         }
@@ -36,7 +36,7 @@ class RVAdapterLog (
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when (holder.itemViewType) {
             ListItem.TYPE_HEADER -> {
-                (holder as HeaderViewHolder).bind(
+                (holder as DateViewHolder).bind(
                     item = listOfItems[position] as HeaderItem
                 )
             }
@@ -62,7 +62,7 @@ class RVAdapterLog (
         return listOfItems.size
     }
 
-    inner class HeaderViewHolder(val binding: HeaderItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class DateViewHolder(val binding: HeaderItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: HeaderItem) {
             binding.tvHeader.text = item.header
 

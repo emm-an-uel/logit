@@ -148,6 +148,8 @@ class FragmentDone : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
+                // this method is called
+                // when the item is moved.
                 return false
             }
 
