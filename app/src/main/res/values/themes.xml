@@ -14,10 +14,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/light_gray</item>
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/lighttheme_blue</item>
+        <item name="primaryTextColor">@color/black</item>
 
         <item name="colorSurface">@color/white</item>
 
         <item name="android:colorBackground">@color/white</item>
+        <item name="colorBackground">@color/white</item>
         <item name="colorContainer">?attr/colorPrimaryContainer</item>
         <item name="colorPrimaryContainer">@color/white</item>
 

@@ -5,4 +5,7 @@
     <attr name="drawerItemColorNormal" format="color" />
     <attr name="drawerItemBackground" format="color" />
     <attr name="drawerBackground" format="color" />
+
+    <attr name="primaryTextColor" format="color" />
+    <attr name="colorBackground" format="color"/>
 </resources>

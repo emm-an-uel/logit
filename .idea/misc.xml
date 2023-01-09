@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/ic_add.xml" value="0.2555" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_calendar.xml" value="0.22826086956521738" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_done.xml" value="0.22826086956521738" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_todo.xml" value="0.22826086956521738" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/week_header_layout.xml" value="0.22644927536231885" />
       </map>
     </option>
   </component>

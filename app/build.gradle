@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    // hugomfandrade CalendarView-Widget
+    implementation 'com.github.hugomfandrade:CalendarView-Widget:1.0.1'
 
     // Splash screen
     implementation "androidx.core:core-splashscreen:1.0.0"

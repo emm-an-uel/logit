@@ -14,10 +14,12 @@
         <item name="android:statusBarColor" tools:targetApi="l">@color/darktheme_background</item>
         <!-- Customize your theme here. -->
         <item name="colorAccent">@color/light_blue</item>
+        <item name="primaryTextColor">@color/white</item>
 
         <item name="colorSurface">@color/darktheme_background</item>
 
         <item name="android:colorBackground">@color/darktheme_background</item>
+        <item name="colorBackground">@color/darktheme_background</item>
         <item name="colorContainer">?attr/colorPrimaryContainer</item>
         <item name="colorPrimaryContainer">@color/cardview_black</item>
 
