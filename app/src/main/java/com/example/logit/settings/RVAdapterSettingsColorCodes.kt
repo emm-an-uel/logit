@@ -102,9 +102,9 @@ class RVAdapterSettingsColorCodes(
         override fun afterTextChanged(p0: Editable?) {
             val input = p0.toString().trim()
 
-            (context as ActivitySettingsColorCodes).updateListSubject(input, position) // update listSubject to match changes
+            (context as ColorCodesSettingsActivity).updateListSubject(input, position) // update listSubject to match changes
 
-            (context as ActivitySettingsColorCodes).checkDuplicates() // checkDuplicates() is run in MainActivity so it can iterate through all items in rvList
+            (context as ColorCodesSettingsActivity).checkDuplicates() // checkDuplicates() is run in MainActivity so it can iterate through all items in rvList
         }
     }
 

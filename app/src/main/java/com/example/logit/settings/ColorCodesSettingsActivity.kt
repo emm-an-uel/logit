@@ -22,7 +22,7 @@ import com.shashank.sony.fancytoastlib.FancyToast
 import java.io.File
 import java.io.StringReader
 
-class ActivitySettingsColorCodes : AppCompatActivity() {
+class ColorCodesSettingsActivity : AppCompatActivity() {
     lateinit var rvColorCodes: RecyclerView
     lateinit var rvAdapter: RVAdapterSettingsColorCodes
 

@@ -12,7 +12,7 @@ import com.example.logit.R
 import java.io.File
 import java.io.StringReader
 
-class ActivityAllSettings : AppCompatActivity() {
+class AllSettingsActivity : AppCompatActivity() {
 
     lateinit var rvSettings: RecyclerView
     lateinit var rvAdapter: RVAdapterAllSettings

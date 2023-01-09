@@ -18,7 +18,7 @@ import java.io.File
 import java.io.StringReader
 import java.util.*
 
-class ActivityAddTask : AppCompatActivity() {
+class AddTaskActivity : AppCompatActivity() {
 
     lateinit var dueDate: String
     lateinit var listTask: ArrayList<Task>

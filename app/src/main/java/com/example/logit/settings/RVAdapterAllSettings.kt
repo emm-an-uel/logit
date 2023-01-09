@@ -101,7 +101,7 @@ class RVAdapterAllSettings(
 
             3 -> { // subject color codes
                 holder.linearLayout.setOnClickListener {
-                    val intent = Intent(context, ActivitySettingsColorCodes::class.java)
+                    val intent = Intent(context, ColorCodesSettingsActivity::class.java)
                     (context as ParentActivity).startActivity(intent)
                 }
             }

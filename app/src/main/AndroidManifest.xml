@@ -26,21 +26,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".settings.ActivityAllSettings"
+            android:name=".settings.AllSettingsActivity"
             android:exported="false"
             android:label="Settings"
             android:parentActivityName=".ParentActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt" />
         <activity
-            android:name=".settings.ActivitySettingsColorCodes"
+            android:name=".settings.ColorCodesSettingsActivity"
             android:exported="false"
             android:label="Subject Color Codes"
-            android:parentActivityName=".settings.ActivityAllSettings"
+            android:parentActivityName=".settings.AllSettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.LogIt" />
         <activity
-            android:name=".addtask.ActivityAddTask"
+            android:name=".addtask.AddTaskActivity"
             android:exported="false"
             android:parentActivityName=".ParentActivity"
             android:screenOrientation="portrait"

@@ -69,7 +69,7 @@ class RVAdapterAddTask(
 
         if (editTaskId != "0") { // if user is editing an existing task
             // find currentTask and set corresponding variables
-            currentTask = (context as ActivityAddTask).findCurrentTask(editTaskId)
+            currentTask = (context as AddTaskActivity).findCurrentTask(editTaskId)
         } else { // if user is creating a new task
             taskIsBeingEdited = false
         }
@@ -170,13 +170,13 @@ class RVAdapterAddTask(
                         // btnConfirm clickability
                         if (taskIsBeingEdited) {
                             if (currentTask.dueDate == dueDate) { // if existing dueDate == new dueDate
-                                (context as ActivityAddTask).btnDisabled()
+                                (context as AddTaskActivity).btnDisabled()
                             } else {
-                                (context as ActivityAddTask).btnEnabled()
+                                (context as AddTaskActivity).btnEnabled()
                             }
                         }
 
-                        (context as ActivityAddTask).updateDueDate(dueDate)
+                        (context as AddTaskActivity).updateDueDate(dueDate)
                     }
                 )
             }
@@ -211,7 +211,7 @@ class RVAdapterAddTask(
 
             val actualMonth = month + 1 // refer to line 200 - month is actualMonth - 1; this adds the 1 back
             val defaultDueDate = "$dayOfMonth $actualMonth $year"
-            (context as ActivityAddTask).updateDueDate(defaultDueDate)
+            (context as AddTaskActivity).updateDueDate(defaultDueDate)
 
         } else {
 
@@ -221,7 +221,7 @@ class RVAdapterAddTask(
             val year = c.get(Calendar.YEAR)
 
             val defaultDueDate = "$day $month $year"
-            (context as ActivityAddTask).updateDueDate(defaultDueDate)
+            (context as AddTaskActivity).updateDueDate(defaultDueDate)
         }
 
         val dayOfWeek = c.get(Calendar.DAY_OF_WEEK)
@@ -284,9 +284,9 @@ class RVAdapterAddTask(
         spinnerSubject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 if (p2 == originalSpinnerIndex) { // note: p2 is current position
-                    (context as ActivityAddTask).btnDisabled()
+                    (context as AddTaskActivity).btnDisabled()
                 } else {
-                    (context as ActivityAddTask).btnEnabled()
+                    (context as AddTaskActivity).btnEnabled()
                 }
             }
 
@@ -303,11 +303,11 @@ class RVAdapterAddTask(
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etTask.text.toString().trim() == currentTask.task) { // if task is unchanged
-                (context as ActivityAddTask).btnDisabled()
+                (context as AddTaskActivity).btnDisabled()
             } else if (etTask.text.toString().trim() == "") { // if task is empty
-                (context as ActivityAddTask).btnDisabled()
+                (context as AddTaskActivity).btnDisabled()
             } else {
-                (context as ActivityAddTask).btnEnabled()
+                (context as AddTaskActivity).btnEnabled()
             }
         }
     }
@@ -319,9 +319,9 @@ class RVAdapterAddTask(
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etNotes.text.toString().trim() == currentTask.notes) { // if notes is unchanged
-                (context as ActivityAddTask).btnDisabled()
+                (context as AddTaskActivity).btnDisabled()
             } else {
-                (context as ActivityAddTask).btnEnabled()
+                (context as AddTaskActivity).btnEnabled()
             }
         }
     }
@@ -346,9 +346,9 @@ class RVAdapterAddTask(
         }
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (etTask.text.toString().trim() != "") {
-                (context as ActivityAddTask).btnEnabled()
+                (context as AddTaskActivity).btnEnabled()
             } else {
-                (context as ActivityAddTask).btnDisabled()
+                (context as AddTaskActivity).btnDisabled()
             }
         }
     }

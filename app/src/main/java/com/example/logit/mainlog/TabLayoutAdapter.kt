@@ -17,9 +17,9 @@ class TabLayoutAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
             override fun createFragment(position: Int): Fragment {
 
                 when (position) {
-                    0 -> return FragmentTodo()
+                    0 -> return TodoFragment()
                 }
 
-                return FragmentDone()
+                return DoneFragment()
             }
         }

@@ -15,14 +15,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.logit.R
 import com.example.logit.ViewModelParent
-import com.example.logit.addtask.ActivityAddTask
+import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentLogBinding
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class FragmentLog : Fragment() {
+class LogFragment : Fragment() {
 
     lateinit var tabLayout: TabLayout
     lateinit var viewPager: ViewPager2
@@ -136,7 +136,7 @@ class FragmentLog : Fragment() {
 
                     override fun onQueryTextChange(p0: String?): Boolean {
                         // updates lists before filtering
-                        childFragmentManager.setFragmentResultListener("listsChanged", this@FragmentLog) { _, _ ->
+                        childFragmentManager.setFragmentResultListener("listsChanged", this@LogFragment) { _, _ ->
                             todoList = viewModel.getTodoList()
                             doneList = viewModel.getDoneList()
                         }
@@ -275,7 +275,7 @@ class FragmentLog : Fragment() {
     }
 
     private fun startActivityAddTask() {
-        val intent = Intent(requireContext(), ActivityAddTask::class.java)
+        val intent = Intent(requireContext(), AddTaskActivity::class.java)
 
         val listSubjects: ArrayList<String> = viewModel.getListSubjects()
         intent.putExtra("listSubjects", listSubjects)

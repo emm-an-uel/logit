@@ -22,7 +22,7 @@ import com.example.logit.databinding.FragmentDoneBinding
 import com.example.logit.settings.SettingsItem
 
 
-class FragmentDone : Fragment() {
+class DoneFragment : Fragment() {
 
     lateinit var tvEmptyList: TextView
     lateinit var rvDone: RecyclerView

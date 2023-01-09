@@ -16,11 +16,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
 import com.example.logit.ViewModelParent
-import com.example.logit.addtask.ActivityAddTask
+import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentTodoBinding
 import com.example.logit.settings.SettingsItem
 
-class FragmentTodo : Fragment() {
+class TodoFragment : Fragment() {
 
     lateinit var tvEmptyList: TextView
     lateinit var rvTodo: RecyclerView
@@ -222,7 +222,7 @@ class FragmentTodo : Fragment() {
                 val selectedTask = todoList[actualIndex]
 
                 // start ActivityAddTask
-                val intent = Intent(activity, ActivityAddTask::class.java)
+                val intent = Intent(activity, AddTaskActivity::class.java)
                 intent.putExtra("taskId", selectedTask.id)
                 val listSubjects: ArrayList<String> = viewModel.getListSubjects()
                 intent.putExtra("listSubjects", listSubjects)
