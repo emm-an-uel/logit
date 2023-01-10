@@ -210,7 +210,7 @@ class CalendarFragment : Fragment() {
         calDialogView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
 
         // set up the ViewPager adapter
-        viewPagerAdapter = PagerAdapter(requireContext(), mapOfTasks, minDate, maxDate, selectedDate)
+        viewPagerAdapter = PagerAdapter(requireContext(), mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors)
 
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
 

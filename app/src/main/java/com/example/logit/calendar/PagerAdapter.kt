@@ -15,6 +15,7 @@ import com.example.logit.ParentActivity
 import com.example.logit.R
 import com.example.logit.Task
 import com.example.logit.addtask.AddTaskActivity
+import com.example.logit.mainlog.CardColor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -24,7 +25,9 @@ class PagerAdapter(
     private val mapOfTasks: Map<Int, List<Task>>,
     private val minDate: Calendar,
     private val maxDate: Calendar,
-    private val selectedDate: Calendar
+    private val selectedDate: Calendar,
+    private val mapSubjectColor: Map<String, Int>,
+    private val cardColors: List<CardColor>
 ) : PagerAdapter() {
 
     private val initialPosition = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt()
@@ -72,7 +75,7 @@ class PagerAdapter(
         for (key in mapOfTasks.keys) { // check if mapOfEvents contains a key with same date as currentDate
             if (key == currentDateInt) {
                 val todayTasks: List<Task> = mapOfTasks[key]!!
-                val adapter = RecyclerViewAdapter(todayTasks)
+                val adapter = RecyclerViewAdapter(todayTasks, mapSubjectColor, cardColors)
                 rvEvents.adapter = adapter
                 hasEvents = true
                 break
