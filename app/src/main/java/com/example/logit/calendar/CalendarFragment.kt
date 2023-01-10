@@ -140,7 +140,11 @@ class CalendarFragment : Fragment() {
 
         val listSubjects: ArrayList<String> = viewModel.getListSubjects()
         intent.putExtra("listSubjects", listSubjects)
-        intent.putExtra("selectedDate", calendarToString(selectedDate))
+        if (selectedDate > Calendar.getInstance()) {
+            intent.putExtra("selectedDate", calendarToString(selectedDate)) // if user clicked on a future date, pass that date to AddTaskActivity
+            // this prevent user from choosing a dueDate before today's date
+        }
+
         startActivity(intent)
     }
 
