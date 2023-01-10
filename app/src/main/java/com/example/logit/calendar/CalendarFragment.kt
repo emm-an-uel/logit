@@ -115,7 +115,7 @@ class CalendarFragment : Fragment() {
                 showCalendarDialog(selectedDate1)
 
             } else { // if no events that day
-                // user has to click twice to create new task 
+                // user has to click twice to create new task
                 if (isSameDate(selectedDate, selectedDate1)) {
                     createNewTask()
                 } else {
@@ -140,7 +140,30 @@ class CalendarFragment : Fragment() {
 
         val listSubjects: ArrayList<String> = viewModel.getListSubjects()
         intent.putExtra("listSubjects", listSubjects)
+        intent.putExtra("selectedDate", calendarToString(selectedDate))
         startActivity(intent)
+    }
+
+    private fun calendarToString(calendar: Calendar): String {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)+1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        var monthString = month.toString()
+        var dayString = day.toString()
+
+        // ensure proper MM format
+        if (month < 10) {
+            monthString = "0$month" // eg convert "8" to "08"
+        }
+
+        // ensure proper DD format
+        if (day < 10) {
+            dayString = "0$day"
+        }
+
+        // convert to DD MM YYYY format
+        return "$dayString $monthString $year"
     }
 
     private fun addCalendarObjects() { // add CalendarObjects to CalendarView

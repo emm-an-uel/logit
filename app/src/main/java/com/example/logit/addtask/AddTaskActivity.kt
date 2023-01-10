@@ -1,13 +1,11 @@
 package com.example.logit.addtask
 
 import android.content.Context
-import android.os.Build
 import android.os.Bundle
 import android.widget.CalendarView
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
@@ -90,9 +88,11 @@ class AddTaskActivity : AppCompatActivity() {
         listSubjectsSpinner.addAll(intent.getStringArrayListExtra("listSubjects")!!) // listSubjects: ArrayList<String>
         listSubjectsSpinner.add("Other") // final option of "Other"
 
+        val selectedDateString: String? = intent.getStringExtra("selectedDate")
+
         // initialize rv
         rvAddTask = findViewById(R.id.rvAddTask)
-        val rvAdapter = RVAdapterAddTask(listSubjectsSpinner, editTaskId)
+        val rvAdapter = RVAdapterAddTask(listSubjectsSpinner, editTaskId, selectedDateString)
         rvAddTask.adapter = rvAdapter
     }
 

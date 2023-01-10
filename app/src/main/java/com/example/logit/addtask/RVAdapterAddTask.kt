@@ -17,7 +17,8 @@ import java.util.*
 
 class RVAdapterAddTask(
     private val listSubjectsSpinner: ArrayList<String>,
-    private val editTaskId: String
+    private val editTaskId: String,
+    private val selectedDateString: String?
 ) : RecyclerView.Adapter<RVAdapterAddTask.NewViewHolder>() {
 
     lateinit var spinnerSubject: Spinner
@@ -123,9 +124,11 @@ class RVAdapterAddTask(
 
                 tvDueDate = holder.itemView.findViewById(R.id.tvDueDate)
                 if (taskIsBeingEdited) {
-                    setTvDueDateText(currentTask.dueDate)
+                    setDefaultDueDate(currentTask.dueDate)
+                } else if (selectedDateString != null) { // would only be non null if user created new task from Calendar
+                    setDefaultDueDate(selectedDateString)
                 } else {
-                    setTvDueDateText("")
+                    setDefaultDueDate(null)
                 }
                 tvDueDate.visibility = View.VISIBLE
 
@@ -193,11 +196,11 @@ class RVAdapterAddTask(
         }
     }
 
-    private fun setTvDueDateText(currentDueDate: String) {
+    private fun setDefaultDueDate(currentDueDate: String?) {
 
         val c = Calendar.getInstance()
 
-        if (currentDueDate != "") { // user is editing an existing task
+        if (currentDueDate != null) { // user is editing an existing task
             val currentDueDateList = currentDueDate.split(" ")
             val dayOfMonth = currentDueDateList[0].toInt()
             val month = currentDueDateList[1].toInt() - 1
