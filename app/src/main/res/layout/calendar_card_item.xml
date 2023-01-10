@@ -49,7 +49,7 @@
                 android:id="@+id/tvNoEvents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="No events today"
+                android:text="No tasks due today"
                 android:textAlignment="center"
                 android:visibility="gone" />
 

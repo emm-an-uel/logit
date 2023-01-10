@@ -3,16 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:layout_margin="10dp"
+    android:layout_marginHorizontal="10dp"
     android:orientation="horizontal"
     android:paddingStart="10dp"
     android:paddingEnd="10dp">
 
     <ImageView
         android:id="@+id/colorCode"
-        android:layout_width="10dp"
+        android:layout_width="4dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
+        android:layout_marginVertical="10dp"
         android:src="@drawable/calendar_dialog_color_code" />
 
     <LinearLayout
@@ -26,13 +26,15 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
             android:text="Subject" />
 
         <TextView
             android:id="@+id/tvTaskName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="10dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginBottom="10dp"
             android:text="Task name" />
 
     </LinearLayout>
