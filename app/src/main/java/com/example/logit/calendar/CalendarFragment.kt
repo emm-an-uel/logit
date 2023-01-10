@@ -67,7 +67,6 @@ class CalendarFragment : Fragment() {
         todoList = viewModel.getTodoList()
         cardColors = viewModel.getListCardColors()
         mapSubjectColor = viewModel.getMapSubjectColor()
-        viewModel.createMapOfTodoTasks()
         mapOfTasks = viewModel.getMapOfTodoTasks()
         setupCalendar()
     }

@@ -187,19 +187,8 @@ class LogFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED) // without this line, there will be duplicates of settings icon when i return to this fragment
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.apply {
-            initListSettings()
-            createTaskLists()
-            createConsolidatedListTodo()
-            createConsolidatedListDone()
-            initSubjectColor()
-        }
-    }
-
     private fun remoteCheckFabClickability() {
-        parentFragmentManager.setFragmentResultListener("rqCheckFabClickability", requireActivity()) { _, _ ->
+        childFragmentManager.setFragmentResultListener("rqCheckFabClickability", requireActivity()) { _, _ ->
             checkFabClickability()
         }
     }
@@ -249,7 +238,7 @@ class LogFragment : Fragment() {
         // update fragmentDone
         val bundle = Bundle()
         bundle.putInt("clearAll", 0)
-        parentFragmentManager.setFragmentResult("rqClearAll", bundle)
+        childFragmentManager.setFragmentResult("rqClearAll", bundle)
 
         fabDisabled()
     }

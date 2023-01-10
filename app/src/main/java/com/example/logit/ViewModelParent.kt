@@ -242,7 +242,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         return doneList
     }
 
-    fun initSubjectColor() {
+    fun createSubjectColors() {
         listSubjectColor = arrayListOf()
         mapSubjectColor = hashMapOf()
         listSubjects = arrayListOf()
@@ -287,7 +287,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         return listSubjects
     }
 
-    fun initListCardColors() {
+    fun createCardColorsList() {
         listCardColors = arrayListOf()
         listColors = arrayListOf()
 
@@ -343,7 +343,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         return listCardColors
     }
 
-    fun initListSettings() {
+    fun createSettingsList() {
         listSettingsItems = arrayListOf()
 
         val file = File(app.filesDir, "fileSettingsItems")

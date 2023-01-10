@@ -29,12 +29,12 @@ class ParentActivity : AppCompatActivity() {
 
         // initialize data
         viewModel.apply {
-            initListCardColors()
-            initListSettings()
+            createCardColorsList()
+            createSettingsList()
             createTaskLists()
             createConsolidatedListTodo()
             createConsolidatedListDone()
-            initSubjectColor()
+            createSubjectColors()
             createMapOfTodoTasks()
         }
 
@@ -55,6 +55,21 @@ class ParentActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        // update ViewModel data
+        viewModel.apply {
+            createCardColorsList()
+            createSettingsList()
+            createTaskLists()
+            createConsolidatedListTodo()
+            createConsolidatedListDone()
+            createSubjectColors()
+            createMapOfTodoTasks()
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {
