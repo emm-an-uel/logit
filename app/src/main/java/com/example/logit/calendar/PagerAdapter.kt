@@ -1,15 +1,20 @@
 package com.example.logit.calendar
 
 import android.content.Context
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
+import com.example.logit.ParentActivity
 import com.example.logit.R
 import com.example.logit.Task
+import com.example.logit.addtask.AddTaskActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.temporal.ChronoUnit
 import java.util.*
@@ -48,12 +53,18 @@ class PagerAdapter(
         val tvDayOfWeek: TextView = view.findViewById(R.id.tvDayOfWeek)
         val tvNoEvents: TextView = view.findViewById(R.id.tvNoEvents)
         val rvEvents: RecyclerView = view.findViewById(R.id.rvEvents)
-        val fabAddEvent: FloatingActionButton = view.findViewById(R.id.fabAddEvent)
+        val fabAddTask: FloatingActionButton = view.findViewById(R.id.fabNewTask)
 
         tvDayOfMonth.text = currentDate.get(Calendar.DAY_OF_MONTH).toString()
         tvDayOfWeek.text = getDayOfWeek(currentDate.get(Calendar.DAY_OF_WEEK))
-        fabAddEvent.setOnClickListener {
-            Toast.makeText(context, "Add new event", Toast.LENGTH_SHORT).show()
+
+        // fabAddTask functionality
+        if (currentDateInt < calendarToInt(Calendar.getInstance())) { // currentDate is in the past
+            fabAddTask.visibility = View.GONE
+        } else {
+            fabAddTask.setOnClickListener { // calls method in ParentActivity since PagerAdapter has no property 'listSubjects' 
+                (context as ParentActivity).createNewTask(calendarToString(currentDate))
+            }
         }
 
         // show today's events
@@ -118,5 +129,27 @@ class PagerAdapter(
         // convert to YYYYMMDD format
         val dateString = "$year$monthString$dayString"
         return (dateString.toInt())
+    }
+
+    private fun calendarToString(calendar: Calendar): String {
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)+1
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        var monthString = month.toString()
+        var dayString = day.toString()
+
+        // ensure proper MM format
+        if (month < 10) {
+            monthString = "0$month" // eg convert "8" to "08"
+        }
+
+        // ensure proper DD format
+        if (day < 10) {
+            dayString = "0$day"
+        }
+
+        // convert to DD MM YYYY format
+        return "$dayString $monthString $year"
     }
 }

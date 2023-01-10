@@ -1,7 +1,9 @@
 package com.example.logit
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -10,7 +12,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.ActivityParentBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
 private lateinit var appBarConfiguration: AppBarConfiguration
 private lateinit var binding: ActivityParentBinding
@@ -79,5 +84,15 @@ class ParentActivity : AppCompatActivity() {
 
     fun updateSettings(position: Int, option: Int) { // this method is here just for the rvAdapter to call it. the actual work is done in ViewModel
         viewModel.updateSettings(position, option)
+    }
+
+    fun createNewTask(selectedDateString: String) {
+        val intent = Intent(this, AddTaskActivity::class.java)
+
+        val listSubjects: ArrayList<String> = viewModel.getListSubjects()
+        intent.putExtra("listSubjects", listSubjects)
+        intent.putExtra("selectedDate", selectedDateString)
+
+        startActivity(intent)
     }
 }

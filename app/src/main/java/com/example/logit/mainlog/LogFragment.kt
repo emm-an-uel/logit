@@ -43,7 +43,6 @@ class LogFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().title = ""
         viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
 
         // initialize lists
@@ -69,6 +68,7 @@ class LogFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().title = ""
 
         // fab
         fabTask = binding.fabTask

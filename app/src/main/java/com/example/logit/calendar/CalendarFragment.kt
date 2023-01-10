@@ -19,6 +19,7 @@ import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentCalendarBinding
 import com.example.logit.Task
 import com.example.logit.mainlog.CardColor
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.selects.select
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
@@ -84,8 +85,13 @@ class CalendarFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        requireActivity().title = ""
 
         setupCalendar()
+
+        binding.fabAddTask.setOnClickListener {
+            createNewTask()
+        }
     }
 
     private fun setMinMaxDates() {
