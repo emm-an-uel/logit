@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.example.logit.R
-import com.example.logit.mainlog.Task
+import com.example.logit.Task
 import java.io.File
 import java.io.StringReader
 import java.util.*

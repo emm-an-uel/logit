@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.logit.R
+import com.example.logit.Task
 import com.example.logit.ViewModelParent
 import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentLogBinding

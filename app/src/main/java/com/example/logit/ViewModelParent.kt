@@ -208,6 +208,8 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
     }
 
     fun saveJsonTaskLists() {
+        todoList.sortBy { it.dueDateInt }
+        doneList.sortBy { it.dueDateInt }
         val listAllTasks = arrayListOf<Task>()
         listAllTasks.addAll(todoList)
         listAllTasks.addAll(doneList)
@@ -221,13 +223,11 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
 
     @JvmName("getTodoList1")
     fun getTodoList(): ArrayList<Task> {
-        todoList.sortBy { it.dueDateInt }
         return todoList
     }
 
     @JvmName("getDoneList1")
     fun getDoneList(): ArrayList<Task> {
-        doneList.sortBy { it.dueDateInt }
         return doneList
     }
 

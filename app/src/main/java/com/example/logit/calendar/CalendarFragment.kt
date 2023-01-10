@@ -1,6 +1,5 @@
 package com.example.logit.calendar
 
-import android.app.ProgressDialog.show
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -10,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil.setContentView
-import androidx.databinding.adapters.ViewBindingAdapter.setPadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.PagerAdapter
@@ -20,7 +17,8 @@ import com.example.logit.R
 import com.example.logit.ViewModelParent
 import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentCalendarBinding
-import com.example.logit.mainlog.Task
+import com.example.logit.Task
+import com.example.logit.mainlog.CardColor
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
 import java.time.temporal.ChronoUnit
@@ -38,9 +36,12 @@ class CalendarFragment : Fragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var mAlertDialog: AlertDialog
 
-    private lateinit var mapOfTasks: Map<Calendar, List<Task>>
+    private lateinit var mapOfTasks: Map<Int, List<Task>>
     private lateinit var minDate: Calendar
     private lateinit var maxDate: Calendar
+    private lateinit var todoList: List<Task>
+    private lateinit var cardColors: List<CardColor>
+    private lateinit var mapSubjectColor: Map<String, Int>
 
     // for PagerAdapter swipe animations
     private val MIN_OFFSET = 0f
@@ -54,6 +55,17 @@ class CalendarFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
         setMinMaxDates()
+        todoList = viewModel.getTodoList()
+        cardColors = viewModel.getListCardColors()
+        mapSubjectColor = viewModel.getMapSubjectColor()
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        todoList = viewModel.getTodoList()
+        cardColors = viewModel.getListCardColors()
+        mapSubjectColor = viewModel.getMapSubjectColor()
     }
 
     override fun onCreateView(
@@ -112,14 +124,20 @@ class CalendarFragment : Fragment() {
 
     private fun addCalendarObjects() { // add CalendarObjects to CalendarView
         val calObjectList = arrayListOf<CalendarView.CalendarObject>()
-        // TODO: do this up
-        for (task in tasks) {
+        for (task in todoList) {
+            val dueDate: Calendar = intToCalendar(task.dueDateInt)
+            val bgColorIndex = mapSubjectColor[task.subject]
+            val bgColor = if (bgColorIndex != null) {
+                ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
+            } else {
+                ContextCompat.getColor(requireContext(), R.color.gray)
+            }
             calObjectList.add(
                 CalendarView.CalendarObject(
                     null,
-                    task.date, // where 'date': Calendar
-                    ContextCompat.getColor(requireContext(), R.color.teal_700),
-                    ContextCompat.getColor(requireContext(), R.color.teal_700)
+                    dueDate,
+                    bgColor,
+                    ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
                 )
             )
         }
@@ -215,5 +233,17 @@ class CalendarFragment : Fragment() {
 
         view.alpha = alpha
         view.scaleY = scale
+    }
+
+    private fun intToCalendar(int: Int): Calendar {
+        val string = int.toString()
+        val year = string.take(4).toInt()
+        val monthDay = string.takeLast(4)
+        val month = (monthDay.take(2).toInt() - 1) // Calendar months go from 0 to 11
+        val day = monthDay.takeLast(2).toInt()
+
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, day)
+        return calendar
     }
 }

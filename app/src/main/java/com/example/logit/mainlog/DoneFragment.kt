@@ -17,6 +17,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.Task
 import com.example.logit.ViewModelParent
 import com.example.logit.databinding.FragmentDoneBinding
 import com.example.logit.settings.SettingsItem

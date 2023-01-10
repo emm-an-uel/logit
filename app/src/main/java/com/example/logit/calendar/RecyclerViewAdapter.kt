@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
-import com.example.logit.mainlog.Task
+import com.example.logit.Task
 
 class RecyclerViewAdapter (
     private val tasks: List<Task>

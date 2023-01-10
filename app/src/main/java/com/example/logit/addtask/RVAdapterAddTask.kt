@@ -12,7 +12,7 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
-import com.example.logit.mainlog.Task
+import com.example.logit.Task
 import java.util.*
 
 class RVAdapterAddTask(

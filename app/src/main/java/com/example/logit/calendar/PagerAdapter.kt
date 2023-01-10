@@ -9,14 +9,14 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.example.logit.R
-import com.example.logit.mainlog.Task
+import com.example.logit.Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.temporal.ChronoUnit
 import java.util.*
 
 class PagerAdapter(
     private val context: Context,
-    private val mapOfTasks: Map<Calendar, List<Task>>,
+    private val mapOfTasks: Map<Int, List<Task>>,
     private val minDate: Calendar,
     private val maxDate: Calendar,
     private val selectedDate: Calendar
@@ -39,6 +39,7 @@ class PagerAdapter(
 
         val currentDate: Calendar = initialPageAndDate.second.clone() as Calendar
         currentDate.add(Calendar.DATE, position - initialPageAndDate.first) // adds the number of days it is away from the initialDate
+        val currentDateInt = calendarToInt(currentDate)
 
         val view = LayoutInflater.from(context).inflate(R.layout.calendar_card_item, container, false)
         view.tag = position // tag for adjustments of size and opacity in CalendarDialog.updatePager
@@ -58,7 +59,7 @@ class PagerAdapter(
         // show today's events
         var hasEvents = false
         for (key in mapOfTasks.keys) { // check if mapOfEvents contains a key with same date as currentDate
-            if (isSameDate(key, currentDate)) {
+            if (key == currentDateInt) {
                 val todayTasks: List<Task> = mapOfTasks[key]!!
                 val adapter = RecyclerViewAdapter(todayTasks)
                 rvEvents.adapter = adapter
@@ -74,16 +75,6 @@ class PagerAdapter(
 
         container.addView(view)
         return view
-    }
-
-    private fun isSameDate(date1: Calendar, date2: Calendar): Boolean {
-        if (date1.get(Calendar.DAY_OF_MONTH) != date2.get(Calendar.DAY_OF_MONTH)) {
-            return false
-        }
-        if (date1.get(Calendar.MONTH) != date2.get(Calendar.MONTH)) {
-            return false
-        }
-        return date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR)
     }
 
     private fun getDayOfWeek(dayInt: Int): String {
@@ -104,5 +95,28 @@ class PagerAdapter(
 
     override fun getItemPosition(`object`: Any): Int {
         return POSITION_NONE // not sure what this does but it was included in the original CalendarView-Widget app by hugomfandrade
+    }
+
+    private fun calendarToInt(date: Calendar): Int {
+        val year = date.get(Calendar.YEAR)
+        val month = date.get(Calendar.MONTH)+1
+        val day = date.get(Calendar.DAY_OF_MONTH)
+
+        var monthString = month.toString()
+        var dayString = day.toString()
+
+        // ensure proper MM format
+        if (month < 10) {
+            monthString = "0$month" // eg convert "8" to "08"
+        }
+
+        // ensure proper DD format
+        if (day < 10) {
+            dayString = "0$day"
+        }
+
+        // convert to YYYYMMDD format
+        val dateString = "$year$monthString$dayString"
+        return (dateString.toInt())
     }
 }

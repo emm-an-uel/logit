@@ -21,11 +21,17 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginHorizontal="7dp"
+        app:current_day_circle_color="?attr/colorAccent"
+        app:current_day_circle_enable="true"
+        app:current_day_text_color="?attr/primaryTextColor"
         app:day_text_color="?attr/primaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvMonth"
         app:month_header_show="false"
         app:offset_day_text_color="?attr/primaryTextColor"
+        app:selected_day_border_color="?attr/colorAccent"
+        app:selected_day_text_color="?attr/colorAccent"
         app:week_header_movable="false" />
 
     <include

@@ -4,6 +4,7 @@
     android:id="@+id/weekHeaderLayout"
     android:layout_width="match_parent"
     android:layout_height="22dp"
+    android:layout_marginHorizontal="7dp"
     android:background="?attr/colorBackground"
     android:orientation="horizontal"
     app:layout_constraintTop_toTopOf="@id/calendarView">
