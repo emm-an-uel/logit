@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.cardview.widget.CardView
@@ -20,8 +21,7 @@ class RecyclerViewAdapter (
 ): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val cardView: CardView = itemView.findViewById(R.id.cardView)
-        val backgroundLayout: LinearLayout = itemView.findViewById(R.id.backgroundLayout)
+        val ivColorCode: ImageView = itemView.findViewById(R.id.colorCode)
         val tvSubject: TextView = itemView.findViewById(R.id.tvSubject)
         val tvTaskName: TextView = itemView.findViewById(R.id.tvTaskName)
     }
@@ -48,6 +48,6 @@ class RecyclerViewAdapter (
         } else {
             ContextCompat.getColor(context, R.color.gray)
         }
-        holder.cardView.backgroundTintList = ColorStateList.valueOf(bgColor)
+        holder.ivColorCode.imageTintList = ColorStateList.valueOf(bgColor)
     }
 }

@@ -3,7 +3,11 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/calendar_dialog_color_code.xml" value="0.2545" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/drawer_item_bg.xml" value="0.2555" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/drawer_item_selector.xml" value="0.2555" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/ic_add.xml" value="0.2555" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/textview_rounded_background.xml" value="0.2555" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/calendar_card_item.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/calendar_dialog.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/calendar_task_card_item.xml" value="0.25" />
