@@ -23,6 +23,8 @@ import com.example.logit.settings.SettingsItem
 
 class TodoFragment : Fragment() {
 
+    private var firstInstance = true
+
     lateinit var tvEmptyList: TextView
     lateinit var rvTodo: RecyclerView
     lateinit var rvAdapter: RVAdapterLog
@@ -243,10 +245,23 @@ class TodoFragment : Fragment() {
 
     private fun getLists() {
         todoList = viewModel.getTodoList()
-        consolidatedList = viewModel.getConsolidatedListTodo()
         listCardColors = viewModel.getListCardColors()
-        mapSubjectColor = viewModel.getMapSubjectColor()
-        createRV()
+
+        if (firstInstance) { // first time initializing TodoFragment
+            consolidatedList = viewModel.getConsolidatedListTodo()
+            mapSubjectColor = viewModel.getMapSubjectColor()
+            createRV()
+            firstInstance = false
+
+        } else {
+            val newConsolidatedList = viewModel.getConsolidatedListTodo()
+            val newMapSubjectColor = viewModel.getMapSubjectColor()
+            if (newConsolidatedList != consolidatedList || newMapSubjectColor != mapSubjectColor) { // update list & map if they've been changed
+                consolidatedList = newConsolidatedList
+                mapSubjectColor = newMapSubjectColor
+                createRV() // re-create RV only if data's been changed
+            }
+        }
     }
 
     private fun getSettings() {

@@ -25,6 +25,8 @@ import com.example.logit.settings.SettingsItem
 
 class DoneFragment : Fragment() {
 
+    private var firstInstance = true
+
     lateinit var tvEmptyList: TextView
     lateinit var rvDone: RecyclerView
     lateinit var rvAdapter: RVAdapterLog
@@ -266,10 +268,23 @@ class DoneFragment : Fragment() {
 
     private fun getLists() {
         doneList = viewModel.getDoneList()
-        consolidatedList = viewModel.getConsolidatedListDone()
         listCardColors = viewModel.getListCardColors()
-        mapSubjectColor = viewModel.getMapSubjectColor()
-        createRV()
+
+        if (firstInstance) { // first time initializing DoneFragment
+            consolidatedList = viewModel.getConsolidatedListDone()
+            mapSubjectColor = viewModel.getMapSubjectColor()
+            createRV()
+            firstInstance = false
+
+        } else {
+            val newConsolidatedList = viewModel.getConsolidatedListDone()
+            val newMapSubjectColor = viewModel.getMapSubjectColor()
+            if (newConsolidatedList != consolidatedList || newMapSubjectColor != mapSubjectColor) { // update list & map if they've been changed
+                consolidatedList = newConsolidatedList
+                mapSubjectColor = newMapSubjectColor
+                createRV() // re-create RV only if data's been changed
+            }
+        }
     }
 
     private fun checkClearAll() {
