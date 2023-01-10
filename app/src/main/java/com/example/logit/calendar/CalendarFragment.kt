@@ -19,6 +19,7 @@ import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentCalendarBinding
 import com.example.logit.Task
 import com.example.logit.mainlog.CardColor
+import kotlinx.coroutines.selects.select
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
 import java.time.temporal.ChronoUnit
@@ -26,6 +27,8 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class CalendarFragment : Fragment() {
+
+    private var selectedDate: Calendar = Calendar.getInstance()
 
     private var _binding: FragmentCalendarBinding? = null
     private val binding get() = _binding!!
@@ -107,14 +110,29 @@ class CalendarFragment : Fragment() {
         }
 
         addCalendarObjects() // add user events to calendar
-        binding.calendarView.setOnItemClickedListener { calendarObjects, previousDate, selectedDate ->
+        binding.calendarView.setOnItemClickedListener { calendarObjects, previousDate, selectedDate1 ->
             if (calendarObjects.size > 0) { // if there are events
-                showCalendarDialog(selectedDate)
+                showCalendarDialog(selectedDate1)
 
             } else { // if no events that day
-                createNewTask()
+                // user has to click twice to create new task 
+                if (isSameDate(selectedDate, selectedDate1)) {
+                    createNewTask()
+                } else {
+                    selectedDate = selectedDate1
+                }
             }
         }
+    }
+
+    private fun isSameDate(date1: Calendar, date2: Calendar): Boolean {
+        if (date1.get(Calendar.DAY_OF_MONTH) != date2.get(Calendar.DAY_OF_MONTH)) {
+            return false
+        }
+        if (date1.get(Calendar.MONTH) != date2.get(Calendar.MONTH)) {
+            return false
+        }
+        return date1.get(Calendar.YEAR) == date2.get(Calendar.YEAR)
     }
 
     private fun createNewTask() {
