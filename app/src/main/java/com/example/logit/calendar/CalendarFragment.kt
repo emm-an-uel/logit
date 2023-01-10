@@ -55,6 +55,7 @@ class CalendarFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
         setMinMaxDates()
+        mapOfTasks = viewModel.getMapOfTodoTasks()
         todoList = viewModel.getTodoList()
         cardColors = viewModel.getListCardColors()
         mapSubjectColor = viewModel.getMapSubjectColor()
@@ -66,6 +67,9 @@ class CalendarFragment : Fragment() {
         todoList = viewModel.getTodoList()
         cardColors = viewModel.getListCardColors()
         mapSubjectColor = viewModel.getMapSubjectColor()
+        viewModel.createMapOfTodoTasks()
+        mapOfTasks = viewModel.getMapOfTodoTasks()
+        setupCalendar()
     }
 
     override fun onCreateView(

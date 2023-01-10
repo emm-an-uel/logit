@@ -40,7 +40,6 @@ class AddTaskActivity : AppCompatActivity() {
 
     var btnIsClickable = false
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_task)

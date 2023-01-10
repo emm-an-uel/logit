@@ -31,10 +31,11 @@ class ParentActivity : AppCompatActivity() {
         viewModel.apply {
             initListCardColors()
             initListSettings()
-            initTaskLists()
+            createTaskLists()
             createConsolidatedListTodo()
             createConsolidatedListDone()
             initSubjectColor()
+            createMapOfTodoTasks()
         }
 
         binding = ActivityParentBinding.inflate(layoutInflater)

@@ -28,7 +28,12 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
     lateinit var consolidatedListTodo: ArrayList<ListItem>
     lateinit var consolidatedListDone: ArrayList<ListItem>
 
-    fun initTaskLists() {
+    private lateinit var mapOfTodoTasks: MutableMap<Int, List<Task>>
+
+    private var mapInitialized = false
+    private var taskListsInitialized = false
+
+    fun createTaskLists() {
         todoList = arrayListOf()
         doneList = arrayListOf()
 
@@ -58,6 +63,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
             saveJsonTaskLists() // note that in above code, auto deleted tasks were not added to doneList, but are still part of the json file.
         // this line saves the new todoList and doneList so tasks which were not added into doneList are actually removed - newly saved json file doesn't contain them
         }
+        taskListsInitialized = true
     }
 
     private fun autoDelete(task: Task): Boolean {
@@ -189,6 +195,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         doneList.add(completedTask)
         todoList.removeAt(actualIndex)
         saveJsonTaskLists()
+        createMapOfTodoTasks()
         createConsolidatedListDone()
     }
 
@@ -198,6 +205,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         todoList.add(restoredTask)
         doneList.removeAt(actualIndex)
         saveJsonTaskLists()
+        createMapOfTodoTasks()
         createConsolidatedListTodo()
     }
 
@@ -223,6 +231,9 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
 
     @JvmName("getTodoList1")
     fun getTodoList(): ArrayList<Task> {
+        if (!taskListsInitialized) {
+            createTaskLists()
+        }
         return todoList
     }
 
@@ -488,5 +499,44 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
             consolidatedList.add(TaskItem(t.subject, t.task, t.dueDate, t.notes))
         }
         return consolidatedList
+    }
+
+    fun createMapOfTodoTasks() {
+        mapOfTodoTasks = mutableMapOf()
+        var list: ArrayList<Task> = arrayListOf()
+        var key: Int? = null
+
+        if (!taskListsInitialized) { // when returning to CalendarFragment from AddTaskActivity, todoList is sometimes not initialized - unsure why but this is a workaround
+            createTaskLists()
+        }
+
+        for (task in todoList) {
+            if (key != null) { // not the first item in list
+                if (key == task.dueDateInt) { // this task is on the same date as the other tasks in list
+                    list.add(task)
+
+                } else { // this task is due on a new date
+                    mapOfTodoTasks[key] = list // save list of tasks before this new tasks to map
+                    key = task.dueDateInt // set new key
+                    list = arrayListOf() // reset list
+                    list.add(task) // add new task to new list
+                }
+
+            } else { // first item in list
+                key = task.dueDateInt
+                list.add(task)
+            }
+        }
+        if (key != null && list.isNotEmpty()) {
+            mapOfTodoTasks[key] = list // save last-added <Int, List> pair
+        }
+        mapInitialized = true
+    }
+
+    fun getMapOfTodoTasks(): Map<Int, List<Task>> {
+        if (!mapInitialized) {
+            createMapOfTodoTasks()
+        }
+        return mapOfTodoTasks
     }
 }

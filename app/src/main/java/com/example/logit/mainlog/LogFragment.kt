@@ -191,7 +191,7 @@ class LogFragment : Fragment() {
         super.onResume()
         viewModel.apply {
             initListSettings()
-            initTaskLists()
+            createTaskLists()
             createConsolidatedListTodo()
             createConsolidatedListDone()
             initSubjectColor()
