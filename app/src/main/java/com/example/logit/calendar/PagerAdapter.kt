@@ -62,7 +62,7 @@ class PagerAdapter(
         if (currentDateInt < calendarToInt(Calendar.getInstance())) { // currentDate is in the past
             fabAddTask.visibility = View.GONE
         } else {
-            fabAddTask.setOnClickListener { // calls method in ParentActivity since PagerAdapter has no property 'listSubjects' 
+            fabAddTask.setOnClickListener { // calls method in ParentActivity since PagerAdapter has no property 'listSubjects'
                 (context as ParentActivity).createNewTask(calendarToString(currentDate))
             }
         }

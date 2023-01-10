@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
-import com.example.logit.databinding.GeneralItemBinding
+import com.example.logit.databinding.TaskItemBinding
 import com.example.logit.databinding.HeaderItemBinding
 import java.util.*
 
@@ -29,7 +29,7 @@ class RVAdapterLog (
             ListItem.TYPE_HEADER ->
                 DateViewHolder(HeaderItemBinding.inflate(layoutInflater, parent, false))
             else ->
-                GeneralViewHolder(GeneralItemBinding.inflate(layoutInflater, parent, false))
+                GeneralViewHolder(TaskItemBinding.inflate(layoutInflater, parent, false))
         }
     }
 
@@ -102,7 +102,7 @@ class RVAdapterLog (
         }
     }
 
-    inner class GeneralViewHolder(val binding: GeneralItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class GeneralViewHolder(val binding: TaskItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TaskItem) {
             val context = binding.cardView.context
 

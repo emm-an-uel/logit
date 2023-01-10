@@ -17,7 +17,7 @@ class RecyclerViewAdapter (
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.task_card_item, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.calendar_task_card_item, parent, false)
         return ViewHolder(itemView)
     }
 
