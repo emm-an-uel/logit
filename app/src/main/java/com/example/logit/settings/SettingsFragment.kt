@@ -34,7 +34,7 @@ class SettingsFragment : Fragment() {
                 add(SettingsItem("Header bars", 0))
                 add(SettingsItem("Automatically delete completed tasks", 3)) // '30 days' by default
                 add(SettingsItem("Edit subject color codes", 0))
-                // TODO: add additional settings items here //
+                // TODO: future user preferences here //
             }
         }
     }
