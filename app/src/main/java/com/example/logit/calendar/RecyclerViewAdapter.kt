@@ -1,6 +1,8 @@
 package com.example.logit.calendar
 
+import android.content.Context
 import android.content.res.ColorStateList
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,6 +26,7 @@ class RecyclerViewAdapter (
         val ivColorCode: ImageView = itemView.findViewById(R.id.colorCode)
         val tvSubject: TextView = itemView.findViewById(R.id.tvSubject)
         val tvTaskName: TextView = itemView.findViewById(R.id.tvTaskName)
+        val checkIcon: ImageView = itemView.findViewById(R.id.checkIcon)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -36,6 +39,7 @@ class RecyclerViewAdapter (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        var checked = false
         val subject = tasks[position].subject
         val context = holder.tvSubject.context
         holder.tvSubject.text = subject
@@ -49,5 +53,25 @@ class RecyclerViewAdapter (
             ContextCompat.getColor(context, R.color.gray)
         }
         holder.ivColorCode.imageTintList = ColorStateList.valueOf(bgColor)
+
+        // check icon to mark as done
+        holder.checkIcon.setOnClickListener {
+            if (!checked) {
+                checked = true
+                holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, androidx.appcompat.R.attr.colorAccent))
+                val completedTask: Task = tasks[position]
+            } else {
+                checked = false 
+                holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, R.attr.calendarDialogCheckColor))
+            }
+        }
+    }
+
+    private fun getColor(context: Context, colorResId: Int): Int {
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
     }
 }

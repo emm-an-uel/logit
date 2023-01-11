@@ -19,8 +19,6 @@ import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentCalendarBinding
 import com.example.logit.Task
 import com.example.logit.mainlog.CardColor
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.coroutines.selects.select
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
 import java.time.temporal.ChronoUnit
@@ -68,6 +66,7 @@ class CalendarFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
+        binding.fabAddTask.visibility = View.VISIBLE
         todoList = viewModel.getTodoList()
         cardColors = viewModel.getListCardColors()
         mapSubjectColor = viewModel.getMapSubjectColor()
@@ -244,22 +243,22 @@ class CalendarFragment : Fragment() {
             ) {
                 // update view scale and alpha of views not currently focused
 
-                updatePager(
+                adjustOpacity(
                     viewPager.findViewWithTag(position),
                     1f - positionOffset
                 ) // current page
                 if ((position + 1) < totalPages) { // next page
-                    updatePager(viewPager.findViewWithTag(position + 1), positionOffset)
+                    adjustOpacity(viewPager.findViewWithTag(position + 1), positionOffset)
                 }
                 if ((position + 2) < totalPages) { // two pages in advance
                     // (so it's already made smaller before user can see it - smoother look)
-                    updatePager(viewPager.findViewWithTag(position + 2), 0f)
+                    adjustOpacity(viewPager.findViewWithTag(position + 2), 0f)
                 }
                 if ((position - 1) >= 0) { // previous page
-                    updatePager(viewPager.findViewWithTag(position - 1), 0f)
+                    adjustOpacity(viewPager.findViewWithTag(position - 1), 0f)
                 }
                 if ((position - 2) >= 0) { // two pages before
-                    updatePager(viewPager.findViewWithTag(position - 2), 0f)
+                    adjustOpacity(viewPager.findViewWithTag(position - 2), 0f)
                 }
             }
 
@@ -273,7 +272,7 @@ class CalendarFragment : Fragment() {
         })
     }
 
-    private fun updatePager(view: View, offset: Float) {
+    private fun adjustOpacity(view: View, offset: Float) {
         // this method adjusts the size and opacity of ViewPager views which aren't currently focused
         var adjustedOffset: Float =
             (1.0f - 0.0f) * (offset - MIN_OFFSET) / (MAX_OFFSET - MIN_OFFSET) + 0.0f

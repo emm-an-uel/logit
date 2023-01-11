@@ -37,7 +37,9 @@
         <item name="drawerItemBackground">@color/cardview_black</item>
         <item name="drawerBackground">@color/white</item>
 
+        <!-- Calendar colors -->
         <item name="calendarDialogBackground">@color/white</item>
+        <item name="calendarDialogCheckColor">@color/light_gray</item>
     </style>
 
     <style name="Theme.LogIt.NoActionBar">

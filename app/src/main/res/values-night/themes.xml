@@ -31,6 +31,8 @@
         <item name="drawerItemBackground">@color/light_blue</item>
         <item name="drawerBackground">@color/cardview_black</item>
 
+        <!-- Calendar colors -->
         <item name="calendarDialogBackground">@color/dark_blue_700</item>
+        <item name="calendarDialogCheckColor">@color/gray</item>
     </style>
 </resources>

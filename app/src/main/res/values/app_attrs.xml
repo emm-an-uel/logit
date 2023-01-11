@@ -11,4 +11,5 @@
 
     <!-- Calendar colors -->
     <attr name="calendarDialogBackground" format="color" />
+    <attr name="calendarDialogCheckColor" format="color" />
 </resources>
