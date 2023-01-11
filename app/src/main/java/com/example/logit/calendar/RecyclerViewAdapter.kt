@@ -29,8 +29,8 @@ class RecyclerViewAdapter (
 
         init {
             checkIcon.setOnClickListener {
-                listener.onItemClick(adapterPosition)
                 checkColors()
+                listener.onItemClick(adapterPosition, checked)
             }
         }
 
@@ -82,7 +82,7 @@ class RecyclerViewAdapter (
     private lateinit var mListener: OnItemClickListener
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int)
+        fun onItemClick(position: Int, checked: Boolean)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {

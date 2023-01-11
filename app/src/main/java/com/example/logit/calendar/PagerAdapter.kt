@@ -27,6 +27,8 @@ class PagerAdapter(
     private val cardColors: List<CardColor>
 ) : PagerAdapter() {
 
+    val completedTaskIndexes = arrayListOf<TaskIndex>() // keeps track of the Tasks marked as done (and their corresponding indexes), ViewModel will only be updated when the AlertDialog is dismissed
+
     private val initialPosition = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt()
     // number of days between minDate and selectedDate to determine ViewPager's initial position
 
@@ -74,18 +76,25 @@ class PagerAdapter(
                 val todayTasks: List<Task> = mapOfTasks[key]!!
                 val adapter = RecyclerViewAdapter(todayTasks, mapSubjectColor, cardColors)
                 rvEvents.adapter = adapter
-                // click listener to watch for mark as done
+
+                // click listener to watch for 'mark as done'
                 adapter.setOnItemClickListener(object: RecyclerViewAdapter.OnItemClickListener {
-                    override fun onItemClick(position: Int) {
+                    override fun onItemClick(position: Int, checked: Boolean) {
                         val completedTask: Task = todayTasks[position]
                         val actualPosition: Int? = findPosition(completedTask)
                         if (actualPosition != null) {
-                            (context as ParentActivity).viewModel.markAsDone(completedTask, actualPosition)
+                            val taskIndex = TaskIndex(completedTask, actualPosition)
+                            if (checked) { // if user marked as done
+                                completedTaskIndexes.add(taskIndex)
+                            } else { // if user marked as undone
+                                completedTaskIndexes.remove(taskIndex)
+                            }
                         } else {
                             Toast.makeText(context, "Error: Task Not Found", Toast.LENGTH_SHORT).show()
                         }
                     }
                 })
+
                 hasEvents = true
                 break
             }
@@ -173,4 +182,9 @@ class PagerAdapter(
         // convert to DD MM YYYY format
         return "$dayString $monthString $year"
     }
+
+    data class TaskIndex (
+        val task: Task,
+        val index: Int
+            )
 }

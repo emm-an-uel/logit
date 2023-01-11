@@ -231,6 +231,18 @@ class CalendarFragment : Fragment() {
             setCanceledOnTouchOutside(true)
             show()
             setContentView(calDialogView)
+            setOnDismissListener {
+                markTasksAsDone()
+            }
+        }
+    }
+
+    private fun markTasksAsDone() {
+        val completedTaskIndexes = (viewPagerAdapter as com.example.logit.calendar.PagerAdapter).completedTaskIndexes
+        for (taskIndex in completedTaskIndexes) {
+            val task = taskIndex.task
+            val index = taskIndex.index
+            viewModel.markAsDone(task, index)
         }
     }
 
