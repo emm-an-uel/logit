@@ -196,6 +196,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         todoList.removeAt(actualIndex)
         saveJsonTaskLists()
         createMapOfTodoTasks()
+        createConsolidatedListTodo()
         createConsolidatedListDone()
     }
 
