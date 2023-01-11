@@ -1,15 +1,12 @@
-package com.example.logit.mainlog
+package com.example.logit.log
 
-import android.R
-import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -17,23 +14,25 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.R
 import com.example.logit.Task
 import com.example.logit.ViewModelParent
-import com.example.logit.databinding.FragmentDoneBinding
+import com.example.logit.addtask.AddTaskActivity
+import com.example.logit.databinding.FragmentTodoBinding
 import com.example.logit.settings.SettingsItem
 
-
-class DoneFragment : Fragment() {
+class TodoFragment : Fragment() {
 
     private var firstInstance = true
 
     lateinit var tvEmptyList: TextView
-    lateinit var rvDone: RecyclerView
+    lateinit var rvTodo: RecyclerView
     lateinit var rvAdapter: RVAdapterLog
-    lateinit var doneList: ArrayList<Task>
+    lateinit var todoList: ArrayList<Task>
     lateinit var consolidatedList: ArrayList<ListItem>
+    lateinit var mapOfIndex: MutableMap<Int, Int>
 
-    private var _binding: FragmentDoneBinding? = null
+    private var _binding: FragmentTodoBinding? = null
 
     lateinit var mapSubjectColor: HashMap<String, Int>
 
@@ -54,9 +53,10 @@ class DoneFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        // instantiate viewModel
         viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
 
-        _binding = FragmentDoneBinding.inflate(inflater, container, false)
+        _binding = FragmentTodoBinding.inflate(inflater, container, false)
         return binding.root
 
     }
@@ -70,18 +70,18 @@ class DoneFragment : Fragment() {
         // initialize map
         mapSubjectColor = hashMapOf()
 
-        // get doneList
+        // get todoList
         getLists()
 
-        // display "no completed assignments" message if consolidatedList is empty
-        tvEmptyList = binding.tvEmptyList
+        // create mapOfIndex <position, actualIndex>
+        createMapOfIndex()
+
+        // display "no upcoming assignments" message if consolidatedList is empty
+        tvEmptyList = view.findViewById(R.id.tvEmptyList)
         checkForEmptyList()
 
-        // watch for clearAll
-        checkClearAll()
-
         // fabAddTask visibility
-        rvDone.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+        rvTodo.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
@@ -103,6 +103,17 @@ class DoneFragment : Fragment() {
         }
     }
 
+    private fun createMapOfIndex() {
+        mapOfIndex = mutableMapOf()
+        var index = 0
+        for (n in 0 until consolidatedList.size) {
+            if (consolidatedList[n].type == ListItem.TYPE_TASK) { // only create key-value pairs for TaskItems
+                mapOfIndex[n] = index
+                index++
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
@@ -113,38 +124,13 @@ class DoneFragment : Fragment() {
         super.onResume()
         getSettings()
         getLists()
+        createMapOfIndex()
         checkForEmptyList()
 
         setFragmentResult("showFab", bundleOf())
     }
 
     private fun swipeFunctions() {
-
-        // restore task
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
-            override fun onMove(
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                target: RecyclerView.ViewHolder
-            ): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
-                val pos = viewHolder.adapterPosition
-                consolidatedList.removeAt(pos) // removes this item from consolidatedList
-                val restoredTask: Task = doneList[pos]
-                restoreTask(restoredTask, pos)
-                rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
-                checkForEmptyList()
-
-                // haptic feedback
-                requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
-            }
-        }).attachToRecyclerView(rvDone)
-
-        // delete permanently
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -156,141 +142,125 @@ class DoneFragment : Fragment() {
                 return false
             }
 
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val pos = viewHolder.adapterPosition
-                val deletedTaskItem = consolidatedList[pos] as TaskItem
-                consolidatedList.removeAt(pos)
+            override fun getSwipeDirs (recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
+                if (viewHolder is RVAdapterLog.DateViewHolder) return 0 // prevents DateViewHolders from getting swiped
+                return super.getSwipeDirs(recyclerView, viewHolder)
+            }
 
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
+                val pos = viewHolder.adapterPosition
+                consolidatedList.removeAt(pos) // removes this item from consolidatedList
+                val actualIndex = mapOfIndex[pos]!!
+                val completedTask: Task = todoList[actualIndex]
+                viewModel.markAsDone(completedTask, actualIndex) // removes this task from todoList and adds to doneList
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
-                confirmDelete(deletedTaskItem, pos)
+                updateMapOfIndex(pos, true)
+                checkForDoubleDate(pos)
+                checkForEmptyList()
 
                 // haptic feedback
                 requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
-        }).attachToRecyclerView(rvDone)
+        }).attachToRecyclerView(rvTodo)
+    }
+
+    private fun updateMapOfIndex(pos: Int, indexChanged: Boolean) {
+        mapOfIndex.remove(pos) // remove the key-value pair of the swiped item
+
+        // adjust the following key-value pairs
+        if (indexChanged) { // TaskItem got removed
+            for (p in pos+1 until consolidatedList.size+1) {
+                if (mapOfIndex.containsKey(p)) { // if it doesn't contain p, that means there is a DateItem in that position (not a TaskItem)
+                    val oldValue = mapOfIndex[p]!!
+                    mapOfIndex.remove(p)
+                    mapOfIndex[p-1] = oldValue-1
+                }
+            }
+        } else { // HeaderItem got removed
+            for (p in pos+1 until consolidatedList.size+1) {
+                if (mapOfIndex.containsKey(p)) {
+                    val actualIndex = mapOfIndex[p]!!
+                    mapOfIndex.remove(p)
+                    mapOfIndex[p-1] = actualIndex // actualIndex of TaskItems remains unchanged
+                }
+            }
+        }
+    }
+
+    private fun checkForDoubleDate(removedIndex: Int) {
+        if (removedIndex < consolidatedList.size) {
+            if (consolidatedList[removedIndex].type == ListItem.TYPE_HEADER) {
+                if (consolidatedList[removedIndex-1].type == ListItem.TYPE_HEADER) {
+                    // if both a) the item which has replaced the one just removed, and b) the previous item are DateItems
+                    consolidatedList.removeAt(removedIndex-1) // remove the double date (ie the one that has no TaskItems below it)
+                    rvAdapter.notifyItemRemoved(removedIndex-1)
+                    updateMapOfIndex(removedIndex-1, false)
+                }
+            }
+        } else { // if item removed was the last item in list
+            if (consolidatedList[removedIndex-1].type == ListItem.TYPE_HEADER) {
+                consolidatedList.removeAt(removedIndex-1)
+                rvAdapter.notifyItemRemoved(removedIndex-1)
+                updateMapOfIndex(removedIndex-1, false)
+            }
+        }
     }
 
     private fun createRV() {
-        rvDone = binding.rvDone
+        rvTodo = binding.rvTodo
         rvAdapter = RVAdapterLog(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
 
         // set adapter to recycler view
-        rvDone.adapter = rvAdapter
+        rvTodo.adapter = rvAdapter
 
         swipeFunctions()
 
         // item click listener
         rvAdapter.setOnItemClickListener(object: RVAdapterLog.OnItemClickListener {
             override fun onItemClick(position: Int) {
-                // do nothing
+
+                val actualIndex = mapOfIndex[position]!!
+                val selectedTask = todoList[actualIndex]
+
+                // start ActivityAddTask
+                val intent = Intent(activity, AddTaskActivity::class.java)
+                intent.putExtra("taskId", selectedTask.id)
+                val listSubjects: ArrayList<String> = viewModel.getListSubjects()
+                intent.putExtra("listSubjects", listSubjects)
+                activity?.startActivity(intent)
             }
 
         })
         rvAdapter.notifyDataSetChanged()
 
-        // filter list (search function)
+        // filter list (search function) 
         setFragmentResultListener("filterList") { _, bundle ->
             val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
-            val newConsolidatedList = viewModel.createFilteredConsolidatedDoneList(filteredList)
+            val newConsolidatedList = viewModel.createFilteredConsolidatedTodoList(filteredList)
             rvAdapter.filterList(newConsolidatedList)
         }
     }
 
-    private fun confirmDelete(deletedTaskItem: TaskItem, position: Int) {
-        var touched = false
-
-        // alert dialog
-        val alertDialog: AlertDialog = requireContext().let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setPositiveButton("Confirm"
-                ) { dialog, id ->
-                    setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
-                    deleteTask(position)
-                    touched = true
-                    checkForEmptyList()
-                }
-
-                setNegativeButton("Cancel"
-                ) { dialog, id ->
-                    consolidatedList.add(position, deletedTaskItem)
-                    rvAdapter.notifyItemInserted(position)
-                    touched = true
-                }
-            }
-
-            builder.setMessage("Clear this task?")
-
-            builder.create()
-        }
-
-        alertDialog.show()
-        val actualColorAccent = getColor(requireContext(), R.attr.colorAccent)
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
-
-        alertDialog.setOnDismissListener {
-            if (!touched) { // if touched == false (ie user touched outside dialog box)
-                consolidatedList.add(position, deletedTaskItem)
-                rvAdapter.notifyItemInserted(position)
-                checkForEmptyList()
-            }
-        }
-    }
-
-    private fun deleteTask(pos: Int) {
-        doneList.removeAt(pos)
-        viewModel.saveJsonTaskLists()
-        val bundle = Bundle()
-        bundle.putInt("fabClickability", 0)
-        setFragmentResult("rqCheckFabClickability", bundle)
-    }
-
-    private fun restoreTask(restoredTask: Task, pos: Int) {
-        viewModel.restoreTask(restoredTask, pos)
-
-        // below code is just so ActivityMainLog calls checkFabClickability() when a task is restored
-        val bundle = Bundle()
-        bundle.putInt("fabClickability", 0)
-        setFragmentResult("rqCheckFabClickability", bundle)
-    }
-
-    private fun getColor(context: Context, colorResId: Int): Int {
-
-        val typedValue = TypedValue()
-        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
-        val color = typedArray.getColor(0, 0)
-        typedArray.recycle()
-        return color
-    }
-
     private fun getLists() {
-        doneList = viewModel.getDoneList()
+        todoList = viewModel.getTodoList()
         listCardColors = viewModel.getListCardColors()
 
-        if (firstInstance) { // first time initializing DoneFragment
-            consolidatedList = viewModel.getConsolidatedListDone()
+        if (firstInstance) { // first time initializing TodoFragment
+            consolidatedList = viewModel.getConsolidatedListTodo()
             mapSubjectColor = viewModel.getMapSubjectColor()
             createRV()
             firstInstance = false
 
         } else {
-            val newConsolidatedList = viewModel.getConsolidatedListDone()
+            val newConsolidatedList = viewModel.getConsolidatedListTodo()
             val newMapSubjectColor = viewModel.getMapSubjectColor()
             if (newConsolidatedList != consolidatedList || newMapSubjectColor != mapSubjectColor) { // update list & map if they've been changed
                 consolidatedList = newConsolidatedList
                 mapSubjectColor = newMapSubjectColor
                 createRV() // re-create RV only if data's been changed
             }
-        }
-    }
-
-    private fun checkClearAll() {
-        setFragmentResultListener("rqClearAll") { _, _ ->
-            getLists()
-            checkForEmptyList()
         }
     }
 

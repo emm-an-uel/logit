@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.lifecycle.AndroidViewModel
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
-import com.example.logit.mainlog.*
+import com.example.logit.log.*
 import com.example.logit.settings.SettingsItem
 import java.io.File
 import java.io.StringReader
@@ -189,7 +189,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         return consolidatedListDone
     }
 
-    fun taskCompleted(completedTask: Task, actualIndex: Int) { // moves completedTask from todoList to doneList
+    fun markAsDone(completedTask: Task, actualIndex: Int) { // moves completedTask from todoList to doneList
         completedTask.status = true // set to 'done'
         completedTask.completedDate = calendarToInt(Calendar.getInstance()) // sets completedDate to today's date
         doneList.add(completedTask)

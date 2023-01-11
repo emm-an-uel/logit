@@ -18,7 +18,7 @@ import com.example.logit.ViewModelParent
 import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentCalendarBinding
 import com.example.logit.Task
-import com.example.logit.mainlog.CardColor
+import com.example.logit.log.CardColor
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
 import java.time.temporal.ChronoUnit
@@ -209,7 +209,7 @@ class CalendarFragment : Fragment() {
         calDialogView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
 
         // set up the ViewPager adapter
-        viewPagerAdapter = PagerAdapter(requireContext(), mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors)
+        viewPagerAdapter = PagerAdapter(requireContext(), todoList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors)
 
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
 

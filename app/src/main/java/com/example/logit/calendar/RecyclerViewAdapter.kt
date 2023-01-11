@@ -7,14 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
 import com.example.logit.Task
-import com.example.logit.mainlog.CardColor
+import com.example.logit.log.CardColor
 
 class RecyclerViewAdapter (
     private val tasks: List<Task>,
@@ -22,16 +20,34 @@ class RecyclerViewAdapter (
     private val cardColors: List<CardColor>
 ): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
+        var checked = false
         val ivColorCode: ImageView = itemView.findViewById(R.id.colorCode)
         val tvSubject: TextView = itemView.findViewById(R.id.tvSubject)
         val tvTaskName: TextView = itemView.findViewById(R.id.tvTaskName)
         val checkIcon: ImageView = itemView.findViewById(R.id.checkIcon)
+
+        init {
+            checkIcon.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+                checkColors()
+            }
+        }
+
+        private fun checkColors() {
+            if (!checked) {
+                checked = true
+                checkIcon.imageTintList = ColorStateList.valueOf(getColor(itemView.context, androidx.appcompat.R.attr.colorAccent))
+            } else {
+                checked = false
+                checkIcon.imageTintList = ColorStateList.valueOf(getColor(itemView.context, R.attr.calendarDialogCheckColor))
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.calendar_task_card_item, parent, false)
-        return ViewHolder(itemView)
+        return ViewHolder(itemView, mListener)
     }
 
     override fun getItemCount(): Int {
@@ -39,32 +55,19 @@ class RecyclerViewAdapter (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var checked = false
-        val subject = tasks[position].subject
+        val task = tasks[position]
         val context = holder.tvSubject.context
-        holder.tvSubject.text = subject
+        holder.tvSubject.text = task.subject
         holder.tvTaskName.text = tasks[position].task
 
         // set color coded tab
-        val bgColorIndex: Int? = mapSubjectColor[subject]
+        val bgColorIndex: Int? = mapSubjectColor[task.subject]
         val bgColor: Int = if (bgColorIndex != null) {
             ContextCompat.getColor(context, cardColors[bgColorIndex].backgroundColor)
         } else {
             ContextCompat.getColor(context, R.color.gray)
         }
         holder.ivColorCode.imageTintList = ColorStateList.valueOf(bgColor)
-
-        // check icon to mark as done
-        holder.checkIcon.setOnClickListener {
-            if (!checked) {
-                checked = true
-                holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, androidx.appcompat.R.attr.colorAccent))
-                val completedTask: Task = tasks[position]
-            } else {
-                checked = false 
-                holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, R.attr.calendarDialogCheckColor))
-            }
-        }
     }
 
     private fun getColor(context: Context, colorResId: Int): Int {
@@ -73,5 +76,16 @@ class RecyclerViewAdapter (
         val color = typedArray.getColor(0, 0)
         typedArray.recycle()
         return color
+    }
+
+    // click listener
+    private lateinit var mListener: OnItemClickListener
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        mListener = listener
     }
 }

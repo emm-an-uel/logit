@@ -1,4 +1,4 @@
-package com.example.logit.mainlog
+package com.example.logit.log
 
 import android.content.Context
 import android.content.Intent

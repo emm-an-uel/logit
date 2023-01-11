@@ -1,27 +1,24 @@
 package com.example.logit.calendar
 
 import android.content.Context
-import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.example.logit.ParentActivity
 import com.example.logit.R
 import com.example.logit.Task
-import com.example.logit.addtask.AddTaskActivity
-import com.example.logit.mainlog.CardColor
+import com.example.logit.log.CardColor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.time.temporal.ChronoUnit
 import java.util.*
 
 class PagerAdapter(
     private val context: Context,
+    private val todoList: List<Task>,
     private val mapOfTasks: Map<Int, List<Task>>,
     private val minDate: Calendar,
     private val maxDate: Calendar,
@@ -77,6 +74,18 @@ class PagerAdapter(
                 val todayTasks: List<Task> = mapOfTasks[key]!!
                 val adapter = RecyclerViewAdapter(todayTasks, mapSubjectColor, cardColors)
                 rvEvents.adapter = adapter
+                // click listener to watch for mark as done
+                adapter.setOnItemClickListener(object: RecyclerViewAdapter.OnItemClickListener {
+                    override fun onItemClick(position: Int) {
+                        val completedTask: Task = todayTasks[position]
+                        val actualPosition: Int? = findPosition(completedTask)
+                        if (actualPosition != null) {
+                            (context as ParentActivity).viewModel.markAsDone(completedTask, actualPosition)
+                        } else {
+                            Toast.makeText(context, "Error: Task Not Found", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                })
                 hasEvents = true
                 break
             }
@@ -89,6 +98,15 @@ class PagerAdapter(
 
         container.addView(view)
         return view
+    }
+
+    private fun findPosition(completedTask: Task): Int? {
+        for (task in todoList) {
+            if (task.id == completedTask.id) {
+                return todoList.indexOf(task)
+            }
+        }
+        return null
     }
 
     private fun getDayOfWeek(dayInt: Int): String {

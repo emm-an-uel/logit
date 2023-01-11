@@ -1,4 +1,4 @@
-package com.example.logit.mainlog
+package com.example.logit.log
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

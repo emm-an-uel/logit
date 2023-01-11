@@ -15,7 +15,7 @@ import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
-import com.example.logit.mainlog.SubjectColor
+import com.example.logit.log.SubjectColor
 
 class RVAdapterSettingsColorCodes(
     private val listSubjectColor: ArrayList<SubjectColor>, // list of items to populate rv with
