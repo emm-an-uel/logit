@@ -19,6 +19,7 @@ import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentCalendarBinding
 import com.example.logit.Task
 import com.example.logit.log.CardColor
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
 import java.time.temporal.ChronoUnit
@@ -63,10 +64,16 @@ class CalendarFragment : Fragment() {
         mapSubjectColor = viewModel.getMapSubjectColor()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        binding.fabAddTask.hide()
+    }
+
     override fun onResume() {
         super.onResume()
 
-        binding.fabAddTask.visibility = View.VISIBLE
+        binding.fabAddTask.show()
         todoList = viewModel.getTodoList()
         cardColors = viewModel.getListCardColors()
         mapSubjectColor = viewModel.getMapSubjectColor()
@@ -229,10 +236,12 @@ class CalendarFragment : Fragment() {
         }
         mAlertDialog.apply {
             setCanceledOnTouchOutside(true)
+            onPause()
             show()
             setContentView(calDialogView)
             setOnDismissListener {
                 markTasksAsDone()
+                onResume()
             }
         }
     }
