@@ -17,12 +17,16 @@ import com.example.logit.log.CardColor
 class RecyclerViewAdapter (
     private val tasks: List<Task>,
     private val mapSubjectColor: Map<String, Int>,
-    private val cardColors: List<CardColor>
+    private val cardColors: List<CardColor>,
+    private var mapChecked: Map<Int, Boolean>
 ): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
-        // TODO: save var 'checked' until user closes ViewPager
-        var checked = false
+        var checked = if (mapChecked[adapterPosition] != null) {
+            mapChecked[adapterPosition]
+        } else {
+            false
+        }
         val ivColorCode: ImageView = itemView.findViewById(R.id.colorCode)
         val tvSubject: TextView = itemView.findViewById(R.id.tvSubject)
         val tvTaskName: TextView = itemView.findViewById(R.id.tvTaskName)
@@ -30,13 +34,13 @@ class RecyclerViewAdapter (
 
         init {
             checkIcon.setOnClickListener {
-                checkColors()
-                listener.onItemClick(adapterPosition, checked)
+                updateCheckColor()
+                listener.onItemClick(adapterPosition, checked!!)
             }
         }
 
-        private fun checkColors() {
-            if (!checked) {
+        private fun updateCheckColor() {
+            if (!checked!!) {
                 checked = true
                 checkIcon.imageTintList = ColorStateList.valueOf(getColor(itemView.context, androidx.appcompat.R.attr.colorAccent))
             } else {
@@ -69,6 +73,13 @@ class RecyclerViewAdapter (
             ContextCompat.getColor(context, R.color.gray)
         }
         holder.ivColorCode.imageTintList = ColorStateList.valueOf(bgColor)
+
+        // set check color
+        if (holder.checked == true) {
+            holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, androidx.appcompat.R.attr.colorAccent))
+        } else {
+            holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, R.attr.calendarDialogCheckColor))
+        }
     }
 
     private fun getColor(context: Context, colorResId: Int): Int {
@@ -88,5 +99,10 @@ class RecyclerViewAdapter (
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         mListener = listener
+    }
+
+    // update mapChecked so 'checked' status remains synced even when user swipes to different ViewPager pages
+    fun updateMapChecked(updatedMap: Map<Int, Boolean>) {
+        mapChecked = updatedMap
     }
 }
