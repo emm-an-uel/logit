@@ -216,6 +216,11 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         createConsolidatedListDone()
     }
 
+    fun restoreTask(task: Task) { // restore deleted task to doneList
+        doneList.add(task)
+        saveJsonTaskLists()
+    }
+
     fun saveJsonTaskLists() {
         todoList.sortBy { it.dueDateInt }
         doneList.sortBy { it.dueDateInt }

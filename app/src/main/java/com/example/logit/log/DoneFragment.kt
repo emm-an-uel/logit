@@ -205,8 +205,8 @@ class DoneFragment : Fragment() {
     private fun cancelDeleteTask(deletedTaskItem: TaskItem, pos: Int) {
         if (deletedTask != null) {
             // restore Task (back end)
-            doneList.add(deletedTask!!)
-            doneList.sortBy { it.dueDateInt }
+            viewModel.restoreTask(deletedTask!!) // update ViewModel
+            doneList = viewModel.getDoneList()
 
             // restore TaskItem (front end)
             consolidatedList.add(pos, deletedTaskItem)
