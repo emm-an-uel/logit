@@ -1,10 +1,11 @@
 package com.example.logit.log
 
-import android.content.Context
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.*
+import android.widget.Button
 import android.widget.SearchView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
@@ -99,7 +100,7 @@ class LogFragment : Fragment() {
                 val position = tab?.position
                 if (position == 0) { // in fragmentTodo
                     currentFrag = 0
-                    fabEnabled()
+                    enableFab()
                     fabTask.setImageResource(android.R.drawable.ic_input_add)
                     fabTask.setOnClickListener {
                         startActivityAddTask()
@@ -196,40 +197,30 @@ class LogFragment : Fragment() {
     private fun confirmClearAll() {
         if (doneList.size > 0) {
             // alert dialog
-            // TODO: make a custom alert dialog - looks better
-            val alertDialog: AlertDialog = requireContext().let {
-                val builder = AlertDialog.Builder(it)
-                builder.apply {
-                    setPositiveButton(
-                        "Confirm"
-                    ) { dialog, id ->
-                        deleteAll()
-                    }
-
-                    setNegativeButton(
-                        "Cancel"
-                    ) { dialog, id ->
-                        // do nothing
-                    }
-                }
-                builder.setMessage("Clear all tasks?")
-                builder.create()
+            val builder = AlertDialog.Builder(requireContext()).create()
+            if (builder.window != null) { // set default background to transparent
+                builder.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             }
-            alertDialog.show()
-            val actualColorAccent = getColor(requireContext(), android.R.attr.colorAccent)
-            alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
-            alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
+            val view = layoutInflater.inflate(R.layout.confirm_delete_all_dialog, null, false)
+            val btnCancel: Button = view.findViewById(R.id.btnCancel)
+            val btnConfirm: Button = view.findViewById(R.id.btnConfirm)
+
+            btnCancel.setOnClickListener {
+                builder.dismiss()
+            }
+            btnConfirm.setOnClickListener {
+                deleteAll()
+                builder.dismiss()
+            }
+
+            builder.apply {
+                setView(view)
+                setCanceledOnTouchOutside(true)
+                show()
+            }
         } else {
             Snackbar.make(requireContext(), binding.tabLayout, "No tasks to clear", Snackbar.LENGTH_SHORT).show()
         }
-    }
-
-    private fun getColor(context: Context, colorResId: Int): Int {
-        val typedValue = TypedValue()
-        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
-        val color = typedArray.getColor(0, 0)
-        typedArray.recycle()
-        return color
     }
 
     private fun deleteAll() { // delete all items in doneList
@@ -241,7 +232,7 @@ class LogFragment : Fragment() {
         bundle.putInt("clearAll", 0)
         childFragmentManager.setFragmentResult("rqClearAll", bundle)
 
-        fabDisabled()
+        disableFab()
     }
 
     private fun checkFabClickability() {
@@ -249,18 +240,18 @@ class LogFragment : Fragment() {
         doneList = viewModel.getDoneList()
 
         if (doneList.size > 0) {
-            fabEnabled()
+            enableFab()
         } else {
-            fabDisabled()
+            disableFab()
         }
     }
 
-    private fun fabDisabled() {
+    private fun disableFab() {
         fabTask.isEnabled = false
         fabTask.background.alpha = 45
     }
 
-    private fun fabEnabled() {
+    private fun enableFab() {
         fabTask.isEnabled = true
         fabTask.background.alpha = 255
     }
