@@ -51,14 +51,12 @@ class DoneFragment : Fragment() {
     private val binding get() = _binding!!
 
     // "undo" delete functionality
-    private lateinit var deletedTasks: ArrayList<Task> // deleted tasks will be stored here until the "undo" snackbar is dismissed
+    private var deletedTask: Task? = null // deleted task will be stored here until another task is deleted
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
-
-        deletedTasks = arrayListOf()
     }
 
     override fun onCreateView(
@@ -205,10 +203,9 @@ class DoneFragment : Fragment() {
     }
 
     private fun cancelDeleteTask(deletedTaskItem: TaskItem, pos: Int) {
-        if (deletedTasks.size > 0) {
+        if (deletedTask != null) {
             // restore Task (back end)
-            val deletedTask: Task = deletedTasks[0]
-            doneList.add(deletedTask)
+            doneList.add(deletedTask!!)
             doneList.sortBy { it.dueDateInt }
 
             // restore TaskItem (front end)
@@ -251,8 +248,7 @@ class DoneFragment : Fragment() {
     }
 
     private fun deleteTask(pos: Int) {
-        deletedTasks = arrayListOf() // clear deletedTasks
-        deletedTasks.add(doneList[pos]) // save to deletedTasks in case user wants to restore it
+        deletedTask = doneList[pos] // save as deletedTask in case user wants to restore it
 
         doneList.removeAt(pos)
         viewModel.saveJsonTaskLists()

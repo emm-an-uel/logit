@@ -202,7 +202,7 @@ class LogFragment : Fragment() {
                     setPositiveButton(
                         "Confirm"
                     ) { dialog, id ->
-                        clearAll()
+                        deleteAll()
                     }
 
                     setNegativeButton(
@@ -231,7 +231,7 @@ class LogFragment : Fragment() {
         return color
     }
 
-    private fun clearAll() { // delete all items in doneList
+    private fun deleteAll() { // delete all items in doneList
         viewModel.clearDoneList()
         doneList = viewModel.getDoneList()
 
