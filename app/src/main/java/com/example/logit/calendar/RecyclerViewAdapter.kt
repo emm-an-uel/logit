@@ -21,12 +21,9 @@ class RecyclerViewAdapter (
     private var mapChecked: Map<Int, Boolean>
 ): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
 
+    var checked: Boolean? = null
+
     inner class ViewHolder(itemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
-        var checked = if (mapChecked[adapterPosition] != null) {
-            mapChecked[adapterPosition]
-        } else {
-            false
-        }
         val ivColorCode: ImageView = itemView.findViewById(R.id.colorCode)
         val tvSubject: TextView = itemView.findViewById(R.id.tvSubject)
         val tvTaskName: TextView = itemView.findViewById(R.id.tvTaskName)
@@ -75,7 +72,12 @@ class RecyclerViewAdapter (
         holder.ivColorCode.imageTintList = ColorStateList.valueOf(bgColor)
 
         // set check color
-        if (holder.checked == true) {
+        checked = if (mapChecked[holder.adapterPosition] != null) {
+            mapChecked[holder.adapterPosition]
+        } else {
+            false
+        }
+        if (checked == true) {
             holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, androidx.appcompat.R.attr.colorAccent))
         } else {
             holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, R.attr.calendarDialogCheckColor))

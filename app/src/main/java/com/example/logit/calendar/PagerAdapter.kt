@@ -118,9 +118,8 @@ class PagerAdapter(
     }
 
     private fun createMapChecked(tasks: List<Task>): MutableMap<Int, Boolean> {
-        // TODO: test if this works
         // note: this method is called everytime a RecyclerView is initialized - including when user swipes away and comes back to a page
-        val map = mutableMapOf<Int, Boolean>()
+        val map = mutableMapOf<Int, Boolean>() // Int ranges from 0 to the number of tasks due that day, Boolean corresponds to whether the task's been marked as done
         for (n in tasks.indices) {
             val task: Task = tasks[n]
             map[n] = completedTaskIds.contains(task.id) // true if task has been marked as done, false otherwise
