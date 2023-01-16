@@ -1,6 +1,5 @@
 package com.example.logit.log
 
-import android.R
 import android.content.Context
 import android.os.Bundle
 import android.util.TypedValue
@@ -8,8 +7,10 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -17,10 +18,12 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.R
 import com.example.logit.Task
 import com.example.logit.ViewModelParent
 import com.example.logit.databinding.FragmentDoneBinding
 import com.example.logit.settings.SettingsItem
+import com.google.android.material.snackbar.Snackbar
 
 
 class DoneFragment : Fragment() {
@@ -163,12 +166,40 @@ class DoneFragment : Fragment() {
 
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
+
+                createSnackbar(deletedTaskItem, pos)
                 confirmDelete(deletedTaskItem, pos)
 
                 // haptic feedback
                 requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             }
         }).attachToRecyclerView(rvDone)
+    }
+
+    private fun createSnackbar(deletedTaskItem: TaskItem, pos: Int) {
+        val snack = Snackbar.make(rvDone, "Task deleted", Snackbar.LENGTH_LONG)
+
+        val customSnackView = layoutInflater.inflate(R.layout.snackbar_undo_delete, null, false) // inflate custom snackbar layout
+
+        if (snack.view.background != null) { // set default background to transparent
+            snack.view.setBackgroundColor(ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color))
+        }
+        val snackbarLayout: Snackbar.SnackbarLayout = snack.view as Snackbar.SnackbarLayout
+        snackbarLayout.setPadding(5, 0, 5, 15)
+        snackbarLayout.addView(customSnackView)
+
+        // btnUndo functionality
+        val btnUndo: Button = snackbarLayout.findViewById(R.id.btnUndo)
+        btnUndo.setOnClickListener {
+            cancelDelete(deletedTaskItem, pos)
+            snack.dismiss()
+        }
+
+        snack.show()
+    }
+
+    private fun cancelDelete(deletedTaskItem: TaskItem, pos: Int) {
+        TODO("Not yet implemented")
     }
 
     private fun createRV() {
@@ -226,7 +257,7 @@ class DoneFragment : Fragment() {
         }
 
         alertDialog.show()
-        val actualColorAccent = getColor(requireContext(), R.attr.colorAccent)
+        val actualColorAccent = getColor(requireContext(), androidx.appcompat.R.attr.colorAccent)
 
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
