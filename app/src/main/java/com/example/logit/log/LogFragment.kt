@@ -122,7 +122,11 @@ class LogFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
-        remoteCheckFabClickability()
+
+        // set fab enabled / disabled when task is deleted or marked as undone
+        childFragmentManager.setFragmentResultListener("rqCheckFabClickability", requireActivity()) { _, _ ->
+            checkFabClickability()
+        }
 
         // menu
         val menuHost = requireActivity()
@@ -152,9 +156,7 @@ class LogFragment : Fragment() {
                             if (currentFrag == 0) { // fragmentTodo
                                 if (todoList.isNotEmpty()) {
                                     for (task in todoList) {
-                                        if (task.subject.contains(p0, true)) {
-                                            filteredList.add(task)
-                                        } else if (task.task.contains(p0, true)) {
+                                        if (task.subject.contains(p0, true) || task.task.contains(p0, true)) {
                                             filteredList.add(task)
                                         }
                                     }
@@ -163,9 +165,7 @@ class LogFragment : Fragment() {
                             } else { // fragmentDone
                                 if (doneList.isNotEmpty()) {
                                     for (task in doneList) {
-                                        if (task.subject.contains(p0, true)) {
-                                            filteredList.add(task)
-                                        } else if (task.task.contains(p0, true)) {
+                                        if (task.subject.contains(p0, true) || task.task.contains(p0, true)) {
                                             filteredList.add(task)
                                         }
                                     }
@@ -186,12 +186,6 @@ class LogFragment : Fragment() {
             }
 
         }, viewLifecycleOwner, Lifecycle.State.RESUMED) // without this line, there will be duplicates of settings icon when i return to this fragment
-    }
-
-    private fun remoteCheckFabClickability() {
-        childFragmentManager.setFragmentResultListener("rqCheckFabClickability", requireActivity()) { _, _ ->
-            checkFabClickability()
-        }
     }
 
     private fun confirmClearAll() {

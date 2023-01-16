@@ -126,7 +126,7 @@ class DoneFragment : Fragment() {
 
     private fun swipeFunctions() {
 
-        // restore task
+        // mark as undone
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -137,13 +137,14 @@ class DoneFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
                 val pos = viewHolder.adapterPosition
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
-                val restoredTask: Task = doneList[pos]
-                markAsUndone(restoredTask, pos)
+                val undoneTask: Task = doneList[pos]
+                markAsUndone(undoneTask, pos)
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
                 checkForEmptyList()
+
+                setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
 
                 // haptic feedback
                 requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -212,6 +213,10 @@ class DoneFragment : Fragment() {
             consolidatedList.add(pos, deletedTaskItem)
             rvAdapter.notifyItemInserted(pos)
             checkForEmptyList()
+
+            // enable fab in LogFragment
+            setFragmentResult("rqCheckFabClickability", bundleOf())
+
         } else {
             FancyToast.makeText(requireContext(), "Failed to restore task", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
         }
@@ -256,10 +261,10 @@ class DoneFragment : Fragment() {
         checkForEmptyList() // displays "No completed tasks" if list is empty
     }
 
-    private fun markAsUndone(restoredTask: Task, pos: Int) {
-        viewModel.markAsUndone(restoredTask, pos)
+    private fun markAsUndone(undoneTask: Task, pos: Int) {
+        viewModel.markAsUndone(undoneTask, pos)
 
-        // below code is just so ActivityMainLog calls checkFabClickability() when a task is restored
+        // get LogFragment to call checkFabClickability() when a task is marked as undone
         val bundle = Bundle()
         bundle.putInt("fabClickability", 0)
         setFragmentResult("rqCheckFabClickability", bundle)

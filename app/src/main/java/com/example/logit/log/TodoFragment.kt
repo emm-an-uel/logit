@@ -148,7 +148,6 @@ class TodoFragment : Fragment() {
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
                 val pos = viewHolder.adapterPosition
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val actualIndex = mapOfIndex[pos]!!
@@ -159,6 +158,8 @@ class TodoFragment : Fragment() {
                 updateMapOfIndex(pos, true)
                 checkForDoubleDate(pos)
                 checkForEmptyList()
+
+                setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
 
                 // haptic feedback
                 requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -235,7 +236,7 @@ class TodoFragment : Fragment() {
         })
         rvAdapter.notifyDataSetChanged()
 
-        // filter list (search function) 
+        // filter list (search function)
         setFragmentResultListener("filterList") { _, bundle ->
             val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
             val newConsolidatedList = viewModel.createFilteredConsolidatedTodoList(filteredList)
