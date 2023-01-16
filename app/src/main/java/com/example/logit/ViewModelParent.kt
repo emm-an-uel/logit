@@ -200,7 +200,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         createConsolidatedListDone()
     }
 
-    fun restoreTask(restoredTask: Task, actualIndex: Int) { // moves restoredTask from doneList to todoList
+    fun markAsUndone(restoredTask: Task, actualIndex: Int) { // moves restoredTask from doneList to todoList
         restoredTask.status = false // set to 'undone'
         restoredTask.completedDate = 0 // removes completedDate
         todoList.add(restoredTask)

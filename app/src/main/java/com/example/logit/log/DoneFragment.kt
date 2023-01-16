@@ -1,15 +1,12 @@
 package com.example.logit.log
 
-import android.content.Context
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -24,6 +21,7 @@ import com.example.logit.ViewModelParent
 import com.example.logit.databinding.FragmentDoneBinding
 import com.example.logit.settings.SettingsItem
 import com.google.android.material.snackbar.Snackbar
+import com.shashank.sony.fancytoastlib.FancyToast
 
 
 class DoneFragment : Fragment() {
@@ -52,16 +50,23 @@ class DoneFragment : Fragment() {
     // setup view binding
     private val binding get() = _binding!!
 
+    // "undo" delete functionality
+    private lateinit var deletedTasks: ArrayList<Task> // deleted tasks will be stored here until the "undo" snackbar is dismissed
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
+
+        deletedTasks = arrayListOf()
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-        viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
-
         _binding = FragmentDoneBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -138,7 +143,7 @@ class DoneFragment : Fragment() {
                 val pos = viewHolder.adapterPosition
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val restoredTask: Task = doneList[pos]
-                restoreTask(restoredTask, pos)
+                markAsUndone(restoredTask, pos)
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
                 checkForEmptyList()
 
@@ -166,9 +171,8 @@ class DoneFragment : Fragment() {
 
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
-
+                deleteTask(pos)
                 createSnackbar(deletedTaskItem, pos)
-                confirmDelete(deletedTaskItem, pos)
 
                 // haptic feedback
                 requireView().performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
@@ -184,6 +188,8 @@ class DoneFragment : Fragment() {
         if (snack.view.background != null) { // set default background to transparent
             snack.view.setBackgroundColor(ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color))
         }
+
+        // add custom view
         val snackbarLayout: Snackbar.SnackbarLayout = snack.view as Snackbar.SnackbarLayout
         snackbarLayout.setPadding(5, 0, 5, 15)
         snackbarLayout.addView(customSnackView)
@@ -191,15 +197,31 @@ class DoneFragment : Fragment() {
         // btnUndo functionality
         val btnUndo: Button = snackbarLayout.findViewById(R.id.btnUndo)
         btnUndo.setOnClickListener {
-            cancelDelete(deletedTaskItem, pos)
+            cancelDeleteTask(deletedTaskItem, pos)
             snack.dismiss()
         }
 
         snack.show()
     }
 
-    private fun cancelDelete(deletedTaskItem: TaskItem, pos: Int) {
-        TODO("Not yet implemented")
+    private fun cancelDeleteTask(deletedTaskItem: TaskItem, pos: Int) {
+        if (deletedTasks.size > 0) {
+            // restore Task (back end)
+            val deletedTask: Task = deletedTasks[0]
+            doneList.add(deletedTask)
+            doneList.sortBy { it.dueDateInt }
+
+            // restore TaskItem (front end)
+            consolidatedList.add(pos, deletedTaskItem)
+            rvAdapter.notifyItemInserted(pos)
+            checkForEmptyList()
+        } else {
+            FancyToast.makeText(requireContext(), "Failed to restore task", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
+        }
+    }
+
+    private fun cancelDeleteTasks(deletedTaskItems: List<TaskItem>) {
+
     }
 
     private fun createRV() {
@@ -228,73 +250,27 @@ class DoneFragment : Fragment() {
         }
     }
 
-    private fun confirmDelete(deletedTaskItem: TaskItem, position: Int) {
-        var touched = false
-
-        // alert dialog
-        val alertDialog: AlertDialog = requireContext().let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setPositiveButton("Confirm"
-                ) { dialog, id ->
-                    setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
-                    deleteTask(position)
-                    touched = true
-                    checkForEmptyList()
-                }
-
-                setNegativeButton("Cancel"
-                ) { dialog, id ->
-                    consolidatedList.add(position, deletedTaskItem)
-                    rvAdapter.notifyItemInserted(position)
-                    touched = true
-                }
-            }
-
-            builder.setMessage("Clear this task?")
-
-            builder.create()
-        }
-
-        alertDialog.show()
-        val actualColorAccent = getColor(requireContext(), androidx.appcompat.R.attr.colorAccent)
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
-
-        alertDialog.setOnDismissListener {
-            if (!touched) { // if touched == false (ie user touched outside dialog box)
-                consolidatedList.add(position, deletedTaskItem)
-                rvAdapter.notifyItemInserted(position)
-                checkForEmptyList()
-            }
-        }
-    }
-
     private fun deleteTask(pos: Int) {
+        deletedTasks = arrayListOf() // clear deletedTasks
+        deletedTasks.add(doneList[pos]) // save to deletedTasks in case user wants to restore it
+
         doneList.removeAt(pos)
         viewModel.saveJsonTaskLists()
         val bundle = Bundle()
         bundle.putInt("fabClickability", 0)
         setFragmentResult("rqCheckFabClickability", bundle)
+        setFragmentResult("listsChanged", bundleOf()) // update FragmentLog
+
+        checkForEmptyList() // displays "No completed tasks" if list is empty
     }
 
-    private fun restoreTask(restoredTask: Task, pos: Int) {
-        viewModel.restoreTask(restoredTask, pos)
+    private fun markAsUndone(restoredTask: Task, pos: Int) {
+        viewModel.markAsUndone(restoredTask, pos)
 
         // below code is just so ActivityMainLog calls checkFabClickability() when a task is restored
         val bundle = Bundle()
         bundle.putInt("fabClickability", 0)
         setFragmentResult("rqCheckFabClickability", bundle)
-    }
-
-    private fun getColor(context: Context, colorResId: Int): Int {
-
-        val typedValue = TypedValue()
-        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
-        val color = typedArray.getColor(0, 0)
-        typedArray.recycle()
-        return color
     }
 
     private fun getLists() {
