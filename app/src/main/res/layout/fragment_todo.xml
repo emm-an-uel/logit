@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="10dp"
-        android:text="You've got no upcoming assignments" />
+        android:text="@string/no_upcoming_tasks" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTodo"

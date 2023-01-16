@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="10dp"
-        android:text="You've got no completed assignments" />
+        android:text="@string/no_completed_tasks" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvDone"

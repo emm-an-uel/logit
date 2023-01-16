@@ -7,4 +7,7 @@
     <string name="due_tomorrow">Due Tomorrow</string>
     <string name="due_soon">Due Soon</string>
     <string name="upcoming">Upcoming</string>
+
+    <string name="no_upcoming_tasks">You\'ve got no upcoming tasks</string>
+    <string name="no_completed_tasks">You\'ve got no completed tasks</string>
 </resources>
