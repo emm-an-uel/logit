@@ -217,10 +217,6 @@ class DoneFragment : Fragment() {
         }
     }
 
-    private fun cancelDeleteTasks(deletedTaskItems: List<TaskItem>) {
-
-    }
-
     private fun createRV() {
         rvDone = binding.rvDone
         rvAdapter = RVAdapterLog(consolidatedList, mapSubjectColor, listCardColors, glow, bars)

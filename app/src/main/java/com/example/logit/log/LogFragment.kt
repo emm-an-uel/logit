@@ -196,6 +196,7 @@ class LogFragment : Fragment() {
     private fun confirmClearAll() {
         if (doneList.size > 0) {
             // alert dialog
+            // TODO: make a custom alert dialog - looks better
             val alertDialog: AlertDialog = requireContext().let {
                 val builder = AlertDialog.Builder(it)
                 builder.apply {
