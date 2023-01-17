@@ -3,6 +3,7 @@ package com.example.logit
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
@@ -24,6 +25,8 @@ class ParentActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         installSplashScreen()
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // set night mode by default 
 
         // initialize viewModel - note that initialization of ViewModel must happen before initializing binding
         // since binding will initialize FragmentLog (which relies on ViewModel already being initialized by this activity)
