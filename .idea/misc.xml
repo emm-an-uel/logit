@@ -7,6 +7,8 @@
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/drawer_item_bg.xml" value="0.2555" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/drawer_item_selector.xml" value="0.2555" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/ic_add.xml" value="0.2555" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/settings_group_background.xml" value="0.2545" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/settings_item_background.xml" value="0.2545" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/textview_rounded_background.xml" value="0.2555" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/calendar_card_item.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/calendar_dialog.xml" value="0.24895833333333334" />
@@ -15,8 +17,10 @@
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/event_card_item.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_calendar.xml" value="0.22826086956521738" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_done.xml" value="0.22826086956521738" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_settings.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_todo.xml" value="0.22826086956521738" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/general_item.xml" value="0.25" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/rv_item_all_settings.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/snackbar_undo_delete.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/task_card_item.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/task_item.xml" value="0.25" />
