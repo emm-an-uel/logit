@@ -1,8 +1,7 @@
 package com.example.logit.settings
 
-import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -60,18 +59,5 @@ class AllSettingsActivity : AppCompatActivity() {
         rvSettings.adapter = rvAdapter
 
         rvSettings.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
-    }
-
-    fun updateSettings(position: Int, option: Int) {
-        listSettingsItems[position].option = option
-        saveSettings()
-    }
-
-    private fun saveSettings() {
-        val file = Klaxon().toJsonString(listSettingsItems)
-
-        this.openFileOutput("fileSettingsItems", Context.MODE_PRIVATE).use {
-            it.write(file.toByteArray())
-        }
     }
 }
