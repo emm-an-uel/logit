@@ -26,7 +26,7 @@ class ParentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // set night mode by default 
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES) // set night mode by default
 
         // initialize viewModel - note that initialization of ViewModel must happen before initializing binding
         // since binding will initialize FragmentLog (which relies on ViewModel already being initialized by this activity)
