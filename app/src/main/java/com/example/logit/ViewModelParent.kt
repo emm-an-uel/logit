@@ -23,7 +23,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
     lateinit var listCardColors: ArrayList<CardColor>
     lateinit var listColors: ArrayList<Int>
 
-    lateinit var listSettingsItems: ArrayList<SettingsItem>
+    private var listSettingsItems: ArrayList<SettingsItem>? = null
 
     lateinit var consolidatedListTodo: ArrayList<ListItem>
     lateinit var consolidatedListDone: ArrayList<ListItem>
@@ -68,7 +68,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
 
     private fun autoDelete(task: Task): Boolean {
         var autoDeleteDays = 0
-        when (listSettingsItems[2].option) { // sets the number of days before auto deleted according to pre-saved user preference
+        when (listSettingsItems!![2].option) { // sets the number of days before auto deleted according to pre-saved user preference
             0 -> autoDeleteDays = 1
             1 -> autoDeleteDays = 7
             2 -> autoDeleteDays = 10
@@ -361,15 +361,29 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                 reader.beginArray {
                     while (reader.hasNext()) {
                         val settingsItem = Klaxon().parse<SettingsItem>(reader)
-                        listSettingsItems.add(settingsItem!!)
+                        listSettingsItems!!.add(settingsItem!!)
                     }
                 }
+            }
+        } else {
+            listSettingsItems!!.apply {
+                add(SettingsItem("Edit subject color codes", 0))
+                add(SettingsItem("Automatically delete completed tasks", 3)) // '30 days' by default
+
+                add(SettingsItem("Header bars", 0))
+                add(SettingsItem("Background glow", 0))
+
+                add(SettingsItem("Show completed tasks", 0))
+                // TODO: future user preferences here //
             }
         }
     }
 
     fun getListSettings(): ArrayList<SettingsItem> {
-        return listSettingsItems
+        if (listSettingsItems == null) {
+            createSettingsList()
+        }
+        return listSettingsItems!!
     }
 
     private fun calendarToInt(date: Calendar): Int {
@@ -408,7 +422,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
     }
 
     fun updateSettings(pos: Int, option: Int) {
-        listSettingsItems[pos].option = option
+        listSettingsItems!![pos].option = option
         val file = Klaxon().toJsonString(listSettingsItems)
         app.openFileOutput("fileSettingsItems", Context.MODE_PRIVATE).use {
             it.write(file.toByteArray())

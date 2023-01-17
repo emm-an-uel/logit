@@ -1,22 +1,22 @@
 package com.example.logit.settings
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.ParentActivity
+import com.example.logit.R
 import com.example.logit.ViewModelParent
 import com.example.logit.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
 
     lateinit var viewModel: ViewModelParent
-    lateinit var rv: RecyclerView
-    lateinit var rvAdapter: RVAdapterAllSettings
     lateinit var listSettingsItems: ArrayList<SettingsItem>
 
     private var _binding: FragmentSettingsBinding? = null
@@ -26,17 +26,8 @@ class SettingsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
 
-        // get existing settings OR start from scratch if none saved
+        // get existing settings
         listSettingsItems = viewModel.getListSettings()
-        if (listSettingsItems.size == 0) {
-            listSettingsItems.apply {
-                add(SettingsItem("Background glow", 0))
-                add(SettingsItem("Header bars", 0))
-                add(SettingsItem("Automatically delete completed tasks", 3)) // '30 days' by default
-                add(SettingsItem("Edit subject color codes", 0))
-                // TODO: future user preferences here //
-            }
-        }
     }
 
     override fun onCreateView(
@@ -49,13 +40,79 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupRVSettings()
+
+        syncSettings()
     }
 
-    private fun setupRVSettings() {
-        rv = binding.rvSettings
-        rvAdapter = RVAdapterAllSettings(listSettingsItems)
-        rv.adapter = rvAdapter
-        rv.addItemDecoration(DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL))
+    private fun syncSettings() {
+        // TODO: future user preferences here //
+        // GENERAL SETTINGS
+        // edit color codes
+        binding.editColorCodes.setOnClickListener {
+            val intent = Intent(requireContext(), ColorCodesSettingsActivity::class.java)
+            (context as ParentActivity).startActivity(intent)
+        }
+        // automatically delete completed tasks
+        val adapter = ArrayAdapter.createFromResource(requireContext(), R.array.auto_delete_options, android.R.layout.simple_spinner_item)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.spinnerAutoDelete.adapter = adapter
+        val selectedOption: Int = listSettingsItems[1].option
+        binding.spinnerAutoDelete.apply {
+            setSelection(selectedOption)
+            onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(
+                    p0: AdapterView<*>?,
+                    p1: View?,
+                    p2: Int,
+                    p3: Long
+                ) {
+                    (context as ParentActivity).viewModel.updateSettings(1, p2)
+                }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    // do nothing
+                }
+            }
+        }
+
+        // LOG SETTINGS
+        // header bars
+        binding.switchHeaderBars.apply {
+            isChecked = intToBoolean(listSettingsItems[2].option)
+            setOnCheckedChangeListener { _, isChecked ->
+                val option = booleanToInt(isChecked)
+                (context as ParentActivity).viewModel.updateSettings(2, option)
+            }
+        }
+        // background glow
+        binding.switchBackgroundGlow.apply {
+            isChecked = intToBoolean(listSettingsItems[3].option)
+            setOnCheckedChangeListener { _, isChecked ->
+                val option = booleanToInt(isChecked)
+                (context as ParentActivity).viewModel.updateSettings(3, option)
+            }
+        }
+
+        // CALENDAR SETTINGS
+        // show completed tasks
+        binding.switchShowCompletedTasks.apply {
+            isChecked = intToBoolean(listSettingsItems[4].option)
+            setOnCheckedChangeListener { _, isChecked ->
+                val option = booleanToInt(isChecked)
+                (context as ParentActivity).viewModel.updateSettings(4, option)
+            }
+        }
+    }
+
+    private fun booleanToInt(status: Boolean): Int {
+        return if (!status) {
+            0
+        } else {
+            1
+        }
+    }
+
+    private fun intToBoolean(option: Int): Boolean {
+        return option != 0
     }
 }

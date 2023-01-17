@@ -42,7 +42,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:text="Edit subject color codes" />
+                        android:text="Edit subject color codes"
+                        android:textColor="?attr/primaryTextColor" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -61,7 +62,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:text="Automatically delete completed tasks" />
+                        android:text="Automatically delete completed tasks"
+                        android:textColor="?attr/primaryTextColor" />
 
                     <Spinner
                         android:id="@+id/spinnerAutoDelete"
@@ -99,7 +101,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:text="Header bars" />
+                        android:text="Header bars"
+                        android:textColor="?attr/primaryTextColor" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switchHeaderBars"
@@ -118,7 +121,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:text="Background glow" />
+                        android:text="Background glow"
+                        android:textColor="?attr/primaryTextColor" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switchBackgroundGlow"
@@ -156,7 +160,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="16dp"
-                        android:text="Show completed tasks" />
+                        android:text="Show completed tasks"
+                        android:textColor="?attr/primaryTextColor" />
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/switchShowCompletedTasks"

@@ -267,17 +267,9 @@ class TodoFragment : Fragment() {
 
     private fun getSettings() {
         listSettingsItems = viewModel.getListSettings()
-        for (i in 0 until listSettingsItems.size) {
-            when (i) {
-                0 -> { // glow
-                    glow = intToBoolean(listSettingsItems[i].option)
-                }
-                1 -> { // header bars
-                    bars = intToBoolean(listSettingsItems[i].option)
-                }
-                // TODO: future user preferences here //
-            }
-        }
+        bars = intToBoolean(listSettingsItems[2].option)
+        glow = intToBoolean(listSettingsItems[3].option)
+        // TODO: future user preferences here //
     }
 
     private fun intToBoolean(option: Int): Boolean {
