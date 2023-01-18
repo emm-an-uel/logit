@@ -1,6 +1,8 @@
 package com.example.logit.settings
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
@@ -132,39 +134,42 @@ class ColorCodesSettingsActivity : AppCompatActivity() {
     private fun confirmDelete(subjectColor: SubjectColor, position: Int) {
         var touched = false
 
-        // alert dialog
-        val alertDialog: AlertDialog = this.let {
-            val builder = AlertDialog.Builder(it)
-            builder.apply {
-                setPositiveButton("Confirm") {
-                        dialog, id ->
-                    touched = true
-                    checkDuplicates()
-                }
+        // build custom dialog
+        val builder = AlertDialog.Builder(this).create()
+        if (builder.window != null) {
+            builder.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        }
+        val view = layoutInflater.inflate(R.layout.alert_dialog_custom, null, false)
+        val tvPrimary: TextView = view.findViewById(R.id.tvPrimary)
+        val tvSecondary: TextView = view.findViewById(R.id.tvSecondary)
+        val btnCancel: Button = view.findViewById(R.id.btnCancel)
+        val btnConfirm: Button = view.findViewById(R.id.btnConfirm)
 
-                setNegativeButton("Cancel") {
-                        dialog, id ->
-                    cancelDelete(subjectColor, position)
-                    touched = true
-                }
-            }
+        val subject = subjectColor.subject
+        tvPrimary.text = "Remove ${subject}'s color code?"
+        tvPrimary.setPadding(0, 12, 0, 45)
+        tvSecondary.visibility = View.GONE
 
-            val subject = subjectColor.subject
-            builder.setMessage("Remove ${subject}'s color code?")
-
-            builder.create()
+        btnCancel.setOnClickListener {
+            cancelDelete(subjectColor, position)
+            touched = true
+            builder.dismiss()
+        }
+        btnConfirm.setOnClickListener {
+            checkDuplicates()
+            touched = true
+            builder.dismiss()
         }
 
-        alertDialog.show()
-        val actualColorAccent = getColor(this, androidx.appcompat.R.attr.colorAccent)
-
-        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(actualColorAccent)
-        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(actualColorAccent)
-
-        alertDialog.setOnDismissListener {
-            if (!touched) {
-                cancelDelete(subjectColor, position)
+        builder.apply {
+            setView(view)
+            setCanceledOnTouchOutside(true)
+            setOnDismissListener { // if dismissed and user hasn't selected anything, cancelDelete
+                if (!touched) {
+                    cancelDelete(subjectColor, position)
+                }
             }
+            show()
         }
     }
 

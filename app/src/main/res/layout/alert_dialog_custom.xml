@@ -19,21 +19,23 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tvPrimary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="15dp"
-                android:text="Delete all completed tasks?"
+                android:text="Primary text"
                 android:textColor="?attr/primaryTextColor"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tvSecondary"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginVertical="12dp"
-                android:text="Once deleted, tasks cannot be restored."
+                android:text="Secondary text"
                 android:textColor="?attr/primaryTextColor" />
 
             <LinearLayout

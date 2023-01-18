@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Button
 import android.widget.SearchView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.core.view.MenuProvider
@@ -195,9 +196,14 @@ class LogFragment : Fragment() {
             if (builder.window != null) { // set default background to transparent
                 builder.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             }
-            val view = layoutInflater.inflate(R.layout.confirm_delete_all_dialog, null, false)
+            val view = layoutInflater.inflate(R.layout.alert_dialog_custom, null, false)
+            val tvPrimary: TextView = view.findViewById(R.id.tvPrimary)
+            val tvSecondary: TextView = view.findViewById(R.id.tvSecondary)
             val btnCancel: Button = view.findViewById(R.id.btnCancel)
             val btnConfirm: Button = view.findViewById(R.id.btnConfirm)
+
+            tvPrimary.text = getString(R.string.confirm_delete_primary)
+            tvSecondary.text = getString(R.string.confirm_delete_secondary)
 
             btnCancel.setOnClickListener {
                 builder.dismiss()

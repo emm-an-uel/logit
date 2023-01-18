@@ -24,6 +24,7 @@
                 android:layout_marginHorizontal="15dp"
                 android:layout_weight="1"
                 android:gravity="start|center"
+                android:paddingVertical="15dp"
                 android:text="Snackbar text"
                 android:textColor="?attr/primaryTextColor" />
 
