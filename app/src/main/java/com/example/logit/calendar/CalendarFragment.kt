@@ -9,22 +9,22 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.example.logit.R
+import com.example.logit.Task
 import com.example.logit.ViewModelParent
 import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentCalendarBinding
-import com.example.logit.Task
 import com.example.logit.log.CardColor
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.example.logit.settings.SettingsItem
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
 import java.time.temporal.ChronoUnit
 import java.util.*
-import kotlin.collections.ArrayList
 
 class CalendarFragment : Fragment() {
 
@@ -39,12 +39,17 @@ class CalendarFragment : Fragment() {
     private lateinit var viewPager: ViewPager
     private lateinit var mAlertDialog: AlertDialog
 
-    private lateinit var mapOfTasks: Map<Int, List<Task>>
+    private lateinit var mapOfTasks: Map<Int, ArrayList<Task>>
     private lateinit var minDate: Calendar
     private lateinit var maxDate: Calendar
     private lateinit var todoList: List<Task>
+    private lateinit var doneList: List<Task>
     private lateinit var cardColors: List<CardColor>
     private lateinit var mapSubjectColor: Map<String, Int>
+
+    private lateinit var settings: List<SettingsItem>
+    private var showCompletedTasks = false
+    // TODO: future user preferences here //
 
     // for PagerAdapter swipe animations
     private val MIN_OFFSET = 0f
@@ -58,26 +63,30 @@ class CalendarFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
         setMinMaxDates()
-        mapOfTasks = viewModel.getMapOfTodoTasks()
-        todoList = viewModel.getTodoList()
-        cardColors = viewModel.getListCardColors()
-        mapSubjectColor = viewModel.getMapSubjectColor()
+        getData()
     }
 
     override fun onPause() {
         super.onPause()
-
         binding.fabAddTask.hide()
+    }
+
+    private fun getData() {
+        mapOfTasks = viewModel.getMapOfTasks()
+        todoList = viewModel.getTodoList()
+        doneList = viewModel.getDoneList()
+        cardColors = viewModel.getListCardColors()
+        mapSubjectColor = viewModel.getMapSubjectColor()
+        settings = viewModel.getListSettings()
+
+        showCompletedTasks = intToBoolean(settings[4].option)
     }
 
     override fun onResume() {
         super.onResume()
 
         binding.fabAddTask.show()
-        todoList = viewModel.getTodoList()
-        cardColors = viewModel.getListCardColors()
-        mapSubjectColor = viewModel.getMapSubjectColor()
-        mapOfTasks = viewModel.getMapOfTodoTasks()
+        getData()
         setupCalendar()
     }
 
@@ -122,7 +131,7 @@ class CalendarFragment : Fragment() {
         }
 
         addCalendarObjects() // add user events to calendar
-        binding.calendarView.setOnItemClickedListener { calendarObjects, previousDate, selectedDate1 ->
+        binding.calendarView.setOnItemClickedListener { calendarObjects, _, selectedDate1 ->
             if (calendarObjects.size > 0) { // if there are events
                 showCalendarDialog(selectedDate1)
 
@@ -152,9 +161,8 @@ class CalendarFragment : Fragment() {
 
         val listSubjects: ArrayList<String> = viewModel.getListSubjects()
         intent.putExtra("listSubjects", listSubjects)
-        if (selectedDate > Calendar.getInstance()) {
-            intent.putExtra("selectedDate", calendarToString(selectedDate)) // if user clicked on a future date, pass that date to AddTaskActivity
-            // this prevent user from choosing a dueDate before today's date
+        if (selectedDate > Calendar.getInstance()) { // this prevent user from choosing a dueDate before today's date
+            intent.putExtra("selectedDate", calendarToString(selectedDate)) // pass selectedDate to AddTaskActivity
         }
 
         startActivity(intent)
@@ -185,7 +193,7 @@ class CalendarFragment : Fragment() {
     private fun addCalendarObjects() { // add CalendarObjects to CalendarView
         val calObjectList = arrayListOf<CalendarView.CalendarObject>()
         for (task in todoList) {
-            val dueDate: Calendar = intToCalendar(task.dueDateInt)
+            val dueDate: Calendar = intToCalendar(task.dueDateInt!!)
             val bgColorIndex = mapSubjectColor[task.subject]
             val bgColor = if (bgColorIndex != null) {
                 ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
@@ -201,6 +209,28 @@ class CalendarFragment : Fragment() {
                 )
             )
         }
+
+        if (showCompletedTasks) { // add completed Tasks to calObjectList
+            for (task in doneList) {
+                val dueDate: Calendar = intToCalendar(task.dueDateInt!!)
+                val bgColorIndex = mapSubjectColor[task.subject]
+                val bgColor = if (bgColorIndex != null) {
+                    ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
+                } else {
+                    ContextCompat.getColor(requireContext(), R.color.gray)
+                }
+                val bgColorTranslucent = ColorUtils.setAlphaComponent(bgColor, 85) // set alpha to make completed Tasks appear translucent
+                calObjectList.add(
+                    CalendarView.CalendarObject(
+                        null,
+                        dueDate,
+                        bgColorTranslucent,
+                        ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                    )
+                )
+            }
+        }
+
         binding.calendarView.setCalendarObjectList(calObjectList)
     }
 
@@ -216,7 +246,7 @@ class CalendarFragment : Fragment() {
         calDialogView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
 
         // set up the ViewPager adapter
-        viewPagerAdapter = PagerAdapter(requireContext(), todoList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors)
+        viewPagerAdapter = CalendarPagerAdapter(requireContext(), todoList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors, showCompletedTasks)
 
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
 
@@ -240,18 +270,8 @@ class CalendarFragment : Fragment() {
             show()
             setContentView(calDialogView)
             setOnDismissListener {
-                markTasksAsDone()
                 onResume()
             }
-        }
-    }
-
-    private fun markTasksAsDone() {
-        val completedTaskIndexes = (viewPagerAdapter as com.example.logit.calendar.PagerAdapter).completedTaskIndexes
-        for (taskIndex in completedTaskIndexes) {
-            val task = taskIndex.task
-            val index = taskIndex.index
-            viewModel.markAsDone(task, index)
         }
     }
 
@@ -319,5 +339,9 @@ class CalendarFragment : Fragment() {
         val calendar = Calendar.getInstance()
         calendar.set(year, month, day)
         return calendar
+    }
+
+    private fun intToBoolean(option: Int): Boolean {
+        return option != 0
     }
 }

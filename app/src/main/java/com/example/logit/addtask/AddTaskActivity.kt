@@ -69,12 +69,12 @@ class AddTaskActivity : AppCompatActivity() {
                 val subject = listSubjectsSpinner[selectedSpinnerIndex]
 
                 val task = etTask.text.toString().trim()
-                val status = false // false = undone, true = done
+                val completed = false // false = undone, true = done
 
                 val notes = etNotes.text.toString().trim()
 
                 // stores subject, task, notes in local file
-                storeLocally(subject, task, status, notes)
+                storeLocally(subject, task, completed, notes)
 
                 finish()
             }

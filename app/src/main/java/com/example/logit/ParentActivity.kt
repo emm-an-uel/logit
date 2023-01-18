@@ -32,16 +32,7 @@ class ParentActivity : AppCompatActivity() {
         // since binding will initialize FragmentLog (which relies on ViewModel already being initialized by this activity)
         viewModel = ViewModelProvider(this)[ViewModelParent::class.java]
 
-        // initialize data
-        viewModel.apply {
-            createCardColorsList()
-            createSettingsList()
-            createTaskLists()
-            createConsolidatedListTodo()
-            createConsolidatedListDone()
-            createSubjectColors()
-            createMapOfTodoTasks()
-        }
+        getData() // initialize ViewModel data
 
         binding = ActivityParentBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -62,10 +53,7 @@ class ParentActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
-    override fun onResume() {
-        super.onResume()
-
-        // update ViewModel data
+    private fun getData() {
         viewModel.apply {
             createCardColorsList()
             createSettingsList()
@@ -73,8 +61,13 @@ class ParentActivity : AppCompatActivity() {
             createConsolidatedListTodo()
             createConsolidatedListDone()
             createSubjectColors()
-            createMapOfTodoTasks()
+            createMapOfTasks()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getData() // update ViewModel data
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -182,7 +182,7 @@ class DoneFragment : Fragment() {
     private fun createSnackbar(deletedTaskItem: TaskItem, pos: Int) {
         val snack = Snackbar.make(rvDone, "Task deleted", Snackbar.LENGTH_LONG)
 
-        val customSnackView = layoutInflater.inflate(R.layout.snackbar_undo_delete, null, false) // inflate custom snackbar layout
+        val customSnackView = layoutInflater.inflate(R.layout.snackbar_custom, null, false) // inflate custom snackbar layout
 
         if (snack.view.background != null) { // set default background to transparent
             snack.view.setBackgroundColor(ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color))
@@ -193,8 +193,13 @@ class DoneFragment : Fragment() {
         snackbarLayout.setPadding(5, 0, 5, 15)
         snackbarLayout.addView(customSnackView)
 
+        // set snackbar message
+        val tvSnackbar: TextView = snackbarLayout.findViewById(R.id.tvSnackbar)
+        tvSnackbar.text = "Task deleted"
+
         // btnUndo functionality
-        val btnUndo: Button = snackbarLayout.findViewById(R.id.btnUndo)
+        val btnUndo: Button = snackbarLayout.findViewById(R.id.btnSnackbar)
+        btnUndo.text = "undo"
         btnUndo.setOnClickListener {
             cancelDeleteTask(deletedTaskItem, pos)
             snack.dismiss()

@@ -14,14 +14,22 @@ import com.example.logit.R
 import com.example.logit.Task
 import com.example.logit.log.CardColor
 
-class RecyclerViewAdapter (
-    private val tasks: List<Task>,
+class CalendarRVAdapter (
+    private val tasks: ArrayList<Task>,
     private val mapSubjectColor: Map<String, Int>,
     private val cardColors: List<CardColor>,
-    private var mapChecked: Map<Int, Boolean>
-): RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder>() {
+    private val showCompletedTasks: Boolean
+): RecyclerView.Adapter<CalendarRVAdapter.ViewHolder>() {
 
-    var checked: Boolean? = null
+    fun checkShouldShowCompletedTasks() {
+        if (!showCompletedTasks) { // remove completed tasks if !showCompletedTasks
+            for (task in tasks) {
+                if (task.completed) {
+                    tasks.remove(task)
+                }
+            }
+        }
+    }
 
     inner class ViewHolder(itemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
         val ivColorCode: ImageView = itemView.findViewById(R.id.colorCode)
@@ -32,16 +40,15 @@ class RecyclerViewAdapter (
         init {
             checkIcon.setOnClickListener {
                 updateCheckColor()
-                listener.onItemClick(adapterPosition, checked!!)
+                listener.onItemClick(adapterPosition)
             }
         }
 
         private fun updateCheckColor() {
-            if (!checked!!) {
-                checked = true
+            val task = tasks[adapterPosition]
+            if (task.completed) {
                 checkIcon.imageTintList = ColorStateList.valueOf(getColor(itemView.context, androidx.appcompat.R.attr.colorAccent))
             } else {
-                checked = false
                 checkIcon.imageTintList = ColorStateList.valueOf(getColor(itemView.context, R.attr.calendarDialogCheckColor))
             }
         }
@@ -72,15 +79,12 @@ class RecyclerViewAdapter (
         holder.ivColorCode.imageTintList = ColorStateList.valueOf(bgColor)
 
         // set check color
-        checked = if (mapChecked[holder.adapterPosition] != null) {
-            mapChecked[holder.adapterPosition]
-        } else {
-            false
-        }
-        if (checked == true) {
-            holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, androidx.appcompat.R.attr.colorAccent))
-        } else {
-            holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, R.attr.calendarDialogCheckColor))
+        if (showCompletedTasks) {
+            if (task.completed) { // set to checked if task completed
+                holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, androidx.appcompat.R.attr.colorAccent))
+            } else {
+                holder.checkIcon.imageTintList = ColorStateList.valueOf(getColor(context, R.attr.calendarDialogCheckColor))
+            }
         }
     }
 
@@ -96,15 +100,10 @@ class RecyclerViewAdapter (
     private lateinit var mListener: OnItemClickListener
 
     interface OnItemClickListener {
-        fun onItemClick(position: Int, checked: Boolean)
+        fun onItemClick(position: Int)
     }
 
     fun setOnItemClickListener(listener: OnItemClickListener) {
         mListener = listener
-    }
-
-    // update mapChecked so 'checked' status remains synced even when user swipes to different ViewPager pages
-    fun updateMapChecked(updatedMap: Map<Int, Boolean>) {
-        mapChecked = updatedMap
     }
 }

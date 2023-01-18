@@ -2,7 +2,6 @@ package com.example.logit
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import java.util.*
 
 @Parcelize
 class Task(
@@ -11,7 +10,7 @@ class Task(
         val task: String,
         val dueDate: String,
         val dueDateInt: Int,
-        var status: Boolean,
+        var completed: Boolean,
         val notes: String,
         var completedDate: Int
         ) : Parcelable

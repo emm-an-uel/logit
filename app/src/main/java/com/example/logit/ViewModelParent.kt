@@ -11,10 +11,10 @@ import java.io.File
 import java.io.StringReader
 import java.util.*
 
-class ViewModelParent(val app: Application): AndroidViewModel(app) {
+class ViewModelParent(val app: Application) : AndroidViewModel(app) {
 
-    lateinit var todoList: ArrayList<Task>
-    lateinit var doneList: ArrayList<Task>
+    private var todoList: ArrayList<Task>? = null
+    private var doneList: ArrayList<Task>? = null
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
     lateinit var mapSubjectColor: HashMap<String, Int>
@@ -28,10 +28,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
     lateinit var consolidatedListTodo: ArrayList<ListItem>
     lateinit var consolidatedListDone: ArrayList<ListItem>
 
-    private lateinit var mapOfTodoTasks: MutableMap<Int, List<Task>>
-
-    private var mapInitialized = false
-    private var taskListsInitialized = false
+    private var mapOfTasks: MutableMap<Int, ArrayList<Task>>? = null
 
     fun createTaskLists() {
         todoList = arrayListOf()
@@ -50,20 +47,19 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                     while (reader.hasNext()) {
                         val task = Klaxon().parse<Task>(reader)
 
-                        if (!task!!.status) { // undone
-                            todoList.add(task)
+                        if (!task!!.completed) { // undone
+                            todoList!!.add(task)
                         } else { // done
                             if (!autoDelete(task)) { // if this task should not be auto deleted, add to doneList
-                                doneList.add(task)
+                                doneList!!.add(task)
                             }
                         }
                     }
                 }
             }
             saveJsonTaskLists() // note that in above code, auto deleted tasks were not added to doneList, but are still part of the json file.
-        // this line saves the new todoList and doneList so tasks which were not added into doneList are actually removed - newly saved json file doesn't contain them
+            // this line saves the new todoList and doneList so tasks which were not added into doneList are actually removed - newly saved json file doesn't contain them
         }
-        taskListsInitialized = true
     }
 
     private fun autoDelete(task: Task): Boolean {
@@ -102,18 +98,19 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         nextWeek.add(Calendar.DATE, 7) // adds 7 days to today's date
         val nextWeekInt = calendarToInt(nextWeek)
 
-        todoList.sortBy { it.dueDateInt }
+        todoList!!.sortBy { it.dueDateInt }
 
         // headings will be - Overdue, Today, Tomorrow, Next Week, Upcoming
         var overdueHeader = false
         var todayHeader = false
         var tomorrowHeader = false
         var nextWeekHeader = false
-        var upcomingHeader = false // these will be set to true as headers are added into consolidatedLists
+        var upcomingHeader =
+            false // these will be set to true as headers are added into consolidatedLists
 
         // create sectioned list to be passed into respective rv's
-        val groupedMap1: Map<Int, List<Task>> = todoList.groupBy {
-            it.dueDateInt
+        val groupedMap1: Map<Int, List<Task>> = todoList!!.groupBy {
+            it.dueDateInt!!
         } // creates a map of 'date' to a 'list of Tasks' - eg: key '20160605', value is a list containing 'name 2', 'name 3'
         consolidatedListTodo = arrayListOf()
         for (dateInt: Int in groupedMap1.keys) {
@@ -122,9 +119,17 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                     consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.overdue))) // adds a header if one doesn't already exist
                     overdueHeader = true
                 }
-                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                val groupItems: List<Task>? =
+                    groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedListTodo.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
 
             } else if (dateInt == todayInt) {
@@ -132,9 +137,17 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                     consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.due_today))) // adds a header if one doesn't already exist
                     todayHeader = true
                 }
-                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                val groupItems: List<Task>? =
+                    groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedListTodo.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
 
             } else if (dateInt == tomorrowInt) {
@@ -142,9 +155,17 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                     consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.due_tomorrow))) // adds a header if one doesn't already exist
                     tomorrowHeader = true
                 }
-                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                val groupItems: List<Task>? =
+                    groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedListTodo.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
 
             } else if (dateInt < nextWeekInt) {
@@ -152,9 +173,17 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                     consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.due_soon))) // adds a header if one doesn't already exist
                     nextWeekHeader = true
                 }
-                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                val groupItems: List<Task>? =
+                    groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedListTodo.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
 
             } else {
@@ -162,9 +191,17 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                     consolidatedListTodo.add(HeaderItem(app.resources.getString(R.string.upcoming))) // adds a header if one doesn't already exist
                     upcomingHeader = true
                 }
-                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                val groupItems: List<Task>? =
+                    groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedListTodo.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedListTodo.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
             }
         }
@@ -177,9 +214,9 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
 
     fun createConsolidatedListDone() {
         // consolidatedListDone will not have DateItems
-        doneList.sortBy { it.dueDateInt }
+        doneList!!.sortBy { it.dueDateInt }
         consolidatedListDone = arrayListOf()
-        for (t in doneList) {
+        for (t in doneList!!) {
             consolidatedListDone.add(TaskItem(t.subject, t.task, t.dueDate, t.notes))
         }
     }
@@ -189,24 +226,30 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         return consolidatedListDone
     }
 
-    fun markAsDone(completedTask: Task, actualIndex: Int) { // moves completedTask from todoList to doneList
-        completedTask.status = true // set to 'done'
+    fun markAsDone(
+        completedTask: Task,
+        actualIndex: Int
+    ) { // moves completedTask from todoList to doneList
+        completedTask.completed = true // set to 'done'
         completedTask.completedDate = calendarToInt(Calendar.getInstance()) // sets completedDate to today's date
-        doneList.add(completedTask)
-        todoList.removeAt(actualIndex)
+        doneList!!.add(completedTask)
+        todoList!!.removeAt(actualIndex)
         saveJsonTaskLists()
-        createMapOfTodoTasks()
+        createMapOfTasks()
         createConsolidatedListTodo()
         createConsolidatedListDone()
     }
 
-    fun markAsUndone(restoredTask: Task, actualIndex: Int) { // moves restoredTask from doneList to todoList
-        restoredTask.status = false // set to 'undone'
+    fun markAsUndone(
+        restoredTask: Task,
+        actualIndex: Int
+    ) { // moves restoredTask from doneList to todoList
+        restoredTask.completed = false // set to 'undone'
         restoredTask.completedDate = 0 // removes completedDate
-        todoList.add(restoredTask)
-        doneList.removeAt(actualIndex)
+        todoList!!.add(restoredTask)
+        doneList!!.removeAt(actualIndex)
         saveJsonTaskLists()
-        createMapOfTodoTasks()
+        createMapOfTasks()
         createConsolidatedListTodo()
     }
 
@@ -217,16 +260,16 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
     }
 
     fun restoreTask(task: Task) { // restore deleted task to doneList
-        doneList.add(task)
+        doneList!!.add(task)
         saveJsonTaskLists()
     }
 
     fun saveJsonTaskLists() {
-        todoList.sortBy { it.dueDateInt }
-        doneList.sortBy { it.dueDateInt }
+        todoList!!.sortBy { it.dueDateInt }
+        doneList!!.sortBy { it.dueDateInt }
         val listAllTasks = arrayListOf<Task>()
-        listAllTasks.addAll(todoList)
-        listAllTasks.addAll(doneList)
+        listAllTasks.addAll(todoList!!)
+        listAllTasks.addAll(doneList!!)
 
         val file = Klaxon().toJsonString(listAllTasks)
 
@@ -237,15 +280,15 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
 
     @JvmName("getTodoList1")
     fun getTodoList(): ArrayList<Task> {
-        if (!taskListsInitialized) {
+        if (todoList == null) {
             createTaskLists()
         }
-        return todoList
+        return todoList!!
     }
 
     @JvmName("getDoneList1")
     fun getDoneList(): ArrayList<Task> {
-        return doneList
+        return doneList!!
     }
 
     fun createSubjectColors() {
@@ -375,6 +418,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
 
                 add(SettingsItem("Show completed tasks", 0))
                 // TODO: future user preferences here //
+                // note that if there are new SettingsItems, the indexes of SettingsItems (wherever referenced throughout the app) need to be updated to match
             }
         }
     }
@@ -388,7 +432,7 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
 
     private fun calendarToInt(date: Calendar): Int {
         val year = date.get(Calendar.YEAR)
-        val month = date.get(Calendar.MONTH)+1
+        val month = date.get(Calendar.MONTH) + 1
         val day = date.get(Calendar.DAY_OF_MONTH)
 
         var monthString = month.toString()
@@ -450,11 +494,12 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         var todayHeader = false
         var tomorrowHeader = false
         var nextWeekHeader = false
-        var upcomingHeader = false // these will be set to true as headers are added into consolidatedLists
+        var upcomingHeader =
+            false // these will be set to true as headers are added into consolidatedLists
 
         // create sectioned list to be passed into respective rv's
         val groupedMap1: Map<Int, List<Task>> = tasks.groupBy {
-            it.dueDateInt
+            it.dueDateInt!!
         } // creates a map of 'date' to a 'list of Tasks' - eg: key '20160605', value is a list containing 'name 2', 'name 3'
         val consolidatedList = arrayListOf<ListItem>()
         for (dateInt: Int in groupedMap1.keys) {
@@ -465,7 +510,14 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedList.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
 
             } else if (dateInt == todayInt) {
@@ -475,7 +527,14 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedList.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
 
             } else if (dateInt == tomorrowInt) {
@@ -483,9 +542,17 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                     consolidatedList.add(HeaderItem(app.resources.getString(R.string.due_tomorrow))) // adds a header if one doesn't already exist
                     tomorrowHeader = true
                 }
-                val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
+                val groupItems: List<Task>? =
+                    groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedList.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
 
             } else if (dateInt < nextWeekInt) {
@@ -495,7 +562,14 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedList.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
 
             } else {
@@ -505,7 +579,14 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
                 }
                 val groupItems: List<Task>? = groupedMap1[dateInt] // groupItems is a list of Tasks which corresponds to the above 'date'
                 groupItems?.forEach {
-                    consolidatedList.add(TaskItem(it.subject, it.task, it.dueDate, it.notes)) // creates a TaskItem class for each 'name' in above list
+                    consolidatedList.add(
+                        TaskItem(
+                            it.subject,
+                            it.task,
+                            it.dueDate,
+                            it.notes
+                        )
+                    ) // creates a TaskItem class for each 'name' in above list
                 }
             }
         }
@@ -521,22 +602,30 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
         return consolidatedList
     }
 
-    fun createMapOfTodoTasks() {
-        mapOfTodoTasks = mutableMapOf()
-        var list: ArrayList<Task> = arrayListOf()
-        var key: Int? = null
-
-        if (!taskListsInitialized) { // when returning to CalendarFragment from AddTaskActivity, todoList is sometimes not initialized - unsure why but this is a workaround
+    fun createMapOfTasks() {
+        if (todoList == null || doneList == null) { // check to make sure lists have been initialized
             createTaskLists()
         }
 
-        for (task in todoList) {
+        mapOfTasks = mutableMapOf()
+        var list: ArrayList<Task> = arrayListOf()
+        var key: Int? = null
+
+        // include all tasks in mapOfTasks
+        val combinedList = arrayListOf<Task>()
+        combinedList.apply {
+            addAll(todoList!!)
+            addAll(doneList!!)
+            sortBy { it.dueDateInt }
+        }
+
+        for (task in combinedList) {
             if (key != null) { // not the first item in list
                 if (key == task.dueDateInt) { // this task is on the same date as the other tasks in list
                     list.add(task)
 
                 } else { // this task is due on a new date
-                    mapOfTodoTasks[key] = list // save list of tasks before this new tasks to map
+                    mapOfTasks!![key] = list // save list of tasks before this new tasks to map
                     key = task.dueDateInt // set new key
                     list = arrayListOf() // reset list
                     list.add(task) // add new task to new list
@@ -548,15 +637,14 @@ class ViewModelParent(val app: Application): AndroidViewModel(app) {
             }
         }
         if (key != null && list.isNotEmpty()) {
-            mapOfTodoTasks[key] = list // save last-added <Int, List> pair
+            mapOfTasks!![key] = list // save last-added <Int, List> pair
         }
-        mapInitialized = true
     }
 
-    fun getMapOfTodoTasks(): Map<Int, List<Task>> {
-        if (!mapInitialized) {
-            createMapOfTodoTasks()
+    fun getMapOfTasks(): Map<Int, ArrayList<Task>> {
+        if (mapOfTasks == null) {
+            createMapOfTasks()
         }
-        return mapOfTodoTasks
+        return mapOfTasks!!
     }
 }

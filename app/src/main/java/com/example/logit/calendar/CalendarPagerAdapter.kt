@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import com.example.logit.ParentActivity
@@ -13,22 +12,21 @@ import com.example.logit.R
 import com.example.logit.Task
 import com.example.logit.log.CardColor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.shashank.sony.fancytoastlib.FancyToast
 import java.time.temporal.ChronoUnit
 import java.util.*
 
-class PagerAdapter(
+class CalendarPagerAdapter(
     private val context: Context,
     private val todoList: List<Task>,
-    private val mapOfTasks: Map<Int, List<Task>>,
+    private val mapOfTasks: Map<Int, ArrayList<Task>>,
     private val minDate: Calendar,
     private val maxDate: Calendar,
     private val selectedDate: Calendar,
     private val mapSubjectColor: Map<String, Int>,
-    private val cardColors: List<CardColor>
+    private val cardColors: List<CardColor>,
+    private val showCompletedTasks: Boolean
 ) : PagerAdapter() {
-
-    val completedTaskIndexes = arrayListOf<TaskIndex>() // keeps track of the Tasks marked as done (and their corresponding indexes), ViewModel will only be updated when the AlertDialog is dismissed
-    val completedTaskIds = arrayListOf<String>() // for reference in createMapChecked - this list will be checked against to see which Tasks are marked as done
 
     private val initialPosition = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt()
     // number of days between minDate and selectedDate to determine ViewPager's initial position
@@ -70,35 +68,25 @@ class PagerAdapter(
             }
         }
 
-        // show today's events
+        // show today's tasks
         var hasEvents = false
         for (key in mapOfTasks.keys) { // check if mapOfEvents contains a key with same date as currentDate
             if (key == currentDateInt) {
-                val todayTasks: List<Task> = mapOfTasks[key]!!
-                val mapChecked: MutableMap<Int, Boolean> = createMapChecked(todayTasks)
-                val rvAdapter = RecyclerViewAdapter(todayTasks, mapSubjectColor, cardColors, mapChecked)
+                val todayTasks: ArrayList<Task> = mapOfTasks[key]!!
+                val rvAdapter = CalendarRVAdapter(todayTasks, mapSubjectColor, cardColors, showCompletedTasks)
+                rvAdapter.checkShouldShowCompletedTasks() // decide whether or not to show completed Tasks
                 rvEvents.adapter = rvAdapter
 
                 // click listener to watch for 'mark as done'
-                rvAdapter.setOnItemClickListener(object: RecyclerViewAdapter.OnItemClickListener {
-                    override fun onItemClick(position: Int, checked: Boolean) {
+                rvAdapter.setOnItemClickListener(object: CalendarRVAdapter.OnItemClickListener {
+                    override fun onItemClick(position: Int) {
                         val completedTask: Task = todayTasks[position]
                         val actualPosition: Int? = findPosition(completedTask)
                         if (actualPosition != null) {
-                            val taskIndex = TaskIndex(completedTask, actualPosition)
-                            if (checked) { // if user marked as done
-                                completedTaskIndexes.add(taskIndex)
-                                completedTaskIds.add(completedTask.id)
-                                mapChecked[position] = true
-                            } else { // if user marked as undone
-                                completedTaskIndexes.remove(taskIndex)
-                                completedTaskIds.remove(completedTask.id)
-                                mapChecked[position] = false
-                            }
-                            rvAdapter.updateMapChecked(mapChecked) // pass updated map
+                            (context as ParentActivity).viewModel.markAsDone(completedTask, actualPosition)
 
                         } else {
-                            Toast.makeText(context, "Error: Task Not Found", Toast.LENGTH_SHORT).show()
+                            FancyToast.makeText(context, "Error: Could not mark as done", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
                         }
                     }
                 })
@@ -115,16 +103,6 @@ class PagerAdapter(
 
         container.addView(view)
         return view
-    }
-
-    private fun createMapChecked(tasks: List<Task>): MutableMap<Int, Boolean> {
-        // note: this method is called everytime a RecyclerView is initialized - including when user swipes away and comes back to a page
-        val map = mutableMapOf<Int, Boolean>() // Int ranges from 0 to the number of tasks due that day, Boolean corresponds to whether the task's been marked as done
-        for (n in tasks.indices) {
-            val task: Task = tasks[n]
-            map[n] = completedTaskIds.contains(task.id) // true if task has been marked as done, false otherwise
-        }
-        return map
     }
 
     private fun findPosition(completedTask: Task): Int? {
@@ -200,9 +178,4 @@ class PagerAdapter(
         // convert to DD MM YYYY format
         return "$dayString $monthString $year"
     }
-
-    data class TaskIndex (
-        val task: Task,
-        val index: Int
-            )
 }

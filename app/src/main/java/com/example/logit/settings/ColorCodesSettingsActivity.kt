@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -252,8 +255,29 @@ class ColorCodesSettingsActivity : AppCompatActivity() {
             finish()
 
         } else {
-            Snackbar.make(rvColorCodes, "Please remove duplicate subjects", Snackbar.LENGTH_SHORT).show()
+            createSnackbar()
         }
+    }
+
+    private fun createSnackbar() {
+        val snack = Snackbar.make(rvColorCodes, "", Snackbar.LENGTH_SHORT)
+        val customSnackView = layoutInflater.inflate(R.layout.snackbar_custom, null, false)
+        if (snack.view.background != null) {
+            snack.view.setBackgroundColor(ContextCompat.getColor(rvColorCodes.context, com.google.android.material.R.color.mtrl_btn_transparent_bg_color))
+        }
+
+        // set custom view
+        val snackbarLayout: Snackbar.SnackbarLayout = snack.view as Snackbar.SnackbarLayout
+        snackbarLayout.setPadding(5, 0, 5, 15)
+        snackbarLayout.addView(customSnackView)
+
+        // populate view
+        val tvSnackbar: TextView = snackbarLayout.findViewById(R.id.tvSnackbar)
+        tvSnackbar.text = getString(R.string.remove_duplicate_subjects)
+        val btn: Button = snackbarLayout.findViewById(R.id.btnSnackbar)
+        btn.visibility = View.GONE
+
+        snack.show()
     }
 
     private fun noDuplicates(): Boolean {
