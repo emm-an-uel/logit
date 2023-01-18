@@ -238,7 +238,7 @@ class CalendarFragment : Fragment() {
             }
 
         } else { // !showCompletedTasks
-            for (task in todoList) { // !completed - all opaque 
+            for (task in todoList) { // !completed - all opaque
                 val dueDate: Calendar = intToCalendar(task.dueDateInt)
                 val bgColorIndex = mapSubjectColor[task.subject]
                 val bgColor = if (bgColorIndex != null) {
@@ -272,7 +272,7 @@ class CalendarFragment : Fragment() {
         calDialogView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
 
         // set up the ViewPager adapter
-        viewPagerAdapter = CalendarPagerAdapter(requireContext(), combinedList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors, showCompletedTasks)
+        viewPagerAdapter = CalendarPagerAdapter(requireContext(), todoList, doneList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors, showCompletedTasks)
 
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
 

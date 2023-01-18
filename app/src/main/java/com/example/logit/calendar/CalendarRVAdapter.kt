@@ -46,9 +46,9 @@ class CalendarRVAdapter (
 
         private fun updateCheckColor() {
             val task = tasks[adapterPosition]
-            if (task.completed) {
+            if (!task.completed) { // currently uncompleted - to mark as done
                 checkIcon.imageTintList = ColorStateList.valueOf(getColor(itemView.context, androidx.appcompat.R.attr.colorAccent))
-            } else {
+            } else { // currently completed - to mark as undone
                 checkIcon.imageTintList = ColorStateList.valueOf(getColor(itemView.context, R.attr.calendarDialogCheckColor))
             }
         }
