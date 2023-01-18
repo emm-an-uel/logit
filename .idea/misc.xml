@@ -10,10 +10,14 @@
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/settings_group_background.xml" value="0.2545" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/settings_item_background.xml" value="0.2545" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/drawable/textview_rounded_background.xml" value="0.2555" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/activity_all_settings.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/calendar_card_item.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/calendar_dialog.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/calendar_task_card_item.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/confirm_delete_all_dialog.xml" value="0.25" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/content_calendar_settings.xml" value="0.20512820512820512" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/content_general_settings.xml" value="0.24895833333333334" />
+        <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/content_log_settings.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/event_card_item.xml" value="0.24895833333333334" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_calendar.xml" value="0.22826086956521738" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/fragment_done.xml" value="0.22826086956521738" />
