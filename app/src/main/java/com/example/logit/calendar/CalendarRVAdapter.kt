@@ -21,7 +21,7 @@ class CalendarRVAdapter (
     private val showCompletedTasks: Boolean
 ): RecyclerView.Adapter<CalendarRVAdapter.ViewHolder>() {
 
-    fun checkShouldShowCompletedTasks() {
+    fun checkShowCompletedTasks() {
         if (!showCompletedTasks) { // remove completed tasks if !showCompletedTasks
             for (task in tasks) {
                 if (task.completed) {

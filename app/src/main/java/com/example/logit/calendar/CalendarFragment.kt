@@ -44,6 +44,7 @@ class CalendarFragment : Fragment() {
     private lateinit var maxDate: Calendar
     private lateinit var todoList: List<Task>
     private lateinit var doneList: List<Task>
+    private lateinit var combinedList: ArrayList<Task>
     private lateinit var cardColors: List<CardColor>
     private lateinit var mapSubjectColor: Map<String, Int>
 
@@ -75,6 +76,12 @@ class CalendarFragment : Fragment() {
         mapOfTasks = viewModel.getMapOfTasks()
         todoList = viewModel.getTodoList()
         doneList = viewModel.getDoneList()
+        combinedList = arrayListOf()
+        combinedList.apply {
+            addAll(todoList)
+            addAll(doneList)
+            sortBy { it.dueDateInt }
+        }
         cardColors = viewModel.getListCardColors()
         mapSubjectColor = viewModel.getMapSubjectColor()
         settings = viewModel.getListSettings()
@@ -246,7 +253,7 @@ class CalendarFragment : Fragment() {
         calDialogView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
 
         // set up the ViewPager adapter
-        viewPagerAdapter = CalendarPagerAdapter(requireContext(), todoList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors, showCompletedTasks)
+        viewPagerAdapter = CalendarPagerAdapter(requireContext(), combinedList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors, showCompletedTasks)
 
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
 
@@ -284,10 +291,7 @@ class CalendarFragment : Fragment() {
             ) {
                 // update view scale and alpha of views not currently focused
 
-                adjustOpacity(
-                    viewPager.findViewWithTag(position),
-                    1f - positionOffset
-                ) // current page
+                adjustOpacity(viewPager.findViewWithTag(position), 1f - positionOffset) // current page
                 if ((position + 1) < totalPages) { // next page
                     adjustOpacity(viewPager.findViewWithTag(position + 1), positionOffset)
                 }

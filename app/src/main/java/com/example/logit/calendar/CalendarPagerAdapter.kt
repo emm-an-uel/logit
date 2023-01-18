@@ -18,7 +18,7 @@ import java.util.*
 
 class CalendarPagerAdapter(
     private val context: Context,
-    private val todoList: List<Task>,
+    private val combinedList: List<Task>,
     private val mapOfTasks: Map<Int, ArrayList<Task>>,
     private val minDate: Calendar,
     private val maxDate: Calendar,
@@ -74,18 +74,22 @@ class CalendarPagerAdapter(
             if (key == currentDateInt) {
                 val todayTasks: ArrayList<Task> = mapOfTasks[key]!!
                 val rvAdapter = CalendarRVAdapter(todayTasks, mapSubjectColor, cardColors, showCompletedTasks)
-                rvAdapter.checkShouldShowCompletedTasks() // decide whether or not to show completed Tasks
+                rvAdapter.checkShowCompletedTasks() // decide whether or not to show completed Tasks
                 rvEvents.adapter = rvAdapter
 
-                // click listener to watch for 'mark as done'
+                // click listener to watch for changes in 'completed' status
                 rvAdapter.setOnItemClickListener(object: CalendarRVAdapter.OnItemClickListener {
                     override fun onItemClick(position: Int) {
-                        val completedTask: Task = todayTasks[position]
-                        val actualPosition: Int? = findPosition(completedTask)
+                        val task = todayTasks[position]
+                        val actualPosition: Int? = findPosition(task)
                         if (actualPosition != null) {
-                            (context as ParentActivity).viewModel.markAsDone(completedTask, actualPosition)
+                            if (task.completed) { // task currently completed, to mark as undone
+                                (context as ParentActivity).viewModel.markAsUndone(task, actualPosition)
+                            } else { // task current uncompleted, to mark as done
+                                (context as ParentActivity).viewModel.markAsDone(task, actualPosition)
+                            }
 
-                        } else {
+                        } else { // if failed to find actualPosition
                             FancyToast.makeText(context, "Error: Could not mark as done", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
                         }
                     }
@@ -106,9 +110,9 @@ class CalendarPagerAdapter(
     }
 
     private fun findPosition(completedTask: Task): Int? {
-        for (task in todoList) {
+        for (task in combinedList) {
             if (task.id == completedTask.id) {
-                return todoList.indexOf(task)
+                return combinedList.indexOf(task)
             }
         }
         return null
