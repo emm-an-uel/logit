@@ -199,39 +199,58 @@ class CalendarFragment : Fragment() {
 
     private fun addCalendarObjects() { // add CalendarObjects to CalendarView
         val calObjectList = arrayListOf<CalendarView.CalendarObject>()
-        for (task in todoList) {
-            val dueDate: Calendar = intToCalendar(task.dueDateInt!!)
-            val bgColorIndex = mapSubjectColor[task.subject]
-            val bgColor = if (bgColorIndex != null) {
-                ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
-            } else {
-                ContextCompat.getColor(requireContext(), R.color.gray)
+        if (showCompletedTasks) {
+            for (task in combinedList) {
+                if (!task.completed) { // task not completed - opaque color
+                    val dueDate: Calendar = intToCalendar(task.dueDateInt)
+                    val bgColorIndex = mapSubjectColor[task.subject]
+                    val bgColor = if (bgColorIndex != null) {
+                        ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
+                    } else {
+                        ContextCompat.getColor(requireContext(), R.color.gray)
+                    }
+                    calObjectList.add(
+                        CalendarView.CalendarObject(
+                            null,
+                            dueDate,
+                            bgColor,
+                            ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                        )
+                    )
+                } else { // task completed - translucent color
+                    val dueDate: Calendar = intToCalendar(task.dueDateInt)
+                    val bgColorIndex = mapSubjectColor[task.subject]
+                    val bgColor = if (bgColorIndex != null) {
+                        ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
+                    } else {
+                        ContextCompat.getColor(requireContext(), R.color.gray)
+                    }
+                    val bgColorTranslucent = ColorUtils.setAlphaComponent(bgColor, 85) // set alpha to make completed Tasks appear translucent
+                    calObjectList.add(
+                        CalendarView.CalendarObject(
+                            null,
+                            dueDate,
+                            bgColorTranslucent,
+                            ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                        )
+                    )
+                }
             }
-            calObjectList.add(
-                CalendarView.CalendarObject(
-                    null,
-                    dueDate,
-                    bgColor,
-                    ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
-                )
-            )
-        }
 
-        if (showCompletedTasks) { // add completed Tasks to calObjectList
-            for (task in doneList) {
-                val dueDate: Calendar = intToCalendar(task.dueDateInt!!)
+        } else { // !showCompletedTasks
+            for (task in todoList) { // !completed - all opaque 
+                val dueDate: Calendar = intToCalendar(task.dueDateInt)
                 val bgColorIndex = mapSubjectColor[task.subject]
                 val bgColor = if (bgColorIndex != null) {
                     ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
                 } else {
                     ContextCompat.getColor(requireContext(), R.color.gray)
                 }
-                val bgColorTranslucent = ColorUtils.setAlphaComponent(bgColor, 85) // set alpha to make completed Tasks appear translucent
                 calObjectList.add(
                     CalendarView.CalendarObject(
                         null,
                         dueDate,
-                        bgColorTranslucent,
+                        bgColor,
                         ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
                     )
                 )
