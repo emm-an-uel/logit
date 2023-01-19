@@ -1,130 +1,262 @@
 package com.example.logit.addtask
 
 import android.content.Context
+import android.content.res.ColorStateList
 import android.os.Bundle
-import android.widget.CalendarView
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.TextView
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.TypedValue
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
+import androidx.core.content.ContextCompat
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
 import com.example.logit.R
 import com.example.logit.Task
+import com.example.logit.databinding.ActivityAddTaskBinding
 import java.io.File
 import java.io.StringReader
 import java.util.*
 
 class AddTaskActivity : AppCompatActivity() {
 
-    lateinit var dueDate: String
-    lateinit var listTask: ArrayList<Task>
-    lateinit var currentTask: Task
-    var dateInt = 0
+    private lateinit var spinnerSubject: Spinner
+    private lateinit var etTask: EditText
+    private lateinit var tvDueDate: TextView
+    private lateinit var cvDueDate: CalendarView
+    private lateinit var etNotes: EditText
 
-    lateinit var spinnerSubject: Spinner
-    lateinit var etTask: EditText
-    lateinit var cvDueDate: CalendarView
-    lateinit var etNotes: EditText
+    private lateinit var dueDate: String
+    private lateinit var listTask: ArrayList<Task>
+    private lateinit var currentTask: Task
+    private var dateInt = 0
 
-    lateinit var tvConfirm: TextView
+    private var taskIsBeingEdited = true
+    private var btnIsClickable = false
+    private var showCvDueDate = false
+    private var originalSpinnerIndex = 0
 
-    var taskIsBeingEdited = true
+    private lateinit var listSubjectsSpinner: ArrayList<String>
 
-    lateinit var listSubjectsSpinner: ArrayList<String>
-
-    lateinit var rvAddTask: RecyclerView
-
-    var btnIsClickable = false
+    private lateinit var binding: ActivityAddTaskBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_task)
+        binding = ActivityAddTaskBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        var editTaskId = intent.getStringExtra("taskId")
+        val editTaskId = intent.getStringExtra("taskId")
         if (editTaskId == null) { // if user is creating a new task
             title = "Create New Task" // this sets the activity's label
-            editTaskId = "0"
             taskIsBeingEdited = false
         } else { // if user is editing an existing task
             title = "Edit a Task"
             currentTask = findCurrentTask(editTaskId)
         }
 
-        setupRVAddTask(editTaskId)
+        setupViews()
 
         // set btnConfirm to unclickable by default
-        tvConfirm = findViewById(R.id.tvConfirm)
         btnDisabled()
 
         // when button "confirm" is clicked
-        tvConfirm.setOnClickListener() {
+        binding.btnConfirm.setOnClickListener {
 
             if (btnIsClickable) {
-
-                assignViews()
-
                 val selectedSpinnerIndex = spinnerSubject.selectedItemPosition
                 val subject = listSubjectsSpinner[selectedSpinnerIndex]
-
                 val task = etTask.text.toString().trim()
-                val completed = false // false = undone, true = done
-
+                val completed = false
                 val notes = etNotes.text.toString().trim()
 
-                // stores subject, task, notes in local file
                 storeLocally(subject, task, completed, notes)
-
                 finish()
             }
         }
     }
 
-    private fun setupRVAddTask(editTaskId: String) {
-        // initialize litSubjectsSpinner
-        listSubjectsSpinner = arrayListOf()
-
-        listSubjectsSpinner.addAll(intent.getStringArrayListExtra("listSubjects")!!) // listSubjects: ArrayList<String>
+    private fun setupViews() {
+        // initialize listSubjectsSpinner
+        listSubjectsSpinner = intent.getStringArrayListExtra("listSubjects")!!
         listSubjectsSpinner.add("Other") // final option of "Other"
 
+        // if user created a new task from Calendar
         val selectedDateString: String? = intent.getStringExtra("selectedDate")
 
-        // initialize rv
-        rvAddTask = findViewById(R.id.rvAddTask)
-        val rvAdapter = RVAdapterAddTask(listSubjectsSpinner, editTaskId, selectedDateString)
-        rvAddTask.adapter = rvAdapter
-    }
+        // set views
+        spinnerSubject = binding.content.spinnerSubject
+        etTask = binding.content.etTask
+        tvDueDate = binding.content.tvDueDate
+        cvDueDate = binding.content.cvDueDate
+        etNotes = binding.content.etNotes
 
-    private fun assignViews() {
-        val itemCount = rvAddTask.adapter!!.itemCount
+        // subject
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, listSubjectsSpinner)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spinnerSubject.adapter = adapter
+        if (taskIsBeingEdited) {
+            setSubjectInfo(currentTask.subject)
+            spinnerSubjectItemSelectedListener()
+        } else {
+            setSubjectInfo("Other")
+        }
 
-        for (i in 0 until itemCount) {
+        // task
+        if (taskIsBeingEdited) {
+            setTaskInfo(currentTask.task)
+            etTask.addTextChangedListener(textWatcherTask)
+        } else {
+            etTask.addTextChangedListener(textWatcherNewTask)
+        }
 
-            val holder = rvAddTask.findViewHolderForAdapterPosition(i)
-            if (holder != null) {
-                when (i) {
-                    0 -> { // subject
-                        spinnerSubject = holder.itemView.findViewById(R.id.spinnerSubject)
-                    }
+        // due date
+        val primaryTextColor = getColor(this, R.attr.primaryTextColor)
+        setMinDate()
+        if (taskIsBeingEdited) {
+            setDefaultDueDate(currentTask.dueDate)
+        } else if (selectedDateString != null) { // would only be non null if user created new task from Calendar
+            setDefaultDueDate(selectedDateString)
+        } else {
+            setDefaultDueDate(null)
+        }
+        tvDueDate.setOnClickListener {
+            if (!showCvDueDate) { // currently not shown -> shown
+                cvDueDate.visibility = View.VISIBLE
+                tvDueDate.setTextColor(ContextCompat.getColor(this, R.color.cardview_black))
 
-                    1 -> { // task
-                        etTask = holder.itemView.findViewById(R.id.etTask)
-                    }
+                // set tvDueDate bg color
+                val bgColor = getColor(this, com.google.android.material.R.attr.colorSecondaryContainer)
+                tvDueDate.backgroundTintList = ColorStateList.valueOf(bgColor)
+                showCvDueDate = true
 
-                    2 -> { // due date
-                        cvDueDate = holder.itemView.findViewById(R.id.cvDueDate)
-                    }
+            } else { // currently shown -> not shown
+                cvDueDate.visibility = View.GONE
+                tvDueDate.setTextColor(primaryTextColor)
 
-                    else -> { // notes
-                        etNotes = holder.itemView.findViewById(R.id.etNotes)
-                    }
+                val bgColor = getColor(this, com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                tvDueDate.backgroundTintList = ColorStateList.valueOf(bgColor)
+                showCvDueDate = false
+            }
+        }
+
+        cvDueDate.visibility = View.GONE // gone by default
+        cvDueDate.setOnDateChangeListener { _, year, month, dayOfMonth ->
+            val month1 = month + 1
+            dueDate = "$dayOfMonth $month1 $year"
+
+            // displays current date on tvDueDate
+            val c = Calendar.getInstance()
+            c.set(year, month, dayOfMonth)
+            val dayOfWeek = c.get(Calendar.DAY_OF_WEEK)
+            val actualDayOfWeek = getActualDayOfWeek(dayOfWeek)
+            val actualMonth = getActualMonth(month1)
+
+            tvDueDate.text = "$actualDayOfWeek, $dayOfMonth $actualMonth $year"
+
+            // btnConfirm clickability
+            if (taskIsBeingEdited) {
+                if (currentTask.dueDate == dueDate) { // if existing dueDate == new dueDate
+                    btnDisabled()
+                } else {
+                    btnEnabled()
                 }
             }
+
+            updateDueDate(dueDate)
+        }
+
+        // notes
+        if (taskIsBeingEdited) {
+            setNotesInfo(currentTask.notes)
+            etNotes.addTextChangedListener(textWatcherNotes)
         }
     }
 
-    fun updateDueDate(date: String) {
+    private fun setDefaultDueDate(currentDueDate: String?) {
+
+        val c = Calendar.getInstance()
+
+        if (currentDueDate != null) { // user is editing an existing task
+            val currentDueDateList = currentDueDate.split(" ")
+            val dayOfMonth = currentDueDateList[0].toInt()
+            val month = currentDueDateList[1].toInt() - 1
+            val year = currentDueDateList[2].toInt()
+
+            c.set(year, month, dayOfMonth)
+
+            // set cvDueDate's selected date
+            val dateLong = c.timeInMillis
+            cvDueDate.date = dateLong
+
+            val actualMonth = month + 1 // refer to line 200 - month is actualMonth - 1; this adds the 1 back
+            val defaultDueDate = "$dayOfMonth $actualMonth $year"
+            updateDueDate(defaultDueDate)
+
+        } else {
+
+            // sets default due date a today's date, passes dueDate to ActivityAddTask - this is so dueDate != null if user doesn't touch tvDueDate
+            val day = c.get(Calendar.DAY_OF_MONTH)
+            val month = c.get(Calendar.MONTH) + 1
+            val year = c.get(Calendar.YEAR)
+
+            val defaultDueDate = "$day $month $year"
+            updateDueDate(defaultDueDate)
+        }
+
+        val dayOfWeek = c.get(Calendar.DAY_OF_WEEK)
+        val actualDayOfWeek = getActualDayOfWeek(dayOfWeek)
+
+        val dayOfMonth = c.get(Calendar.DAY_OF_MONTH)
+
+        val month1 = c.get(Calendar.MONTH) + 1
+        val actualMonth = getActualMonth(month1)
+
+        val year = c.get(Calendar.YEAR)
+
+        tvDueDate.text = "$actualDayOfWeek, $dayOfMonth $actualMonth $year"
+    }
+
+    private fun getActualDayOfWeek(dayOfWeek: Int): String {
+        when (dayOfWeek) {
+            1 -> return "Sun"
+            2 -> return "Mon"
+            3 -> return "Tue"
+            4 -> return "Wed"
+            5 -> return "Thu"
+            6 -> return "Fri"
+            7 -> return "Sat"
+        }
+
+        return "Error"
+    }
+
+    private fun getActualMonth(month: Int): String {
+        when (month) {
+            1 -> return "Jan"
+            2 -> return "Feb"
+            3 -> return "Mar"
+            4 -> return "Apr"
+            5 -> return "May"
+            6 -> return "Jun"
+            7 -> return "Jul"
+            8 -> return "Aug"
+            9 -> return "Sep"
+            10 -> return "Oct"
+            11 -> return "Nov"
+            12 -> return "Dec"
+        }
+
+        return "Error"
+    }
+
+    private fun setMinDate() {
+        val today = Calendar.getInstance()
+        val todayLong = today.timeInMillis
+        cvDueDate.minDate = todayLong
+    }
+
+    private fun updateDueDate(date: String) {
         dueDate = date
         val dueDateList = dueDate.split(" ")
         val day = dueDateList[0].toInt()
@@ -160,12 +292,12 @@ class AddTaskActivity : AppCompatActivity() {
 
     fun btnDisabled() {
         btnIsClickable = false
-        tvConfirm.alpha = 0.2F
+        binding.btnConfirm.alpha = 0.2F
     }
 
     fun btnEnabled() {
         btnIsClickable = true
-        tvConfirm.alpha = 1F
+        binding.btnConfirm.alpha = 1F
     }
 
     fun findCurrentTask(editTaskId: String): Task {
@@ -198,11 +330,11 @@ class AddTaskActivity : AppCompatActivity() {
         return currentTask
     }
 
-    private fun storeLocally(subject : String, task : String, status: Boolean, notes: String) {
+    private fun storeLocally(subject : String, task : String, completed: Boolean, notes: String) {
         val id = UUID.randomUUID().toString()
 
         // create val "assignment" using Class "Task" parameters
-        val newAssignment = Task(id, subject, task, dueDate, dateInt, status, notes, 0)
+        val newAssignment = Task(id, subject, task, dueDate, dateInt, completed, notes, 0)
 
         // check if there's existing "fileAssignments"
         val file = File(this.filesDir, "fileAssignment")
@@ -254,5 +386,87 @@ class AddTaskActivity : AppCompatActivity() {
                 it.write(updatedFile.toByteArray())
             }
         }
+    }
+
+    private fun spinnerSubjectItemSelectedListener() {
+        spinnerSubject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                if (p2 == originalSpinnerIndex) { // note: p2 is current position
+                    btnDisabled()
+                } else {
+                    btnEnabled()
+                }
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+            }
+
+        }
+    }
+
+    private val textWatcherTask = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (etTask.text.toString().trim() == currentTask.task) { // if task is unchanged
+                btnDisabled()
+            } else if (etTask.text.toString().trim() == "") { // if task is empty
+                btnDisabled()
+            } else {
+                btnEnabled()
+            }
+        }
+    }
+
+    private val textWatcherNotes = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (etNotes.text.toString().trim() == currentTask.notes) { // if notes is unchanged
+                btnDisabled()
+            } else {
+                btnEnabled()
+            }
+        }
+    }
+
+    private fun setSubjectInfo(subject: String) {
+        originalSpinnerIndex = listSubjectsSpinner.indexOf(subject)
+        spinnerSubject.setSelection(originalSpinnerIndex)
+    }
+
+    private fun setTaskInfo(task: String) {
+        etTask.setText(task)
+    }
+
+    private fun setNotesInfo(notes: String) {
+        etNotes.setText(notes)
+    }
+
+    private val textWatcherNewTask = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {
+        }
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+        }
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (etTask.text.toString().trim() != "") {
+                btnEnabled()
+            } else {
+                btnDisabled()
+            }
+        }
+    }
+
+    private fun getColor(context: Context, colorResId: Int): Int {
+
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
     }
 }

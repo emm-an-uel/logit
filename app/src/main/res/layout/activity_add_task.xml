@@ -6,23 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".addtask.AddTaskActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvAddTask"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="55dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/btnConfirm"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <TextView
-        android:id="@+id/tvConfirm"
+        <include
+            android:id="@+id/content"
+            layout="@layout/content_add_task" />
+
+    </ScrollView>
+
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:padding="15dp"
-        android:text="CONFIRM"
-        android:textAlignment="center"
+        android:id="@+id/btnConfirm"
+        android:background="?attr/colorBackground"
+        android:text="confirm"
         android:textColor="?attr/colorOnSecondary"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
