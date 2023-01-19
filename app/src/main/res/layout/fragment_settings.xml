@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -17,13 +16,19 @@
             android:orientation="vertical">
 
             <!-- General settings -->
-            <include android:layout="@layout/content_general_settings" />
+            <include
+                android:id="@+id/generalSettings"
+                layout="@layout/content_general_settings" />
 
             <!-- Log settings -->
-            <include android:layout="@layout/content_log_settings" />
+            <include
+                android:id="@+id/logSettings"
+                layout="@layout/content_log_settings" />
 
             <!-- Calendar settings -->
-            <include android:layout="@layout/content_calendar_settings" />
+            <include
+                android:id="@+id/calendarSettings"
+                layout="@layout/content_calendar_settings" />
 
         </LinearLayout>
 

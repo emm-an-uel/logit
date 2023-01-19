@@ -48,16 +48,16 @@ class SettingsFragment : Fragment() {
         // TODO: future user preferences here //
         // GENERAL SETTINGS
         // edit color codes
-        binding.editColorCodes.setOnClickListener {
+        binding.generalSettings.editColorCodes.setOnClickListener {
             val intent = Intent(requireContext(), ColorCodesSettingsActivity::class.java)
             (context as ParentActivity).startActivity(intent)
         }
         // automatically delete completed tasks
         val adapter = ArrayAdapter.createFromResource(requireContext(), R.array.auto_delete_options, android.R.layout.simple_spinner_item)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.spinnerAutoDelete.adapter = adapter
+        binding.generalSettings.spinnerAutoDelete.adapter = adapter
         val selectedOption: Int = listSettingsItems[1].option
-        binding.spinnerAutoDelete.apply {
+        binding.generalSettings.spinnerAutoDelete.apply {
             setSelection(selectedOption)
             onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -77,7 +77,7 @@ class SettingsFragment : Fragment() {
 
         // LOG SETTINGS
         // header bars
-        binding.switchHeaderBars.apply {
+        binding.logSettings.switchHeaderBars.apply {
             isChecked = intToBoolean(listSettingsItems[2].option)
             setOnCheckedChangeListener { _, isChecked ->
                 val option = booleanToInt(isChecked)
@@ -85,7 +85,7 @@ class SettingsFragment : Fragment() {
             }
         }
         // background glow
-        binding.switchBackgroundGlow.apply {
+        binding.logSettings.switchBackgroundGlow.apply {
             isChecked = intToBoolean(listSettingsItems[3].option)
             setOnCheckedChangeListener { _, isChecked ->
                 val option = booleanToInt(isChecked)
@@ -95,7 +95,7 @@ class SettingsFragment : Fragment() {
 
         // CALENDAR SETTINGS
         // show completed tasks
-        binding.switchShowCompletedTasks.apply {
+        binding.calendarSettings.switchShowCompletedTasks.apply {
             isChecked = intToBoolean(listSettingsItems[4].option)
             setOnCheckedChangeListener { _, isChecked ->
                 val option = booleanToInt(isChecked)

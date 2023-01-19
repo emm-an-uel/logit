@@ -47,7 +47,7 @@
         android:layout_height="30dp"
         android:layout_gravity="center"
         android:contentDescription="checkIcon"
-        android:src="@drawable/ic_baseline_check_box_24"
+        android:src="@drawable/ic_check_box"
         app:tint="?attr/calendarDialogCheckColor" />
 
 </LinearLayout>
