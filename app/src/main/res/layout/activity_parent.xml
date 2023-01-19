@@ -21,6 +21,7 @@
         android:layout_gravity="start"
         android:backgroundTint="?attr/drawerBackground"
         android:fitsSystemWindows="true"
+        android:paddingHorizontal="10dp"
         app:headerLayout="@layout/nav_header_main"
         app:itemBackground="@drawable/drawer_item_selector"
         app:itemTextColor="@color/drawer_item_text_color"
