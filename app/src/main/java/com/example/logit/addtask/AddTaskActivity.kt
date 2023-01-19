@@ -126,7 +126,7 @@ class AddTaskActivity : AppCompatActivity() {
                 tvDueDate.setTextColor(ContextCompat.getColor(this, R.color.cardview_black))
 
                 // set tvDueDate bg color
-                val bgColor = getColor(this, com.google.android.material.R.attr.colorSecondaryContainer)
+                val bgColor = getColor(this, com.google.android.material.R.attr.colorAccent)
                 tvDueDate.backgroundTintList = ColorStateList.valueOf(bgColor)
                 showCvDueDate = true
 
