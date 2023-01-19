@@ -33,7 +33,6 @@ class RVAdapterLog (
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        holder.setIsRecyclable(false)
         when (holder.itemViewType) {
             ListItem.TYPE_HEADER -> {
                 (holder as DateViewHolder).bind(
@@ -41,6 +40,7 @@ class RVAdapterLog (
                 )
             }
             ListItem.TYPE_TASK -> {
+                holder.setIsRecyclable(false)
                 (holder as TaskViewHolder).bind(
                     item = listOfItems[position] as TaskItem
                 )
