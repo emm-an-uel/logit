@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.logit.ParentActivity
 import com.example.logit.R
 import com.example.logit.Task
 import com.example.logit.log.CardColor
@@ -42,6 +43,16 @@ class CalendarRVAdapter (
                 updateCheckColor()
                 listener.onItemClick(adapterPosition)
             }
+
+            itemView.setOnClickListener {
+                editTask(adapterPosition)
+            }
+        }
+
+        private fun editTask(position: Int) {
+            val context = itemView.context
+            val selectedTask = tasks[position]
+            (context as ParentActivity).editTask(selectedTask)
         }
 
         private fun updateCheckColor() {
@@ -64,6 +75,7 @@ class CalendarRVAdapter (
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         val task = tasks[position]
         val context = holder.tvSubject.context
         holder.tvSubject.text = task.subject

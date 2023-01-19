@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.R
-import com.example.logit.databinding.TaskItemBinding
 import com.example.logit.databinding.HeaderItemBinding
+import com.example.logit.databinding.TaskItemBinding
 import java.util.*
 
 class RVAdapterLog (
@@ -20,7 +20,6 @@ class RVAdapterLog (
     private val listColors: ArrayList<CardColor>,
     private val glow: Boolean,
     private val bars: Boolean
-    // TODO: future user preferences here //
         ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -29,11 +28,12 @@ class RVAdapterLog (
             ListItem.TYPE_HEADER ->
                 DateViewHolder(HeaderItemBinding.inflate(layoutInflater, parent, false))
             else ->
-                GeneralViewHolder(TaskItemBinding.inflate(layoutInflater, parent, false))
+                TaskViewHolder(TaskItemBinding.inflate(layoutInflater, parent, false))
         }
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        holder.setIsRecyclable(false)
         when (holder.itemViewType) {
             ListItem.TYPE_HEADER -> {
                 (holder as DateViewHolder).bind(
@@ -41,7 +41,7 @@ class RVAdapterLog (
                 )
             }
             ListItem.TYPE_TASK -> {
-                (holder as GeneralViewHolder).bind(
+                (holder as TaskViewHolder).bind(
                     item = listOfItems[position] as TaskItem
                 )
             }
@@ -102,7 +102,7 @@ class RVAdapterLog (
         }
     }
 
-    inner class GeneralViewHolder(val binding: TaskItemBinding): RecyclerView.ViewHolder(binding.root) {
+    inner class TaskViewHolder(val binding: TaskItemBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(item: TaskItem) {
             val context = binding.cardView.context
 

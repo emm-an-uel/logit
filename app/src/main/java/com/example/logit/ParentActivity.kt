@@ -53,6 +53,16 @@ class ParentActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
     }
 
+    override fun onResume() {
+        super.onResume()
+        getData() // update ViewModel data
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
     private fun getData() {
         viewModel.apply {
             createCardColorsList()
@@ -65,22 +75,22 @@ class ParentActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        getData() // update ViewModel data
-    }
-
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
-    }
-
-    fun createNewTask(selectedDateString: String) {
+    fun createNewTask(selectedDateString: String) { // called from Calendar
         val intent = Intent(this, AddTaskActivity::class.java)
 
         val listSubjects: ArrayList<String> = viewModel.getListSubjects()
         intent.putExtra("listSubjects", listSubjects)
         intent.putExtra("selectedDate", selectedDateString)
+
+        startActivity(intent)
+    }
+
+    fun editTask(task: Task) { // called from Calendar
+        val intent = Intent(this, AddTaskActivity::class.java)
+
+        val listSubjects: ArrayList<String> = viewModel.getListSubjects()
+        intent.putExtra("listSubjects", listSubjects)
+        intent.putExtra("taskId", task.id)
 
         startActivity(intent)
     }
