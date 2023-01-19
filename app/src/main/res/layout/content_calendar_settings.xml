@@ -32,7 +32,7 @@
                 android:layout_gravity="start|center"
                 android:layout_margin="10dp"
                 android:src="@drawable/ic_checklist"
-                app:tint="@color/light_blue" />
+                app:tint="@color/cardview_yellow" />
 
             <TextView
                 android:layout_width="wrap_content"
