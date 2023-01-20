@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start|center"
                 android:layout_margin="10dp"
-                android:src="@drawable/ic_timer"
+                android:src="@drawable/ic_auto_delete"
                 app:tint="@color/light_blue" />
 
             <TextView

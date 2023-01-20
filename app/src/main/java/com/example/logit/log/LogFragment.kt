@@ -108,7 +108,7 @@ class LogFragment : Fragment() {
                     }
                 } else { // in fragmentDone
                     currentFrag = 1
-                    fabTask.setImageResource(R.drawable.icon_trash)
+                    fabTask.setImageResource(R.drawable.ic_delete)
                     checkFabClickability() // set clickability
                     fabTask.setOnClickListener {
                         confirmClearAll()
