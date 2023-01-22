@@ -98,7 +98,7 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
         nextWeek.add(Calendar.DATE, 7) // adds 7 days to today's date
         val nextWeekInt = calendarToInt(nextWeek)
 
-        todoList!!.sortBy { it.dueDateInt }
+        todoList!!.sortWith(compareBy(Task::dueDateInt, Task::subject))
 
         // headings will be - Overdue, Today, Tomorrow, Next Week, Upcoming
         var overdueHeader = false
@@ -214,7 +214,7 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
 
     fun createConsolidatedListDone() {
         // consolidatedListDone will not have DateItems
-        doneList!!.sortBy { it.dueDateInt }
+        doneList!!.sortWith(compareBy(Task::dueDateInt, Task::subject))
         consolidatedListDone = arrayListOf()
         for (t in doneList!!) {
             consolidatedListDone.add(TaskItem(t.subject, t.task, t.dueDate, t.notes))
@@ -265,8 +265,6 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
     }
 
     fun saveJsonTaskLists() {
-        todoList!!.sortBy { it.dueDateInt }
-        doneList!!.sortBy { it.dueDateInt }
         val listAllTasks = arrayListOf<Task>()
         listAllTasks.addAll(todoList!!)
         listAllTasks.addAll(doneList!!)
@@ -487,7 +485,7 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
         nextWeek.add(Calendar.DATE, 7) // adds 7 days to today's date
         val nextWeekInt = calendarToInt(nextWeek)
 
-        tasks.sortBy { it.dueDateInt }
+        tasks.sortWith(compareBy(Task::dueDateInt, Task::subject))
 
         // headings will be - Overdue, Today, Tomorrow, Next Week, Upcoming
         var overdueHeader = false
@@ -594,7 +592,7 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
     }
 
     fun createFilteredConsolidatedDoneList(tasks: ArrayList<Task>): ArrayList<ListItem> {
-        tasks.sortBy { it.dueDateInt }
+        tasks.sortWith(compareBy(Task::dueDateInt, Task::subject))
         val consolidatedList = arrayListOf<ListItem>()
         for (t in tasks) {
             consolidatedList.add(TaskItem(t.subject, t.task, t.dueDate, t.notes))
@@ -616,7 +614,7 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
         combinedList.apply {
             addAll(todoList!!)
             addAll(doneList!!)
-            sortBy { it.dueDateInt }
+            sortWith(compareBy(Task::dueDateInt, Task::subject, Task::task)) // sort by dueDateInt first, then by subject, then by task - for more uniform sorting
         }
 
         for (task in combinedList) {

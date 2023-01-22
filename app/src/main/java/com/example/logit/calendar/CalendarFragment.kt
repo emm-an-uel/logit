@@ -80,7 +80,7 @@ class CalendarFragment : Fragment() {
         combinedList.apply {
             addAll(todoList)
             addAll(doneList)
-            sortBy { it.dueDateInt }
+            sortWith(compareBy(Task::dueDateInt, Task::subject, Task::task))
         }
         cardColors = viewModel.getListCardColors()
         mapSubjectColor = viewModel.getMapSubjectColor()
@@ -199,6 +199,7 @@ class CalendarFragment : Fragment() {
 
     private fun addCalendarObjects() { // add CalendarObjects to CalendarView
         val calObjectList = arrayListOf<CalendarView.CalendarObject>()
+        var id = 0
         if (showCompletedTasks) {
             for (task in combinedList) {
                 if (!task.completed) { // task not completed - opaque color
@@ -211,7 +212,7 @@ class CalendarFragment : Fragment() {
                     }
                     calObjectList.add(
                         CalendarView.CalendarObject(
-                            null,
+                            id.toString(),
                             dueDate,
                             bgColor,
                             ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
@@ -228,13 +229,14 @@ class CalendarFragment : Fragment() {
                     val bgColorTranslucent = ColorUtils.setAlphaComponent(bgColor, 85) // set alpha to make completed Tasks appear translucent
                     calObjectList.add(
                         CalendarView.CalendarObject(
-                            null,
+                            id.toString(),
                             dueDate,
                             bgColorTranslucent,
                             ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
                         )
                     )
                 }
+                id++
             }
 
         } else { // !showCompletedTasks
@@ -248,15 +250,17 @@ class CalendarFragment : Fragment() {
                 }
                 calObjectList.add(
                     CalendarView.CalendarObject(
-                        null,
+                        id.toString(),
                         dueDate,
                         bgColor,
                         ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
                     )
                 )
+                id++
             }
         }
 
+        calObjectList.sortBy { it.id } // to sync CalendarObjects with RecyclerView Tasks
         binding.calendarView.setCalendarObjectList(calObjectList)
     }
 
