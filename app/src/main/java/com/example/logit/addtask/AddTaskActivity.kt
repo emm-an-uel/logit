@@ -92,8 +92,7 @@ class AddTaskActivity : AppCompatActivity() {
         etNotes = binding.content.etNotes
 
         // subject
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, listSubjectsSpinner)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = AddTaskSpinnerAdapter(this, listSubjectsSpinner)
         spinnerSubject.adapter = adapter
         if (taskIsBeingEdited) {
             setSubjectInfo(currentTask.subject)
