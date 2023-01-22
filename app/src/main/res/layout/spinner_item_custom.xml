@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:id="@+id/background"
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:background="@color/blue_gray"
         android:orientation="vertical">
@@ -15,12 +15,18 @@
             android:id="@+id/tvSubject"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingVertical="8dp"
+            android:paddingVertical="10dp"
             android:paddingLeft="8dp"
             android:paddingRight="18dp"
             android:text="Subject"
             android:textColor="@color/white"
             android:textSize="16sp" />
+
+        <View
+            android:id="@+id/dividerLine"
+            android:layout_width="wrap_content"
+            android:layout_height="1dp"
+            android:background="@color/gray" />
 
     </LinearLayout>
 

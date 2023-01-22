@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.core.content.ContextCompat
 import com.example.logit.R
 
 class AddTaskSpinnerAdapter(context: Context, subjects: List<String>) :
@@ -17,50 +16,39 @@ class AddTaskSpinnerAdapter(context: Context, subjects: List<String>) :
     private val numSubjects = subjects.size
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return myView(position, convertView, parent, dropDown = false)
+        return newView(position, convertView, parent, dropDown = false)
     }
 
     override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
-        return myView(position, convertView, parent, dropDown = true)
+        return newView(position, convertView, parent, dropDown = true)
     }
 
-    private fun myView(
+    private fun newView(
         position: Int,
         convertView: View?,
         parent: ViewGroup,
         dropDown: Boolean
     ): View {
         val subject: String? = getItem(position)
-        val view = convertView ?: LayoutInflater.from(context)
-            .inflate(R.layout.spinner_item_custom, parent, false)
-
-        if (view.background != null) {
-            view.setBackgroundColor(
-                ContextCompat.getColor(
-                    context,
-                    android.R.color.transparent
-                )
-            ) // get rid of default bg
-        }
+        val view = convertView ?: LayoutInflater.from(context).inflate(R.layout.spinner_item_custom, parent, false)
 
         val tvSubject: TextView = view.findViewById(R.id.tvSubject)
         val background: LinearLayout = view.findViewById(R.id.background)
+        val dividerLine: View = view.findViewById(R.id.dividerLine)
 
-        if (subject != null) {
-            tvSubject.text = subject
-        } else {
-            tvSubject.visibility = View.GONE
-        }
+        tvSubject.text = subject
 
-        // set transparent background if it's the current option being chosen (aesthetic)
+        // special conditions for selected item (not in drop-down list) 
         if (!dropDown) {
             background.background = getDrawable(context, android.R.color.transparent)
+            dividerLine.visibility = View.GONE
 
-        } else { // special conditions for first and last items
+        } else { // special conditions for first and last items in drop-down list 
             if (position == 0) {
                 background.background = getDrawable(context, R.drawable.custom_spinner_bg_top)
             } else if (position == numSubjects - 1) {
                 background.background = getDrawable(context, R.drawable.custom_spinner_bg_bottom)
+                dividerLine.visibility = View.GONE
             }
         }
 

@@ -93,6 +93,7 @@ class AddTaskActivity : AppCompatActivity() {
 
         // subject
         val adapter = AddTaskSpinnerAdapter(this, listSubjectsSpinner)
+        spinnerSubject.setPopupBackgroundResource(android.R.color.transparent) // remove default black background
         spinnerSubject.adapter = adapter
         if (taskIsBeingEdited) {
             setSubjectInfo(currentTask.subject)
