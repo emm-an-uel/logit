@@ -2,6 +2,7 @@ package com.example.logit.addtask
 
 import android.content.Context
 import android.content.res.ColorStateList
+import android.content.res.Resources
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -92,9 +93,12 @@ class AddTaskActivity : AppCompatActivity() {
         etNotes = binding.content.etNotes
 
         // subject
-        val adapter = AddTaskSpinnerAdapter(this, listSubjectsSpinner)
-        spinnerSubject.setPopupBackgroundResource(android.R.color.transparent) // remove default black background
-        spinnerSubject.adapter = adapter
+        val spinnerAdapter = AddTaskSpinnerAdapter(this, listSubjectsSpinner)
+        spinnerSubject.apply {
+            setPopupBackgroundResource(android.R.color.transparent) // remove default black bg
+            dropDownVerticalOffset = dpToPx(this@AddTaskActivity, 40F) // 40dp offset down
+            adapter = spinnerAdapter
+        }
         if (taskIsBeingEdited) {
             setSubjectInfo(currentTask.subject)
             spinnerSubjectItemSelectedListener()
@@ -462,11 +466,19 @@ class AddTaskActivity : AppCompatActivity() {
     }
 
     private fun getColor(context: Context, colorResId: Int): Int {
-
         val typedValue = TypedValue()
         val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
         val color = typedArray.getColor(0, 0)
         typedArray.recycle()
         return color
+    }
+
+    private fun dpToPx(context: Context, dp: Float): Int {
+        val r: Resources = context.resources
+        return TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_DIP,
+            dp,
+            r.displayMetrics
+        ).toInt()
     }
 }
