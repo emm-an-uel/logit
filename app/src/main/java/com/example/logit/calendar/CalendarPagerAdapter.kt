@@ -71,39 +71,36 @@ class CalendarPagerAdapter(
 
         // show today's tasks
         var hasEvents = false
-        for (key in mapOfTasks.keys) { // check if mapOfEvents contains a key with same date as currentDate
-            if (key == currentDateInt) {
-                val todayTasks: ArrayList<Task> = mapOfTasks[key]!!
-                val rvAdapter = CalendarRVAdapter(todayTasks, mapSubjectColor, cardColors, showCompletedTasks)
-                rvAdapter.checkShowCompletedTasks() // decide whether or not to show completed Tasks
-                rvEvents.adapter = rvAdapter
+        // TODO: fix crash
+        if (mapOfTasks.containsKey(currentDateInt)) {
+            val todayTasks: ArrayList<Task> = mapOfTasks[currentDateInt]!!
+            val rvAdapter = CalendarRVAdapter(todayTasks, mapSubjectColor, cardColors, showCompletedTasks)
+            rvAdapter.checkShowCompletedTasks() // decide whether or not to show completed Tasks
+            rvEvents.adapter = rvAdapter
 
-                // click listener to watch for changes in 'completed' status
-                rvAdapter.setOnItemClickListener(object: CalendarRVAdapter.OnItemClickListener {
-                    override fun onItemClick(position: Int) {
-                        val task = todayTasks[position]
-                        if (task.completed) { // task currently complete, to mark as undone
-                            val actualPosition: Int? = findPositionDone(task) // find task in doneList
-                            if (actualPosition != null) {
-                                (context as ParentActivity).viewModel.markAsUndone(task, actualPosition)
-                            } else { // if failed to find actualPosition
-                                FancyToast.makeText(context, "Error: Could not mark as undone", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
-                            }
+            // click listener to watch for changes in 'completed' status
+            rvAdapter.setOnItemClickListener(object: CalendarRVAdapter.OnItemClickListener {
+                override fun onItemClick(position: Int) {
+                    val task = todayTasks[position]
+                    if (task.completed) { // task currently complete, to mark as undone
+                        val actualPosition: Int? = findPositionDone(task) // find task in doneList
+                        if (actualPosition != null) {
+                            (context as ParentActivity).viewModel.markAsUndone(task, actualPosition)
+                        } else { // if failed to find actualPosition
+                            FancyToast.makeText(context, "Error: Could not mark as undone", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
+                        }
 
-                        } else { // task currently incomplete, to mark as done
-                            val actualPosition: Int? = findPositionTodo(task) // find task in todoList
-                            if (actualPosition != null) {
-                                (context as ParentActivity).viewModel.markAsDone(task, actualPosition)
-                            } else {
-                                FancyToast.makeText(context, "Error: Could not mark as done", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
-                            }
+                    } else { // task currently incomplete, to mark as done
+                        val actualPosition: Int? = findPositionTodo(task) // find task in todoList
+                        if (actualPosition != null) {
+                            (context as ParentActivity).viewModel.markAsDone(task, actualPosition)
+                        } else {
+                            FancyToast.makeText(context, "Error: Could not mark as done", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
                         }
                     }
-                })
-
-                hasEvents = true
-                break
-            }
+                }
+            })
+            hasEvents = true
         }
 
         if (!hasEvents) { // no events for the day
