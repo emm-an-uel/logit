@@ -394,8 +394,8 @@ class AddTaskActivity : AppCompatActivity() {
 
     private fun spinnerSubjectItemSelectedListener() {
         spinnerSubject.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                if (p2 == originalSpinnerIndex) { // note: p2 is current position
+            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, currentPosition: Int, p3: Long) {
+                if (currentPosition == originalSpinnerIndex) {
                     btnDisabled()
                 } else {
                     btnEnabled()

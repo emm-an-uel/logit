@@ -8,7 +8,7 @@
         android:id="@+id/background"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:background="@color/blue_gray"
+        android:background="@color/spinner_item_bg"
         android:orientation="vertical">
 
         <TextView
@@ -26,7 +26,7 @@
             android:id="@+id/dividerLine"
             android:layout_width="wrap_content"
             android:layout_height="1dp"
-            android:background="@color/gray" />
+            android:background="#373945" />
 
     </LinearLayout>
 

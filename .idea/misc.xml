@@ -42,7 +42,12 @@
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/task_item.xml" value="0.25" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/layout/week_header_layout.xml" value="0.22644927536231885" />
         <entry key="..\:/Personal Folder/Coding Projects/Android Studio Projects/Logit/app/src/main/res/menu/parent_activity_drawer.xml" value="0.25" />
+        <entry key="..\:/Personal Folder/Coding/Android Studio Projects/Logit/app/src/main/res/drawable/custom_spinner_bg_bottom.xml" value="0.2555" />
+        <entry key="..\:/Personal Folder/Coding/Android Studio Projects/Logit/app/src/main/res/drawable/custom_spinner_bg_top.xml" value="0.2555" />
+        <entry key="..\:/Personal Folder/Coding/Android Studio Projects/Logit/app/src/main/res/layout/alert_dialog_custom.xml" value="0.20521590423257802" />
+        <entry key="..\:/Personal Folder/Coding/Android Studio Projects/Logit/app/src/main/res/layout/calendar_card_item.xml" value="0.20521590423257802" />
         <entry key="..\:/Personal Folder/Coding/Android Studio Projects/Logit/app/src/main/res/layout/calendar_dialog.xml" value="0.20521590423257802" />
+        <entry key="..\:/Personal Folder/Coding/Android Studio Projects/Logit/app/src/main/res/layout/spinner_item_custom.xml" value="0.20521590423257802" />
       </map>
     </option>
   </component>
