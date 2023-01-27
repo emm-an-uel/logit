@@ -237,7 +237,7 @@ class TodoFragment : Fragment() {
         rvAdapter.notifyDataSetChanged()
 
         // filter list (search function)
-        setFragmentResultListener("filterList") { _, bundle ->
+        setFragmentResultListener("filterTodoList") { _, bundle ->
             val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
             val newConsolidatedList = viewModel.createFilteredConsolidatedTodoList(filteredList)
             rvAdapter.filterList(newConsolidatedList)

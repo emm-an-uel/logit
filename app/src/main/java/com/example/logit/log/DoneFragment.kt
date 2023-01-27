@@ -246,7 +246,7 @@ class DoneFragment : Fragment() {
         rvAdapter.notifyDataSetChanged()
 
         // filter list (search function)
-        setFragmentResultListener("filterList") { _, bundle ->
+        setFragmentResultListener("filterDoneList") { _, bundle ->
             val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
             val newConsolidatedList = viewModel.createFilteredConsolidatedDoneList(filteredList)
             rvAdapter.filterList(newConsolidatedList)

@@ -162,6 +162,7 @@ class LogFragment : Fragment() {
                                         }
                                     }
                                 }
+                                childFragmentManager.setFragmentResult("filterTodoList", bundleOf("filteredList" to filteredList))
 
                             } else { // fragmentDone
                                 if (doneList.isNotEmpty()) {
@@ -171,9 +172,9 @@ class LogFragment : Fragment() {
                                         }
                                     }
                                 }
+                                childFragmentManager.setFragmentResult("filterDoneList", bundleOf("filteredList" to filteredList))
                             }
                         }
-                        childFragmentManager.setFragmentResult("filterList", bundleOf("filteredList" to filteredList))
                     }
                 })
             }
@@ -186,7 +187,7 @@ class LogFragment : Fragment() {
                 }
             }
 
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED) // without this line, there will be duplicates of settings icon when i return to this fragment
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED) // without this line, there will be duplicates of search icon when i return to this fragment
     }
 
     private fun confirmClearAll() {
