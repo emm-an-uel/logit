@@ -1,6 +1,7 @@
 package com.example.logit.addtask
 
 import android.content.Context
+import android.graphics.Typeface
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,7 +9,6 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.core.content.ContextCompat
 import com.example.logit.R
 
 class AddTaskSpinnerAdapter(context: Context, subjects: List<String>) :
@@ -43,7 +43,7 @@ class AddTaskSpinnerAdapter(context: Context, subjects: List<String>) :
         if (!dropDown) {
             background.background = getDrawable(context, android.R.color.transparent)
             dividerLine.visibility = View.GONE
-            tvSubject.setTextColor(ContextCompat.getColor(context, R.color.white))
+            tvSubject.setTypeface(null, Typeface.BOLD)
 
         } else { // special conditions for first and last items in drop-down list 
             if (position == 0) {
