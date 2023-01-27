@@ -153,7 +153,7 @@ class LogFragment : Fragment() {
                     }
                     private fun filter(p0: String?) {
                         val filteredList: ArrayList<Task> = arrayListOf()
-                        if (p0 != null) {
+                        if (p0 != null) { // if user is searching something
                             if (currentFrag == 0) { // fragmentTodo
                                 if (todoList.isNotEmpty()) {
                                     for (task in todoList) {
@@ -173,6 +173,15 @@ class LogFragment : Fragment() {
                                     }
                                 }
                                 childFragmentManager.setFragmentResult("filterDoneList", bundleOf("filteredList" to filteredList))
+                            }
+                        } else { // if searchbar is empty - revert to original lists
+                            if (currentFrag == 0) { // TodoFragment
+                                val list = todoList
+                                childFragmentManager.setFragmentResult("filterTodoList", bundleOf("filteredList" to list))
+
+                            } else { // DoneFragment
+                                val list = doneList
+                                childFragmentManager.setFragmentResult("filterDoneList", bundleOf("filteredList" to list))
                             }
                         }
                     }

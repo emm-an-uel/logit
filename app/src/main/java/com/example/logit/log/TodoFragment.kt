@@ -241,6 +241,10 @@ class TodoFragment : Fragment() {
             val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
             val newConsolidatedList = viewModel.createFilteredConsolidatedTodoList(filteredList)
             rvAdapter.filterList(newConsolidatedList)
+
+            // update lists
+            todoList = filteredList
+            consolidatedList = newConsolidatedList
         }
     }
 

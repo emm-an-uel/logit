@@ -250,6 +250,10 @@ class DoneFragment : Fragment() {
             val filteredList: ArrayList<Task> = bundle.getParcelableArrayList<Task>("filteredList") as ArrayList<Task>
             val newConsolidatedList = viewModel.createFilteredConsolidatedDoneList(filteredList)
             rvAdapter.filterList(newConsolidatedList)
+
+            // update lists
+            doneList = filteredList
+            consolidatedList = newConsolidatedList
         }
     }
 
