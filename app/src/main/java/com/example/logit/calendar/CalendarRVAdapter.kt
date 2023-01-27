@@ -23,16 +23,6 @@ class CalendarRVAdapter (
     private val showCompletedTasks: Boolean
 ): RecyclerView.Adapter<CalendarRVAdapter.ViewHolder>() {
 
-    fun checkShowCompletedTasks() {
-        if (!showCompletedTasks) { // remove completed tasks if !showCompletedTasks
-            for (task in tasks) {
-                if (task.completed) {
-                    tasks.remove(task)
-                }
-            }
-        }
-    }
-
     inner class ViewHolder(itemView: View, listener: OnItemClickListener) : RecyclerView.ViewHolder(itemView) {
         val ivColorCode: ImageView = itemView.findViewById(R.id.colorCode)
         val tvSubject: TextView = itemView.findViewById(R.id.tvSubject)

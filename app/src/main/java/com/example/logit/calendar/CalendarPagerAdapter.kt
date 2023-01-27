@@ -71,11 +71,14 @@ class CalendarPagerAdapter(
 
         // show today's tasks
         var hasEvents = false
-        // TODO: fix crash
-        if (mapOfTasks.containsKey(currentDateInt)) {
-            val todayTasks: ArrayList<Task> = mapOfTasks[currentDateInt]!!
+        if (mapOfTasks.containsKey(currentDateInt)) { // if there are tasks due today
+
+            val todayTasks = if (!showCompletedTasks) { // contents of 'todayTasks' depends on whether showCompletedTasks
+                removeCompletedTasks(mapOfTasks[currentDateInt]!!)
+            } else {
+                mapOfTasks[currentDateInt]!!
+            }
             val rvAdapter = CalendarRVAdapter(todayTasks, mapSubjectColor, cardColors, showCompletedTasks)
-            rvAdapter.checkShowCompletedTasks() // decide whether or not to show completed Tasks
             rvEvents.adapter = rvAdapter
 
             // click listener to watch for changes in 'completed' status
@@ -110,6 +113,16 @@ class CalendarPagerAdapter(
 
         container.addView(view)
         return view
+    }
+
+    private fun removeCompletedTasks(tasks: ArrayList<Task>): ArrayList<Task> {
+        val updatedList = arrayListOf<Task>()
+        for (t in tasks) {
+            if (!t.completed) {
+                updatedList.add(t)
+            }
+        }
+        return updatedList
     }
 
     private fun findPositionTodo(task1: Task): Int? {
