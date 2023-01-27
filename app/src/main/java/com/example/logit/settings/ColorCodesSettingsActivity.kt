@@ -155,6 +155,7 @@ class ColorCodesSettingsActivity : AppCompatActivity() {
             touched = true
             builder.dismiss()
         }
+        btnConfirm.text = "Remove"
         btnConfirm.setOnClickListener {
             checkDuplicates()
             touched = true

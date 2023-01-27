@@ -218,6 +218,7 @@ class LogFragment : Fragment() {
             btnCancel.setOnClickListener {
                 builder.dismiss()
             }
+            btnConfirm.text = "Delete"
             btnConfirm.setOnClickListener {
                 deleteAll()
                 builder.dismiss()
