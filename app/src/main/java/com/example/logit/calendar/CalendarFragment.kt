@@ -204,6 +204,8 @@ class CalendarFragment : Fragment() {
             for (task in combinedList) {
                 if (!task.completed) { // task not completed - opaque color
                     val dueDate: Calendar = intToCalendar(task.dueDateInt)
+                    dueDate.add(Calendar.SECOND, id) // adds seconds to the 'date' parameter so the order that CalendarObjects are
+                    // displayed are synced with the order that Tasks are displayed in the CalendarDialog
                     val bgColorIndex = mapSubjectColor[task.subject]
                     val bgColor = if (bgColorIndex != null) {
                         ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
@@ -220,6 +222,7 @@ class CalendarFragment : Fragment() {
                     )
                 } else { // task completed - translucent color
                     val dueDate: Calendar = intToCalendar(task.dueDateInt)
+                    dueDate.add(Calendar.SECOND, id)
                     val bgColorIndex = mapSubjectColor[task.subject]
                     val bgColor = if (bgColorIndex != null) {
                         ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
@@ -242,6 +245,7 @@ class CalendarFragment : Fragment() {
         } else { // !showCompletedTasks
             for (task in todoList) { // !completed - all opaque
                 val dueDate: Calendar = intToCalendar(task.dueDateInt)
+                dueDate.add(Calendar.SECOND, id)
                 val bgColorIndex = mapSubjectColor[task.subject]
                 val bgColor = if (bgColorIndex != null) {
                     ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
@@ -260,7 +264,6 @@ class CalendarFragment : Fragment() {
             }
         }
 
-        calObjectList.sortBy { it.id } // to sync CalendarObjects with RecyclerView Tasks
         binding.calendarView.setCalendarObjectList(calObjectList)
     }
 
