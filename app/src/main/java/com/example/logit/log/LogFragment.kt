@@ -46,18 +46,26 @@ class LogFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel = ViewModelProvider(requireActivity())[ViewModelParent::class.java]
-
-        // initialize lists
-        listCardColors = viewModel.getListCardColors()
-        listSubjectColor = viewModel.getListSubjectColor()
-        todoList = viewModel.getTodoList()
-        doneList = viewModel.getDoneList()
+        getData()
 
         // updates lists when user swipes in FragmentTodo and FragmentDone
         childFragmentManager.setFragmentResultListener("listsChanged", this) { _, _ ->
             todoList = viewModel.getTodoList()
             doneList = viewModel.getDoneList()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        getData()
+    }
+
+    private fun getData() {
+        // initialize lists
+        listCardColors = viewModel.getListCardColors()
+        listSubjectColor = viewModel.getListSubjectColor()
+        todoList = viewModel.getTodoList()
+        doneList = viewModel.getDoneList()
     }
 
     override fun onCreateView(

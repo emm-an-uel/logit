@@ -245,6 +245,7 @@ class TodoFragment : Fragment() {
             // update lists
             todoList = filteredList
             consolidatedList = newConsolidatedList
+            createMapOfIndex()
         }
     }
 

@@ -8,6 +8,8 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp">
 
+        <!-- TODO: replace ImageView with View -->
+
         <ImageView
             android:id="@+id/ivBar"
             android:layout_width="0dp"
