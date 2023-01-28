@@ -41,7 +41,7 @@ android {
 
 dependencies {
     // custom CalendarView-Widget
-    implementation 'com.github.emm-an-uel:CalendarView-Widget:940d64bfd5'
+    implementation 'com.github.emm-an-uel:CalendarView-Widget:2bc6222ded'
 
     // Splash screen
     implementation "androidx.core:core-splashscreen:1.0.0"

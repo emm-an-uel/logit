@@ -4,15 +4,13 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.example.logit.R
@@ -136,75 +134,6 @@ class LogFragment : Fragment() {
         childFragmentManager.setFragmentResultListener("rqCheckFabClickability", requireActivity()) { _, _ ->
             checkFabClickability()
         }
-
-        // menu
-        val menuHost = requireActivity()
-        menuHost.addMenuProvider(object: MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                menuInflater.inflate(R.menu.main_log_menu, menu)
-                val searchItem: MenuItem = menu.findItem(R.id.actionSearch)
-                val searchView: SearchView = searchItem.actionView as SearchView
-                searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
-                    override fun onQueryTextSubmit(p0: String?): Boolean {
-                        return false
-                    }
-
-                    override fun onQueryTextChange(p0: String?): Boolean {
-                        // updates lists before filtering
-                        childFragmentManager.setFragmentResultListener("listsChanged", this@LogFragment) { _, _ ->
-                            todoList = viewModel.getTodoList()
-                            doneList = viewModel.getDoneList()
-                        }
-
-                        filter(p0)
-                        return false
-                    }
-                    private fun filter(p0: String?) {
-                        val filteredList: ArrayList<Task> = arrayListOf()
-                        if (p0 != null) { // if user is searching something
-                            if (currentFrag == 0) { // fragmentTodo
-                                if (todoList.isNotEmpty()) {
-                                    for (task in todoList) {
-                                        if (task.subject.contains(p0, true) || task.task.contains(p0, true)) {
-                                            filteredList.add(task)
-                                        }
-                                    }
-                                }
-                                childFragmentManager.setFragmentResult("filterTodoList", bundleOf("filteredList" to filteredList))
-
-                            } else { // fragmentDone
-                                if (doneList.isNotEmpty()) {
-                                    for (task in doneList) {
-                                        if (task.subject.contains(p0, true) || task.task.contains(p0, true)) {
-                                            filteredList.add(task)
-                                        }
-                                    }
-                                }
-                                childFragmentManager.setFragmentResult("filterDoneList", bundleOf("filteredList" to filteredList))
-                            }
-                        } else { // if searchbar is empty - revert to original lists
-                            if (currentFrag == 0) { // TodoFragment
-                                val list = todoList
-                                childFragmentManager.setFragmentResult("filterTodoList", bundleOf("filteredList" to list))
-
-                            } else { // DoneFragment
-                                val list = doneList
-                                childFragmentManager.setFragmentResult("filterDoneList", bundleOf("filteredList" to list))
-                            }
-                        }
-                    }
-                })
-            }
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.actionSearch -> {
-                        true
-                    } else -> false
-                }
-            }
-
-        }, viewLifecycleOwner, Lifecycle.State.RESUMED) // without this line, there will be duplicates of search icon when i return to this fragment
     }
 
     private fun confirmClearAll() {

@@ -1,9 +1,11 @@
 package com.example.logit.calendar
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -229,13 +231,13 @@ class CalendarFragment : Fragment() {
                     } else {
                         ContextCompat.getColor(requireContext(), R.color.gray)
                     }
-                    val bgColorTranslucent = ColorUtils.setAlphaComponent(bgColor, 85) // set alpha to make completed Tasks appear translucent
+                    val bgColorTranslucent = ColorUtils.setAlphaComponent(bgColor, 100) // set alpha to make completed Tasks appear translucent
                     calObjectList.add(
                         CalendarView.CalendarObject(
                             id.toString(),
                             dueDate,
                             bgColorTranslucent,
-                            ContextCompat.getColor(requireContext(), com.google.android.material.R.color.mtrl_btn_transparent_bg_color)
+                            getColor(requireContext(), androidx.appcompat.R.attr.colorAccent)
                         )
                     )
                 }
@@ -373,5 +375,13 @@ class CalendarFragment : Fragment() {
 
     private fun intToBoolean(option: Int): Boolean {
         return option != 0
+    }
+
+    private fun getColor(context: Context, colorResId: Int): Int {
+        val typedValue = TypedValue()
+        val typedArray = context.obtainStyledAttributes(typedValue.data, intArrayOf(colorResId))
+        val color = typedArray.getColor(0, 0)
+        typedArray.recycle()
+        return color
     }
 }
