@@ -6,16 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".calendar.CalendarFragment">
 
-    <TextView
-        android:id="@+id/tvMonth"
+    <RelativeLayout
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="5dp"
-        android:paddingBottom="15dp"
-        android:text="January 2023"
-        android:textAlignment="center"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvMonth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="15dp"
+            android:text="January 2023"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <include
+            android:id="@+id/btnToday"
+            layout="@layout/calendar_today_button"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="8dp" />
+
+    </RelativeLayout>
 
     <org.hugoandrade.calendarviewlib.CalendarView
         android:id="@+id/calendarView"
@@ -25,7 +42,7 @@
         app:current_day_text_color="?attr/colorAccent"
         app:day_text_color="?attr/primaryTextColor"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvMonth"
+        app:layout_constraintTop_toBottomOf="@id/linearLayout"
         app:month_header_show="false"
         app:offset_day_text_color="?attr/primaryTextColor"
         app:selected_day_border_color="?attr/colorAccent"
