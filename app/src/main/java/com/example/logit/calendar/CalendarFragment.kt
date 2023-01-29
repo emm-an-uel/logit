@@ -231,13 +231,14 @@ class CalendarFragment : Fragment() {
                     } else {
                         ContextCompat.getColor(requireContext(), R.color.gray)
                     }
-                    val bgColorTranslucent = ColorUtils.setAlphaComponent(bgColor, 100) // set alpha to make completed Tasks appear translucent
+                    val bgColorTranslucent = ColorUtils.setAlphaComponent(bgColor, 100) // set alpha to make completed Tasks' CalendarObjects appear translucent
+                    val checkedColorTranslucent = ColorUtils.setAlphaComponent(getColor(requireContext(), androidx.appcompat.R.attr.colorAccent), 130)
                     calObjectList.add(
                         CalendarView.CalendarObject(
                             id.toString(),
                             dueDate,
                             bgColorTranslucent,
-                            getColor(requireContext(), androidx.appcompat.R.attr.colorAccent)
+                            checkedColorTranslucent
                         )
                     )
                 }
