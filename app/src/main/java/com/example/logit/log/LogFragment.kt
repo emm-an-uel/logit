@@ -76,7 +76,6 @@ class LogFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().title = ""
 
         // fab
         fabTask = binding.fabTask

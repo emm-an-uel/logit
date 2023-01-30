@@ -4,7 +4,8 @@
 
     <item
         android:id="@+id/today"
-        android:icon="@drawable/ic_search"
+        android:icon="@drawable/ic_today"
+        android:iconTint="@color/white"
         android:title="Today"
         app:showAsAction="always" />
 

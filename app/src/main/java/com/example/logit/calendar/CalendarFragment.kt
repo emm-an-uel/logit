@@ -2,6 +2,7 @@ package com.example.logit.calendar
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -97,7 +98,6 @@ class CalendarFragment : Fragment() {
         binding.fabAddTask.show()
         getData()
         setupCalendar()
-        setupMenu()
     }
 
     override fun onCreateView(
@@ -124,6 +124,8 @@ class CalendarFragment : Fragment() {
         requireActivity().addMenuProvider(object: MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.calendar_menu, menu)
+                val menuItem = menu.findItem(R.id.today)
+                menuItem.iconTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white)) // set icon color to white
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
