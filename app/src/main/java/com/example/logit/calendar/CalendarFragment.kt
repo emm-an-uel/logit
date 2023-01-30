@@ -6,13 +6,13 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.TypedValue
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
@@ -97,6 +97,7 @@ class CalendarFragment : Fragment() {
         binding.fabAddTask.show()
         getData()
         setupCalendar()
+        setupMenu()
     }
 
     override fun onCreateView(
@@ -112,10 +113,29 @@ class CalendarFragment : Fragment() {
         requireActivity().title = ""
 
         setupCalendar()
+        setupMenu()
 
         binding.fabAddTask.setOnClickListener {
             createNewTask()
         }
+    }
+
+    private fun setupMenu() {
+        requireActivity().addMenuProvider(object: MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.calendar_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.today -> {
+                        binding.calendarView.selectedDate = Calendar.getInstance() // updates CalendarView
+                        selectedDate = Calendar.getInstance() // updates variable 'selectedDate'
+                        true
+                    } else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
     private fun setMinMaxDates() {
@@ -140,16 +160,16 @@ class CalendarFragment : Fragment() {
         }
 
         addCalendarObjects() // add user events to calendar
-        binding.calendarView.setOnItemClickedListener { calendarObjects, _, selectedDate1 ->
+        binding.calendarView.setOnItemClickedListener { calendarObjects, _, newSelectedDate ->
             if (calendarObjects.size > 0) { // if there are events
-                showCalendarDialog(selectedDate1)
+                showCalendarDialog(newSelectedDate)
 
             } else { // if no events that day
                 // user has to click twice to create new task
-                if (isSameDate(selectedDate, selectedDate1)) {
+                if (isSameDate(selectedDate, newSelectedDate)) {
                     createNewTask()
                 } else {
-                    selectedDate = selectedDate1
+                    selectedDate = newSelectedDate
                 }
             }
         }
