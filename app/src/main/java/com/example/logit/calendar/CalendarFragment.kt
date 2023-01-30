@@ -2,12 +2,12 @@ package com.example.logit.calendar
 
 import android.content.Context
 import android.content.Intent
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.*
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
@@ -124,19 +124,21 @@ class CalendarFragment : Fragment() {
         requireActivity().addMenuProvider(object: MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.calendar_menu, menu)
-                val menuItem = menu.findItem(R.id.today)
-                menuItem.iconTintList = ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.white)) // set icon color to white
+                val rootView: View? = menu.findItem(R.id.today).actionView
+                if (rootView != null) {
+                    val tvDate: TextView = rootView.findViewById(R.id.tvDate)
+                    tvDate.text = (Calendar.getInstance().get(Calendar.DAY_OF_MONTH)).toString() // update menu item text
+                    rootView.setOnClickListener {
+                        binding.calendarView.selectedDate = Calendar.getInstance() // updates CalendarView
+                        selectedDate = Calendar.getInstance() // updates variable 'selectedDate'
+                    }
+                }
             }
 
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                return when (menuItem.itemId) {
-                    R.id.today -> {
-                        binding.calendarView.selectedDate = Calendar.getInstance() // updates CalendarView
-                        selectedDate = Calendar.getInstance() // updates variable 'selectedDate'
-                        true
-                    } else -> false
-                }
+                return false
             }
+
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 

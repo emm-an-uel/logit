@@ -4,9 +4,8 @@
 
     <item
         android:id="@+id/today"
-        android:icon="@drawable/ic_today"
-        android:iconTint="@color/white"
         android:title="Today"
+        app:actionLayout="@layout/calendar_today_button"
         app:showAsAction="always" />
 
 </menu>
