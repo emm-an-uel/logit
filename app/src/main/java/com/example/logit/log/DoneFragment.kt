@@ -140,7 +140,7 @@ class DoneFragment : Fragment() {
                 val pos = viewHolder.adapterPosition
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val undoneTask: Task = doneList[pos]
-                markAsUndone(undoneTask, pos)
+                markAsUndone(undoneTask)
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
                 checkForEmptyList()
 
@@ -158,8 +158,6 @@ class DoneFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                // this method is called
-                // when the item is moved.
                 return false
             }
 
@@ -270,8 +268,8 @@ class DoneFragment : Fragment() {
         checkForEmptyList() // displays "No completed tasks" if list is empty
     }
 
-    private fun markAsUndone(undoneTask: Task, pos: Int) {
-        viewModel.markAsUndone(undoneTask, pos)
+    private fun markAsUndone(undoneTask: Task) {
+        viewModel.markAsUndone(undoneTask)
 
         // get LogFragment to call checkFabClickability() when a task is marked as undone
         val bundle = Bundle()

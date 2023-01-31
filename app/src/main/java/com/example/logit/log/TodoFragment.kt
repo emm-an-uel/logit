@@ -29,6 +29,7 @@ class TodoFragment : Fragment() {
     lateinit var rvTodo: RecyclerView
     lateinit var rvAdapter: RVAdapterLog
     lateinit var todoList: ArrayList<Task>
+    private lateinit var originalTodoList: ArrayList<Task>
     lateinit var consolidatedList: ArrayList<ListItem>
     lateinit var mapOfIndex: MutableMap<Int, Int>
 
@@ -152,7 +153,7 @@ class TodoFragment : Fragment() {
                 consolidatedList.removeAt(pos) // removes this item from consolidatedList
                 val actualIndex = mapOfIndex[pos]!!
                 val completedTask: Task = todoList[actualIndex]
-                viewModel.markAsDone(completedTask, actualIndex) // removes this task from todoList and adds to doneList
+                viewModel.markAsDone(completedTask) // removes this task from todoList and adds to doneList
                 rvAdapter.notifyItemRemoved(viewHolder.adapterPosition)
 
                 updateMapOfIndex(pos, true)
@@ -251,6 +252,7 @@ class TodoFragment : Fragment() {
 
     private fun getLists() {
         todoList = viewModel.getTodoList()
+        originalTodoList = viewModel.getTodoList()
         listCardColors = viewModel.getListCardColors()
 
         if (firstInstance) { // first time initializing TodoFragment

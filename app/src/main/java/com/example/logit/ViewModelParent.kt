@@ -228,12 +228,11 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
 
     fun markAsDone(
         completedTask: Task,
-        actualIndex: Int
     ) { // moves completedTask from todoList to doneList
         completedTask.completed = true // set to 'done'
         completedTask.completedDate = calendarToInt(Calendar.getInstance()) // sets completedDate to today's date
         doneList!!.add(completedTask)
-        todoList!!.removeAt(actualIndex)
+        todoList!!.remove(completedTask)
         saveJsonTaskLists()
         createMapOfTasks()
         createConsolidatedListTodo()
@@ -241,16 +240,16 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
     }
 
     fun markAsUndone(
-        restoredTask: Task,
-        actualIndex: Int
+        restoredTask: Task
     ) { // moves restoredTask from doneList to todoList
         restoredTask.completed = false // set to 'undone'
         restoredTask.completedDate = 0 // removes completedDate
         todoList!!.add(restoredTask)
-        doneList!!.removeAt(actualIndex)
+        doneList!!.remove(restoredTask)
         saveJsonTaskLists()
         createMapOfTasks()
         createConsolidatedListTodo()
+        createConsolidatedListDone()
     }
 
     fun clearDoneList() { // clears all items in doneList

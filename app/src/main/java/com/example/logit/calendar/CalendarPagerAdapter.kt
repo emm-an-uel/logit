@@ -88,7 +88,7 @@ class CalendarPagerAdapter(
                     if (task.completed) { // task currently complete, to mark as undone
                         val actualPosition: Int? = findPositionDone(task) // find task in doneList
                         if (actualPosition != null) {
-                            (context as ParentActivity).viewModel.markAsUndone(task, actualPosition)
+                            (context as ParentActivity).viewModel.markAsUndone(task)
                         } else { // if failed to find actualPosition
                             FancyToast.makeText(context, "Error: Could not mark as undone", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
                         }
@@ -96,7 +96,7 @@ class CalendarPagerAdapter(
                     } else { // task currently incomplete, to mark as done
                         val actualPosition: Int? = findPositionTodo(task) // find task in todoList
                         if (actualPosition != null) {
-                            (context as ParentActivity).viewModel.markAsDone(task, actualPosition)
+                            (context as ParentActivity).viewModel.markAsDone(task)
                         } else {
                             FancyToast.makeText(context, "Error: Could not mark as done", FancyToast.LENGTH_SHORT, FancyToast.DEFAULT, false).show()
                         }
