@@ -11,11 +11,14 @@
 
     <color name="red">#C1292E</color>
 
-    <color name="cardview_blue">#659CF6</color>
+    <color name="cardview_blue">#7ABDFF</color>
     <color name="cardview_red">#C5303C</color>
     <color name="cardview_yellow">#FFC31F</color>
     <color name="cardview_green">#10A85E</color>
-    <color name="cardview_purple">#83569F</color>
+    <color name="cardview_purple">#6F4987</color>
+    <color name="cardview_dark_blue">#2B4269</color>
+    <color name="cardview_pink">#D28AFF</color>
+    <color name="cardview_orange">#F0793E</color>
 
     <color name="cardview_black">#202632</color>
     <color name="dark_blue_700">#171B24</color>

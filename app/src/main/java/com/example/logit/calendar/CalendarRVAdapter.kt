@@ -14,12 +14,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.logit.ParentActivity
 import com.example.logit.R
 import com.example.logit.Task
-import com.example.logit.log.CardColor
 
 class CalendarRVAdapter (
     private val tasks: ArrayList<Task>,
     private val mapSubjectColor: Map<String, Int>,
-    private val cardColors: List<CardColor>,
+    private val colors: List<Int>,
     private val showCompletedTasks: Boolean
 ): RecyclerView.Adapter<CalendarRVAdapter.ViewHolder>() {
 
@@ -76,7 +75,7 @@ class CalendarRVAdapter (
         // set color coded tab
         val bgColorIndex: Int? = mapSubjectColor[task.subject]
         val bgColor: Int = if (bgColorIndex != null) {
-            ContextCompat.getColor(context, cardColors[bgColorIndex].backgroundColor)
+            ContextCompat.getColor(context, colors[bgColorIndex])
         } else {
             ContextCompat.getColor(context, R.color.gray)
         }

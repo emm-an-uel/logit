@@ -22,7 +22,6 @@ import com.example.logit.Task
 import com.example.logit.ViewModelParent
 import com.example.logit.addtask.AddTaskActivity
 import com.example.logit.databinding.FragmentCalendarBinding
-import com.example.logit.log.CardColor
 import com.example.logit.settings.SettingsItem
 import org.hugoandrade.calendarviewlib.CalendarView
 import java.text.DateFormatSymbols
@@ -48,7 +47,7 @@ class CalendarFragment : Fragment() {
     private lateinit var todoList: List<Task>
     private lateinit var doneList: List<Task>
     private lateinit var combinedList: ArrayList<Task>
-    private lateinit var cardColors: List<CardColor>
+    private lateinit var colors: List<Int>
     private lateinit var mapSubjectColor: Map<String, Int>
 
     private lateinit var settings: List<SettingsItem>
@@ -85,7 +84,7 @@ class CalendarFragment : Fragment() {
             addAll(doneList)
             sortWith(compareBy(Task::dueDateInt, Task::subject, Task::task))
         }
-        cardColors = viewModel.getListCardColors()
+        colors = viewModel.getColors()
         mapSubjectColor = viewModel.getMapSubjectColor()
         settings = viewModel.getListSettings()
 
@@ -234,7 +233,7 @@ class CalendarFragment : Fragment() {
                     // displayed are synced with the order that Tasks are displayed in the CalendarDialog
                     val bgColorIndex = mapSubjectColor[task.subject]
                     val bgColor = if (bgColorIndex != null) {
-                        ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
+                        ContextCompat.getColor(requireContext(), colors[bgColorIndex])
                     } else {
                         ContextCompat.getColor(requireContext(), R.color.gray)
                     }
@@ -251,7 +250,7 @@ class CalendarFragment : Fragment() {
                     dueDate.add(Calendar.SECOND, id)
                     val bgColorIndex = mapSubjectColor[task.subject]
                     val bgColor = if (bgColorIndex != null) {
-                        ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
+                        ContextCompat.getColor(requireContext(), colors[bgColorIndex])
                     } else {
                         ContextCompat.getColor(requireContext(), R.color.gray)
                     }
@@ -275,7 +274,7 @@ class CalendarFragment : Fragment() {
                 dueDate.add(Calendar.SECOND, id)
                 val bgColorIndex = mapSubjectColor[task.subject]
                 val bgColor = if (bgColorIndex != null) {
-                    ContextCompat.getColor(requireContext(), cardColors[bgColorIndex].backgroundColor)
+                    ContextCompat.getColor(requireContext(), colors[bgColorIndex])
                 } else {
                     ContextCompat.getColor(requireContext(), R.color.gray)
                 }
@@ -306,7 +305,7 @@ class CalendarFragment : Fragment() {
         calDialogView = View.inflate(requireContext(), R.layout.calendar_dialog, null)
 
         // set up the ViewPager adapter
-        viewPagerAdapter = CalendarPagerAdapter(requireContext(), todoList, doneList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, cardColors, showCompletedTasks)
+        viewPagerAdapter = CalendarPagerAdapter(requireContext(), todoList, doneList, mapOfTasks, minDate, maxDate, selectedDate, mapSubjectColor, colors, showCompletedTasks)
 
         val index = ChronoUnit.DAYS.between(minDate.toInstant(), selectedDate.toInstant()).toInt() // corresponding index for the current date
 

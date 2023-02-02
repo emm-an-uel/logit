@@ -37,7 +37,7 @@ class TodoFragment : Fragment() {
 
     lateinit var mapSubjectColor: HashMap<String, Int>
 
-    lateinit var listCardColors: ArrayList<CardColor>
+    private lateinit var colors: ArrayList<Int>
 
     lateinit var viewModel: ViewModelParent
 
@@ -212,7 +212,7 @@ class TodoFragment : Fragment() {
 
     private fun createRV() {
         rvTodo = binding.rvTodo
-        rvAdapter = RVAdapterLog(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
+        rvAdapter = RVAdapterLog(consolidatedList, mapSubjectColor, colors, glow, bars)
 
         // set adapter to recycler view
         rvTodo.adapter = rvAdapter
@@ -253,7 +253,7 @@ class TodoFragment : Fragment() {
     private fun getLists() {
         todoList = viewModel.getTodoList()
         originalTodoList = viewModel.getTodoList()
-        listCardColors = viewModel.getListCardColors()
+        colors = viewModel.getColors()
 
         if (firstInstance) { // first time initializing TodoFragment
             consolidatedList = viewModel.getConsolidatedListTodo()

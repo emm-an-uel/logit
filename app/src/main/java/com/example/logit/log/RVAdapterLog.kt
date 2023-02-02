@@ -17,7 +17,7 @@ import java.util.*
 class RVAdapterLog (
     private var listOfItems: List<ListItem>,
     private val mapSubjectColor: HashMap<String, Int>,
-    private val listColors: ArrayList<CardColor>,
+    private val colors: ArrayList<Int>,
     private val glow: Boolean,
     private val bars: Boolean
         ): RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -132,7 +132,7 @@ class RVAdapterLog (
             val textColor = getColor(context, com.google.android.material.R.attr.colorOnSecondary)
 
             if (bgColorIndex != null) {
-                val bgColor = ContextCompat.getColor(context, listColors[bgColorIndex].backgroundColor)
+                val bgColor = ContextCompat.getColor(context, colors[bgColorIndex])
                 binding.cardView.setCardBackgroundColor(bgColor)
                 if (glow && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
                     binding.cardView.outlineSpotShadowColor = bgColor

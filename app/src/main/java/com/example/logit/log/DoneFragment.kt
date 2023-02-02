@@ -38,7 +38,7 @@ class DoneFragment : Fragment() {
 
     lateinit var mapSubjectColor: HashMap<String, Int>
 
-    lateinit var listCardColors: ArrayList<CardColor>
+    lateinit var colors: ArrayList<Int>
 
     lateinit var viewModel: ViewModelParent
 
@@ -227,7 +227,7 @@ class DoneFragment : Fragment() {
 
     private fun createRV() {
         rvDone = binding.rvDone
-        rvAdapter = RVAdapterLog(consolidatedList, mapSubjectColor, listCardColors, glow, bars)
+        rvAdapter = RVAdapterLog(consolidatedList, mapSubjectColor, colors, glow, bars)
 
         // set adapter to recycler view
         rvDone.adapter = rvAdapter
@@ -279,7 +279,7 @@ class DoneFragment : Fragment() {
 
     private fun getLists() {
         doneList = viewModel.getDoneList()
-        listCardColors = viewModel.getListCardColors()
+        colors = viewModel.getColors()
 
         if (firstInstance) { // first time initializing DoneFragment
             consolidatedList = viewModel.getConsolidatedListDone()

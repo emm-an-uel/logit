@@ -10,7 +10,6 @@ import androidx.viewpager.widget.PagerAdapter
 import com.example.logit.ParentActivity
 import com.example.logit.R
 import com.example.logit.Task
-import com.example.logit.log.CardColor
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.shashank.sony.fancytoastlib.FancyToast
 import java.time.temporal.ChronoUnit
@@ -25,7 +24,7 @@ class CalendarPagerAdapter(
     private val maxDate: Calendar,
     private val selectedDate: Calendar,
     private val mapSubjectColor: Map<String, Int>,
-    private val cardColors: List<CardColor>,
+    private val colors: List<Int>,
     private val showCompletedTasks: Boolean
 ) : PagerAdapter() {
 
@@ -78,7 +77,7 @@ class CalendarPagerAdapter(
             } else {
                 mapOfTasks[currentDateInt]!!
             }
-            val rvAdapter = CalendarRVAdapter(todayTasks, mapSubjectColor, cardColors, showCompletedTasks)
+            val rvAdapter = CalendarRVAdapter(todayTasks, mapSubjectColor, colors, showCompletedTasks)
             rvEvents.adapter = rvAdapter
 
             // click listener to watch for changes in 'completed' status

@@ -60,7 +60,10 @@ class ColorCodesSettingsActivity : AppCompatActivity() {
             R.color.cardview_red,
             R.color.cardview_yellow,
             R.color.cardview_green,
-            R.color.cardview_purple
+            R.color.cardview_purple,
+            R.color.cardview_dark_blue,
+            R.color.cardview_orange,
+            R.color.cardview_pink
         )
     }
 

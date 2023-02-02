@@ -38,7 +38,7 @@ class LogFragment : Fragment() {
 
     lateinit var listSubjectColor: ArrayList<SubjectColor>
 
-    lateinit var listCardColors: ArrayList<CardColor>
+    private lateinit var colors: ArrayList<Int>
 
     lateinit var viewModel: ViewModelParent
 
@@ -66,7 +66,7 @@ class LogFragment : Fragment() {
 
     private fun getData() {
         // initialize lists
-        listCardColors = viewModel.getListCardColors()
+        colors = viewModel.getColors()
         listSubjectColor = viewModel.getListSubjectColor()
         todoList = viewModel.getTodoList()
         doneList = viewModel.getDoneList()
@@ -93,10 +93,10 @@ class LogFragment : Fragment() {
 
         // show/hide fab on user scroll
         childFragmentManager.setFragmentResultListener("showFab", this) { _, _ ->
-            showFabAddTask()
+            fabTask.show()
         }
         childFragmentManager.setFragmentResultListener("hideFab", this) { _, _ ->
-            hideFabAddTask()
+            fabTask.hide()
         }
 
         // tab layout
@@ -148,6 +148,7 @@ class LogFragment : Fragment() {
 
     private fun createMenu() {
         requireActivity().addMenuProvider(object: MenuProvider {
+            // TODO: hide fab when searching
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.main_log_menu, menu)
                 val searchItem = menu.findItem(R.id.actionSearch)
@@ -283,13 +284,5 @@ class LogFragment : Fragment() {
         val listSubjects: ArrayList<String> = viewModel.getListSubjects()
         intent.putExtra("listSubjects", listSubjects)
         startActivity(intent)
-    }
-
-    private fun showFabAddTask() { // called when user scrolls up
-        fabTask.show()
-    }
-
-    private fun hideFabAddTask() { // called when user scrolls down
-        fabTask.hide()
     }
 }

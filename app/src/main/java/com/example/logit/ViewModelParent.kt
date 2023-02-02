@@ -20,7 +20,6 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
     lateinit var mapSubjectColor: HashMap<String, Int>
     lateinit var listSubjects: ArrayList<String>
 
-    lateinit var listCardColors: ArrayList<CardColor>
     lateinit var listColors: ArrayList<Int>
 
     private var listSettingsItems: ArrayList<SettingsItem>? = null
@@ -334,59 +333,21 @@ class ViewModelParent(val app: Application) : AndroidViewModel(app) {
     }
 
     fun createCardColorsList() {
-        listCardColors = arrayListOf()
-        listColors = arrayListOf()
-
-        val file = File(app.filesDir, "listCardColors")
-
-        if (file.exists()) {
-
-            // deserialize and read json
-            val fileJson = file.readText() // read file
-
-            // convert fileJson into list
-            JsonReader(StringReader(fileJson)).use { reader ->
-                reader.beginArray {
-                    while (reader.hasNext()) {
-                        val cardColor = Klaxon().parse<CardColor>(reader)
-                        val backgroundColor = cardColor!!.backgroundColor
-
-                        listCardColors.add(cardColor)
-                        listColors.add(backgroundColor)
-                    }
-                }
-            }
-        }
-        if (listCardColors.size == 0) { // if list is empty
-
-            listCardColors = arrayListOf(
-                CardColor(R.color.cardview_blue, R.color.white),
-                CardColor(R.color.cardview_red, R.color.white),
-                CardColor(R.color.cardview_yellow, R.color.black),
-                CardColor(R.color.cardview_green, R.color.white),
-                CardColor(R.color.cardview_purple, R.color.white)
-            )
-
-            listColors = arrayListOf(
-                R.color.cardview_blue,
-                R.color.cardview_red,
-                R.color.cardview_yellow,
-                R.color.cardview_green,
-                R.color.cardview_purple
-            )
-
-            // save listCardColors
-            val fileListCardColors = Klaxon().toJsonString(listCardColors)
-
-            app.openFileOutput("fileListCardColors", Context.MODE_PRIVATE).use {
-                it.write(fileListCardColors.toByteArray())
-            }
-        }
+        listColors = arrayListOf(
+            R.color.cardview_blue,
+            R.color.cardview_red,
+            R.color.cardview_yellow,
+            R.color.cardview_green,
+            R.color.cardview_purple,
+            R.color.cardview_dark_blue,
+            R.color.cardview_orange,
+            R.color.cardview_pink
+        )
     }
 
     @JvmName("getListCardColors1")
-    fun getListCardColors(): ArrayList<CardColor> {
-        return listCardColors
+    fun getColors(): ArrayList<Int> {
+        return listColors
     }
 
     fun createSettingsList() {
