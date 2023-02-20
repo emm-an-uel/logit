@@ -9,14 +9,15 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:backgroundTint="?attr/colorPrimaryContainer"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="28dp"
         app:cardElevation="6dp">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:paddingVertical="3dp"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp">
 
             <TextView
                 android:id="@+id/tvPrimary"
@@ -51,7 +52,8 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:text="Cancel" />
+                    android:text="Cancel"
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="1dp"
@@ -66,7 +68,8 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:text="Confirm"
-                    android:textColor="@color/red" />
+                    android:textColor="@color/red"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
