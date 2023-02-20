@@ -86,9 +86,9 @@ class TodoFragment : Fragment() {
             override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                 super.onScrolled(recyclerView, dx, dy)
 
-                if (dy > 0) { // scrolling down and fab is shown
+                if (dy > 0) { // scrolling down - fab is shown
                     setFragmentResult("hideFab", bundleOf())
-                } else { // scrolling up and fab is not shown
+                } else { // scrolling up - fab is not shown
                     setFragmentResult("showFab", bundleOf())
                 }
             }

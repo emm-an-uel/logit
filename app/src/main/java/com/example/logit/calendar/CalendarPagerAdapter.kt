@@ -102,6 +102,19 @@ class CalendarPagerAdapter(
                     }
                 }
             })
+
+            // show/hide fab on scroll
+            rvEvents.addOnScrollListener(object: RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    super.onScrolled(recyclerView, dx, dy)
+                    if (dy > 0) { // scrolling down - fab is shown
+                        fabAddTask.hide()
+                    } else { // scrolling up - fab is not shown
+                        fabAddTask.show()
+                    }
+                }
+            })
+
             hasEvents = true
         }
 
