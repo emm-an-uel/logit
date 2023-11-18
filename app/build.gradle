@@ -15,7 +15,7 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.example.logit"
+        applicationId "es.emmanuel.logit"
         minSdk 26
         targetSdk 33
         versionCode 1
